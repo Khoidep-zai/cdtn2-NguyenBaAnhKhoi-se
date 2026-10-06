@@ -276,8 +276,34 @@ cdtn2-NguyenBaAnhKhoi-se/
 3. Truy cập các dịch vụ:
    - **Frontend Web:** `http://localhost:3000`
    - **Backend API:** `http://localhost:8080/api/v1`
-   - **Swagger API Docs:** `http://localhost:8080/swagger-ui.html`
+   - **Swagger API Docs:** `http://localhost:8080/api/v1/swagger-ui.html`
    - **PostgreSQL Database:** `localhost:5432` (User: `freelance_user`, DB: `freelance_db`)
+
+### 3.3. Khởi chạy 1-Click trên IntelliJ IDEA (Tự động mở trình duyệt chạy song song BE + FE)
+Dự án đã được cấu hình sẵn toàn bộ Run Configurations tại `.idea/runConfigurations/`:
+1. Mở thư mục gốc `cdtn2-NguyenBaAnhKhoi-se` bằng **IntelliJ IDEA** (hỗ trợ cả Community và Ultimate).
+2. Tại thanh công cụ trên cùng, chọn cấu hình:
+   - **`🚀 Run Full Project (BE + FE)`** (được cấu hình mặc định sẵn).
+3. Bấm nút **Run (▶)** (hoặc `Shift + F10`):
+   - **Backend Spring Boot** tự động khởi động tại `http://localhost:8080/api/v1`.
+   - Cơ sở dữ liệu tự động kích hoạt (hỗ trợ H2 Database nhúng nếu máy chưa cài PostgreSQL hoặc tự động kết nối PostgreSQL nếu có).
+   - `DataInitializer` tự động nạp sẵn dữ liệu mẫu (Roles, Categories, tài khoản Admin, Nhà tuyển dụng, Sinh viên, Tin đăng, Ứng tuyển).
+   - **Frontend React Vite** tự động được kích hoạt chạy song song tại `http://localhost:3000`.
+   - **Trình duyệt Web mặc định (Chrome/Edge) sẽ TỰ ĐỘNG MỞ NGAY LẬP TỨC** trang web `http://localhost:3000`.
+   - Khi bấm nút Stop (■) trên IntelliJ, cả Backend và Frontend sẽ tự động dừng an toàn.
+
+### 3.4. Khởi chạy 1-Click bằng tệp `run.bat` (Windows)
+- Chỉ cần **nhấp đúp chuột** vào tệp `run.bat` tại thư mục gốc của dự án.
+- Tệp sẽ tự động khởi động Backend và Frontend chạy song song, sau đó tự động bật trình duyệt `http://localhost:3000`.
+
+### 3.5. Tài khoản mẫu dùng thử (Mật khẩu chung: `Password123@`)
+| Vai trò | Email đăng nhập | Mật khẩu | Chức năng chính |
+|---|---|---|---|
+| **Quản trị viên** | `admin@freelancehub.vn` | `Password123@` | Quản lý người dùng, kiểm duyệt bài đăng, xem KPI hệ thống |
+| **Nhà tuyển dụng** | `recruiter@thecoffee.vn` | `Password123@` | Đăng tin, quản lý tin tuyển dụng, duyệt đơn, chấm điểm sinh viên |
+| **Nhà tuyển dụng** | `techlead@innovate.vn` | `Password123@` | Tuyển lập trình viên, designer, đánh giá 2 chiều |
+| **Sinh viên** | `sinhvien.khoi@vanlanguni.vn` | `Password123@` | Tìm việc, nộp CV, xem trạng thái ứng tuyển, cập nhật hồ sơ |
+| **Sinh viên** | `sinhvien.tai@vanlanguni.vn` | `Password123@` | Nộp hồ sơ part-time & freelance, đánh giá nhà tuyển dụng |
 
 ---
 

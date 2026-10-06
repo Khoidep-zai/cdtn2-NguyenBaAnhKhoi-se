@@ -63,181 +63,75 @@ Xây dựng một nền tảng web hai chiều (two-sided marketplace) kết n�
 cdtn2-NguyenBaAnhKhoi-se/
 ├── .env.example
 ├── .gitignore
-├── docker-compose.yml              # backend + frontend + database
+├── docker-compose.yml              # Cụm container: backend + frontend + database
+├── run.bat                         # 1-Click launcher tự động chạy song song BE + FE
 ├── README.md
 │
-├── docs/                           # Tài liệu phân tích – thiết kế (phục vụ báo cáo)
-│   ├── phieu-pham-vi.md
-│   ├── srs.md                      # Đặc tả yêu cầu (3 vai trò, luồng nghiệp vụ)
-│   ├── api-contract.md             # Danh sách endpoint REST
-│   ├── architecture.md
-│   ├── architecture.drawio
-│   ├── erd.drawio
-│   ├── usecase.drawio
-│   ├── activity-diagram.drawio     # Luồng: đăng tin → ứng tuyển → duyệt → hoàn thành → đánh giá
-│   ├── wireframe.fig
-│   ├── wireframes.html
-│   ├── deployment-guide.md
-│   ├── ai-disclosure.md
+├── docs/                           # Hồ sơ tài liệu kỹ thuật hoàn chỉnh
+│   ├── phieu-pham-vi.md            # Phiếu xác định phạm vi dự án
+│   ├── srs.md                      # Đặc tả yêu cầu phần mềm (SRS v1.2)
+│   ├── api-contract.md             # Hợp đồng REST API Contract
+│   ├── architecture.md             # Tài liệu kiến trúc phân tầng 3 lớp
+│   ├── architecture.drawio         # Sơ đồ kiến trúc hệ thống
+│   ├── erd.drawio                  # Sơ đồ thực thể quan hệ CSDL
+│   ├── usecase.drawio              # Sơ đồ Use Case phân quyền
+│   ├── activity-diagram.drawio     # Luồng nghiệp vụ: Đăng tin ➔ Ứng tuyển ➔ Duyệt ➔ Đánh giá
+│   ├── deployment-guide.md         # Hướng dẫn triển khai & khởi chạy
+│   ├── ai-disclosure.md            # Bản công bố minh bạch sử dụng AI
+│   ├── wireframes.html             # Prototype Wireframe giao diện web
 │   └── test/
-│       ├── test-plan.md
-│       ├── test-cases.xlsx         # Test case cho chức năng cốt lõi
-│       ├── test-report.md          # Kết quả kiểm thử
+│       ├── test-plan.md            # Kế hoạch kiểm thử phần mềm
+│       ├── test-cases.xlsx         # Bảng 21 ca kiểm thử chức năng & bảo mật
+│       ├── test-report.md          # Báo cáo kết quả kiểm thử (100% PASS)
 │       └── postman/
 │           └── parttime-marketplace.postman_collection.json
 │
-├── database/
-│   ├── schema.sql                  # Bảng: users, student_profiles, employer_profiles,
-│   │                               # categories, jobs, applications, reviews, notifications
-│   ├── seed.sql                    # Dữ liệu mẫu (admin, ngành nghề, tin mẫu)
-│   └── README.md
+├── database/                       # CSDL PostgreSQL & Migrations
+│   ├── schema.sql                  # Schema hoàn chỉnh 7 bảng & 13 indexes
+│   ├── seed.sql                    # Dữ liệu mẫu (Tài khoản, danh mục, tin mẫu)
+│   ├── ERD_Diagram.md              # Sơ đồ Mermaid ERD & quy tắc ràng buộc
+│   └── migrations/                 # Lịch sử Flyway migrations V1..V4
 │
-├── backend/                        # Spring Boot (REST API)
-│   ├── pom.xml                     # hoặc build.gradle
+├── backend/                        # Spring Boot 3.2.x REST API
+│   ├── pom.xml
 │   ├── Dockerfile
 │   └── src/
 │       ├── main/
-│       │   ├── java/com/parttime/marketplace/
-│       │   │   ├── MarketplaceApplication.java
-│       │   │   │
-│       │   │   ├── config/
-│       │   │   │   ├── SecurityConfig.java        # Spring Security, phân quyền theo role
-│       │   │   │   ├── CorsConfig.java
-│       │   │   │   └── OpenApiConfig.java         # (tùy chọn) Swagger
-│       │   │   │
-│       │   │   ├── security/
-│       │   │   │   ├── JwtTokenProvider.java
-│       │   │   │   ├── JwtAuthenticationFilter.java
-│       │   │   │   └── CustomUserDetailsService.java
-│       │   │   │
-│       │   │   ├── controller/
-│       │   │   │   ├── AuthController.java        # Đăng ký / đăng nhập
-│       │   │   │   ├── UserController.java        # Hồ sơ cá nhân
-│       │   │   │   ├── JobController.java         # Đăng tin, tìm kiếm, lọc
-│       │   │   │   ├── ApplicationController.java # Ứng tuyển, duyệt/từ chối
-│       │   │   │   ├── ReviewController.java      # Đánh giá hai chiều
-│       │   │   │   ├── NotificationController.java
-│       │   │   │   ├── CategoryController.java
-│       │   │   │   └── AdminController.java       # Quản trị người dùng, tin đăng
-│       │   │   │
-│       │   │   ├── service/
-│       │   │   │   ├── AuthService.java
-│       │   │   │   ├── UserService.java
-│       │   │   │   ├── JobService.java
-│       │   │   │   ├── ApplicationService.java
-│       │   │   │   ├── ReviewService.java
-│       │   │   │   ├── NotificationService.java
-│       │   │   │   └── FileStorageService.java    # Upload CV
-│       │   │   │
-│       │   │   ├── repository/
-│       │   │   │   ├── UserRepository.java
-│       │   │   │   ├── JobRepository.java
-│       │   │   │   ├── ApplicationRepository.java
-│       │   │   │   ├── ReviewRepository.java
-│       │   │   │   ├── NotificationRepository.java
-│       │   │   │   └── CategoryRepository.java
-│       │   │   │
-│       │   │   ├── entity/
-│       │   │   │   ├── User.java
-│       │   │   │   ├── StudentProfile.java
-│       │   │   │   ├── EmployerProfile.java
-│       │   │   │   ├── Job.java
-│       │   │   │   ├── Application.java
-│       │   │   │   ├── Review.java
-│       │   │   │   ├── Notification.java
-│       │   │   │   └── Category.java
-│       │   │   │
-│       │   │   ├── enums/
-│       │   │   │   ├── Role.java                  # STUDENT, EMPLOYER, ADMIN
-│       │   │   │   ├── JobStatus.java             # OPEN, FILLED, COMPLETED
-│       │   │   │   └── ApplicationStatus.java     # PENDING, APPROVED, REJECTED
-│       │   │   │
-│       │   │   ├── dto/
-│       │   │   │   ├── request/                   # LoginRequest, JobRequest, ApplyRequest...
-│       │   │   │   └── response/                  # JobResponse, ApplicationResponse...
-│       │   │   │
-│       │   │   ├── mapper/
-│       │   │   │   └── JobMapper.java ...
-│       │   │   │
-│       │   │   └── exception/
-│       │   │       ├── GlobalExceptionHandler.java
-│       │   │       ├── ResourceNotFoundException.java
-│       │   │       └── ForbiddenActionException.java
-│       │   │
+│       │   ├── java/com/nhom8/freelance/
+│       │   │   ├── FreelanceMarketplaceApplication.java
+│       │   │   ├── config/             # CorsConfig, OpenApiConfig, SecurityConfig
+│       │   │   ├── controllers/        # Auth, Job, Application, Review, Notification, User, Admin
+│       │   │   ├── dto/                # Request & Response envelopes (ApiResponse<T>)
+│       │   │   ├── exceptions/         # GlobalExceptionHandler, ResourceNotFoundException
+│       │   │   ├── models/             # User, Role, Category, Job, Application, Review, Notification
+│       │   │   ├── repositories/       # JPA Repositories
+│       │   │   ├── security/           # JwtTokenProvider, JwtAuthenticationFilter, UserPrincipal
+│       │   │   └── services/           # Logic nghiệp vụ chi tiết
 │       │   └── resources/
 │       │       ├── application.yml
 │       │       ├── application-dev.yml
 │       │       └── application-prod.yml
-│       │
-│       └── test/java/com/parttime/marketplace/
-│           ├── controller/
-│           │   ├── AuthControllerTest.java
-│           │   ├── JobControllerTest.java
-│           │   └── ApplicationControllerTest.java
-│           ├── service/
-│           │   ├── JobServiceTest.java
-│           │   ├── ApplicationServiceTest.java
-│           │   └── ReviewServiceTest.java
-│           └── repository/
-│               └── JobRepositoryTest.java
+│       └── test/java/com/nhom8/freelance/ # 30 Unit & Controller Tests (JUnit 5)
 │
-└── frontend/                       # ReactJS (responsive)
+└── frontend/                       # React 18 + TypeScript + Vite
     ├── package.json
-    ├── vite.config.js
+    ├── vite.config.ts
     ├── Dockerfile
     ├── index.html
-    ├── public/
     └── src/
-        ├── main.jsx
-        ├── App.jsx
-        │
-        ├── api/                    # Gọi REST API
-        │   ├── axiosClient.js      # Gắn JWT vào header
-        │   ├── authApi.js
-        │   ├── jobApi.js
-        │   ├── applicationApi.js
-        │   ├── reviewApi.js
-        │   └── notificationApi.js
-        │
-        ├── context/
-        │   └── AuthContext.jsx
-        │
-        ├── routes/
-        │   ├── AppRoutes.jsx
-        │   └── ProtectedRoute.jsx  # Chặn theo vai trò
-        │
-        ├── components/
-        │   ├── common/             # Button, Modal, Pagination, StatusBadge...
-        │   ├── layout/             # Header, Footer, Sidebar
-        │   ├── job/                # JobCard, JobFilter, JobForm
-        │   ├── application/        # ApplicationList, ApplyForm
-        │   ├── review/             # ReviewForm, StarRating
-        │   └── notification/       # NotificationBell
-        │
-        ├── pages/
-        │   ├── public/
-        │   │   ├── HomePage.jsx
-        │   │   ├── LoginPage.jsx
-        │   │   ├── RegisterPage.jsx
-        │   │   ├── JobListPage.jsx         # Tìm kiếm + lọc
-        │   │   └── JobDetailPage.jsx
-        │   ├── student/
-        │   │   ├── StudentDashboard.jsx
-        │   │   ├── MyApplicationsPage.jsx  # Theo dõi trạng thái ứng tuyển
-        │   │   └── StudentProfilePage.jsx
-        │   ├── employer/
-        │   │   ├── EmployerDashboard.jsx
-        │   │   ├── PostJobPage.jsx
-        │   │   ├── MyJobsPage.jsx          # Quản lý trạng thái công việc
-        │   │   └── ApplicantsPage.jsx      # Duyệt / từ chối ứng viên
-        │   └── admin/
-        │       ├── AdminDashboard.jsx
-        │       ├── ManageUsersPage.jsx
-        │       └── ManageJobsPage.jsx
-        │
-        ├── hooks/
-        ├── utils/
-        └── styles/
+        ├── App.tsx                 # Central routing & protected route guards
+        ├── main.tsx
+        ├── components/             # Common badges, Review modal, Notification bell, Job cards
+        ├── context/                # AuthContext (JWT session state)
+        ├── layouts/                # MainLayout (Header, Navbar, Footer)
+        ├── pages/                  # HomePage, JobBrowse, JobDetail, Login, Register, PostJob
+        │   ├── admin/              # AdminDashboard, ManageUsersPage, ManageJobsPage
+        │   ├── employer/           # EmployerDashboard, MyJobsPage, ApplicantsPage
+        │   └── student/            # StudentDashboard, MyApplicationsPage, StudentProfilePage
+        ├── routes/                 # ProtectedRoute guard
+        ├── services/               # apiClient, authService, jobService, adminService...
+        ├── styles/                 # Dark Modern Theme, responsive CSS tokens
+        └── types/                  # TypeScript interface models
 ```
 
 ---

@@ -1,81 +1,121 @@
-# TÀI LIỆU KIẾN TRÚC HỆ THỐNG (SYSTEM ARCHITECTURE SPECIFICATION)
+# TÀI LIỆU THIẾT KẾ KIẾN TRÚC HỆ THỐNG (SYSTEM ARCHITECTURE SPECIFICATION)
 
 **Dự án:** Student Freelance & Part-time Job Marketplace  
-**Nhóm:** Nhóm 8 — Chuyên đề tốt nghiệp 2 — Khoa CNTT — Trường ĐH Văn Lang  
+**Nhóm thực hiện:** Nhóm 8 — Chuyên đề tốt nghiệp 2 — Khoa CNTT — Trường ĐH Văn Lang  
+**Phiên bản:** v1.2  
 
 ---
 
-## 1. TỔNG QUAN KIẾN TRÚC (OVERALL ARCHITECTURE)
+## 1. TỔNG QUAN KIẾN TRÚC HỆ THỐNG (3-TIER ARCHITECTURE)
 
-Hệ thống được thiết kế theo mô hình **Kiến trúc phân tầng chuẩn 3 lớp (Three-Tier Client-Server Architecture)** kết hợp với kiến trúc **Monolithic hướng dịch vụ nội bộ (Modular Monolith)** và đóng gói Container hóa (Dockerized).
+Hệ thống được xây dựng theo mô hình **Kiến trúc phân tầng 3 lớp chuẩn doanh nghiệp (Three-Tier Architecture)** kết hợp với kiến trúc **Monolith phân tầng (Layered Monolith)** và đóng gói Container hóa độc lập.
 
 ```
-                      +---------------------------------------+
-                      |          CLIENT TIER (Frontend)       |
-                      |  - React 18 + Vite + TypeScript       |
-                      |  - Single Page Application (SPA)      |
-                      |  - Responsive Web UI (Nginx reverse)  |
-                      +-------------------+-------------------+
-                                          |
-                                          | HTTPS / REST (JSON + JWT)
-                                          v
-                      +---------------------------------------+
-                      |       APPLICATION TIER (Backend)      |
-                      |  - Java 17/21 + Spring Boot 3.x       |
-                      |  - Spring Security (JWT / RBAC Filter)|
-                      |  - Controller -> Service -> Repo      |
-                      |  - Springdoc OpenAPI (Swagger UI)     |
-                      +-------------------+-------------------+
-                                          |
-                                          | JDBC Connection Pool (HikariCP)
-                                          v
-                      +---------------------------------------+
-                      |           DATA TIER (Database)        |
-                      |  - PostgreSQL 16 Relational DB        |
-                      |  - ACID Compliant Transactions        |
-                      |  - Foreign Keys & Composite Indexes   |
-                      +---------------------------------------+
++-------------------------------------------------------------------------+
+|                        1. CLIENT TIER (Frontend)                       |
+|  - React 18 + TypeScript + Vite (Single Page Application)                |
+|  - Quản lý trạng thái: React Context API (AuthContext)                  |
+|  - Giao tiếp mạng: Axios Interceptor (Auto-attach Bearer JWT)           |
+|  - Giao diện: Modern Dark Design System, Lucide SVG Icons, Responsive    |
++------------------------------------+------------------------------------+
+                                     |
+                                     | HTTPS / REST JSON (Stateless JWT)
+                                     v
++-------------------------------------------------------------------------+
+|                     2. APPLICATION TIER (Backend REST API)              |
+|  - Java 17/21 + Spring Boot 3.2.x | Package: com.nhom8.freelance        |
+|  - Security: Spring Security 6 + JWT Filter (HS256) + BCrypt Encoder    |
+|  - Phân tầng: Controller ➔ Service ➔ Repository (Clean Architecture)   |
+|  - Xử lý lỗi: GlobalExceptionHandler (@RestControllerAdvice)            |
+|  - Tài liệu hóa: Springdoc OpenAPI 3.0 / Swagger UI                     |
++------------------------------------+------------------------------------+
+                                     |
+                                     | JDBC Connection Pool (HikariCP)
+                                     v
++-------------------------------------------------------------------------+
+|                         3. DATA TIER (Database)                         |
+|  - PostgreSQL 16 (Production/Docker) / H2 In-Memory (Dev Fallback)      |
+|  - Đảm bảo toàn vẹn giao dịch ACID, ràng buộc khóa ngoại (FK)           |
+|  - Đánh chỉ mục hiệu năng (13 B-Tree Indexes) trên trường tra cứu       |
++-------------------------------------------------------------------------+
 ```
 
 ---
 
 ## 2. CHI TIẾT CÁC TẦNG HỆ THỐNG
 
-### 2.1. Tầng Trình diễn (Presentation / Client Tier)
-- **Công nghệ:** React 18, TypeScript, Vite.
-- **Quản lý trạng thái:** React Context API (`AuthContext`) lưu trữ thông tin xác thực và người dùng đăng nhập.
-- **Giao tiếp API:** Thư viện Axios với Interceptor tự động đính kèm `Authorization: Bearer <token>` vào mọi yêu cầu và điều hướng thông minh khi phiên hết hạn.
-- **Bảo vệ luồng định tuyến (Route Guarding):** Component `ProtectedRoute` kiểm tra trạng thái đăng nhập và phân quyền vai trò (`allowedRoles: ['ROLE_STUDENT', 'ROLE_EMPLOYER', 'ROLE_ADMIN']`).
-- **Giao diện & Trải nghiệm:** Thiết kế dựa trên Design System chuyên nghiệp, sử dụng biểu tượng vector Lucide SVG, tối ưu hóa hiển thị trên màn hình từ điện thoại đến máy tính để bàn.
+### 2.1. Tầng Trình diễn (Client Tier)
+- **Công nghệ cốt lõi:** React 18, TypeScript, Vite Bundler.
+- **Quản lý phiên & Xác thực:** `AuthContext` lưu giữ trạng thái người dùng đăng nhập (`user`, `token`, `role`) trong `localStorage` và tự động khôi phục khi tải lại trang.
+- **Bảo vệ định tuyến (Route Guard):** Component `ProtectedRoute` kiểm tra quyền truy cập theo vai trò:
+  - Sinh viên truy cập: `/student/*` (`ROLE_STUDENT`)
+  - Nhà tuyển dụng truy cập: `/employer/*`, `/post-job` (`ROLE_EMPLOYER`)
+  - Quản trị viên truy cập: `/admin/*` (`ROLE_ADMIN`)
+  - Điều hướng thông minh: `/dashboard` tự động chuyển hướng đúng trang tương ứng với vai trò của người dùng.
+- **Giao tiếp API:** `apiClient` (Axios) tự động đính kèm `Authorization: Bearer <token>` vào mọi yêu cầu và chuyển hướng về trang đăng nhập nếu token hết hạn (HTTP 401).
 
-### 2.2. Tầng Ứng dụng & Nghiệp vụ (Application / Business Tier)
-- **Công nghệ:** Java Spring Boot 3.x.
-- **Mô hình tổ chức:** Phân chia rõ ràng 3 lớp theo nguyên lý Clean Architecture:
-  1. **Controller Layer:** Tiếp nhận HTTP Request, kiểm tra tính hợp lệ dữ liệu đầu vào (`@Valid`), ánh xạ vào DTO và trả về `ResponseEntity<ApiResponse<T>>`.
-  2. **Service Layer:** Xử lý toàn bộ logic nghiệp vụ (Kiểm tra trạng thái tin, quy tắc ứng tuyển, xác nhận hoàn thành, tính toán đánh giá sao, bắn thông báo sự kiện).
-  3. **Repository Layer:** Sử dụng Spring Data JPA để tương tác an toàn với CSDL, loại bỏ nguy cơ tấn công SQL Injection.
-- **Bảo mật & Phân quyền:**
-  - `JwtAuthenticationFilter` chặn các request đến, trích xuất và giải mã JWT token.
-  - `SecurityConfig` thiết lập bộ lọc SecurityFilterChain, áp dụng phân quyền theo URL (`hasRole('STUDENT')`, `hasRole('EMPLOYER')`, `hasRole('ADMIN')`).
-- **Xử lý ngoại lệ tập trung:** `GlobalExceptionHandler` kết hợp `@RestControllerAdvice` bắt và chuẩn hóa mọi ngoại lệ (`ResourceNotFoundException`, `BadRequestException`, `MethodArgumentNotValidException`) thành mã lỗi HTTP nhất quán.
+### 2.2. Tầng Nghiệp vụ (Application Tier)
+Mã nguồn backend tổ chức theo cấu trúc phân tầng nghiêm ngặt (`com.nhom8.freelance`):
+1. **Controllers (`com.nhom8.freelance.controllers`):**
+   - Tiếp nhận HTTP Request, giải mã tham số, kiểm tra dữ liệu đầu vào (`@Valid`), gọi Service tương ứng và trả về `ResponseEntity<ApiResponse<T>>`.
+   - Bao gồm: `AuthController`, `JobController`, `ApplicationController`, `ReviewController`, `NotificationController`, `UserController`, `CategoryController`, `AdminController`.
+2. **Services (`com.nhom8.freelance.services`):**
+   - Chứa 100% logic nghiệp vụ: Kiểm tra quyền sở hữu bài đăng, kiểm tra trạng thái việc làm, thực hiện chuyển đổi trạng thái đơn, tính toán đánh giá sao và kích hoạt tạo thông báo hệ thống.
+3. **Repositories (`com.nhom8.freelance.repositories`):**
+   - Kế thừa `JpaRepository` của Spring Data JPA. Sử dụng câu truy vấn tối ưu, tự động ngăn chặn hoàn toàn tấn công SQL Injection.
+4. **Security & Filter (`com.nhom8.freelance.security`):**
+   - `JwtAuthenticationFilter`: Trích xuất token từ header `Authorization`, xác thực chữ ký và thời hạn qua `JwtTokenProvider`, sau đó nạp `UserPrincipal` vào `SecurityContextHolder`.
 
 ### 2.3. Tầng Dữ liệu (Data Tier)
-- **Hệ quản trị CSDL:** PostgreSQL 16 (Relational Database Management System).
-- **Tính toàn vẹn dữ liệu:** Ràng buộc khóa ngoại (`ON DELETE CASCADE`, `ON DELETE RESTRICT`) và khóa duy nhất (`unique_job_student_application`, `unique_job_reviewer`).
-- **Tối ưu hóa truy vấn:** Tạo các Index phức hợp và đơn lẻ trên các trường được tìm kiếm và lọc dữ liệu với tần suất cao.
+- **Hệ quản trị CSDL:** PostgreSQL 16.
+- **Bảng dữ liệu chính:** `roles`, `users`, `categories`, `jobs`, `applications`, `reviews`, `notifications`.
+- **Toàn vẹn quan hệ:** Khóa ngoại liên kết chặt chẽ (`ON DELETE CASCADE` cho đơn/đánh giá/thông báo khi xóa công việc; `ON DELETE RESTRICT` cho vai trò/danh mục).
+- **Ràng buộc nghiệp vụ ở cấp độ CSDL:**
+  - `unique_job_student_application`: Ngăn chặn sinh viên nộp trùng đơn cho cùng 1 công việc.
+  - `unique_job_reviewer`: Ngăn chặn người dùng đánh giá lặp lại nhiều lần.
+  - `CHECK (rating >= 1 AND rating <= 5)`: Cưỡng chế thang điểm đánh giá hợp lệ.
 
 ---
 
-## 3. KIẾN TRÚC BẢO MẬT (SECURITY ARCHITECTURE)
+## 3. KIẾN TRÚC BẢO MẬT & PHÂN QUYỀN (SECURITY & RBAC)
 
 ```
-[Request] ---> [CorsFilter] ---> [JwtAuthenticationFilter] ---> [SecurityFilterChain] ---> [Controller]
-                                          |
-                                 Verify Signature & Expiry
-                                          |
-                               [SecurityContextHolder]
+[HTTP Request] 
+      │
+      ▼
+[CorsFilter] ───────────────► Kiểm tra domain được phép (Cross-Origin)
+      │
+      ▼
+[JwtAuthenticationFilter] ──► Giải mã & kiểm tra chữ ký JWT Token
+      │                       ├─ Hợp lệ: Gán UserPrincipal vào SecurityContext
+      │                       └─ Sai/Hết hạn: Tiếp tục ẩn danh
+      ▼
+[SecurityFilterChain] ──────► Kiểm tra quyền truy cập URL & Role
+      │                       ├─ Không có quyền: Trả về HTTP 403 Forbidden
+      │                       └─ Chưa đăng nhập: Trả về HTTP 401 Unauthorized
+      ▼
+[Controller & Service] ─────► Xử lý logic nghiệp vụ an toàn
 ```
 
-1. **Không lưu phiên (Stateless Session):** Không lưu Session trên server, tăng khả năng mở rộng (Scalability) theo chiều ngang.
-2. **Mã hóa mật khẩu an toàn:** Sử dụng `BCryptPasswordEncoder` với salt ngẫu nhiên bảo vệ chống lại các hình thức tấn công Brute-force và Rainbow table.
-3. **Phân quyền vai trò (Role-Based Access Control - RBAC):** Đảm bảo nguyên tắc đặc quyền tối thiểu (Least Privilege).
+### Ma trận phân quyền (RBAC Matrix)
+
+| Chức năng / Endpoint | Public / Guest | Sinh viên (`STUDENT`) | Nhà tuyển dụng (`EMPLOYER`) | Quản trị viên (`ADMIN`) |
+|---|:---:|:---:|:---:|:---:|
+| Đăng ký / Đăng nhập / Xem danh mục việc làm |  |  |  |  |
+| Tìm kiếm, lọc và xem chi tiết tin việc làm |  |  |  |  |
+| Cập nhật hồ sơ sinh viên (Kỹ năng, CV) | ❌ |  | ❌ | ❌ |
+| Nộp đơn ứng tuyển & Xem đơn của tôi | ❌ |  | ❌ | ❌ |
+| Đăng tin tuyển dụng & Đổi trạng thái tin | ❌ | ❌ |  |  |
+| Xem danh sách & Duyệt hồ sơ ứng viên | ❌ | ❌ |  |  |
+| Đánh giá hai chiều sau khi hoàn thành | ❌ |  |  |  |
+| Quản lý tài khoản (Khóa/Mở) & Xem thống kê hệ thống | ❌ | ❌ | ❌ |  |
+
+---
+
+## 4. MÔ HÌNH TRIỂN KHAI VẬN HÀNH (DEPLOYMENT ARCHITECTURE)
+
+1. **Triển khai Container (Docker Compose):**
+   - Đóng gói 3 container dịch vụ: `freelance-db` (Port 5432), `freelance-backend` (Port 8080), `freelance-frontend` (Port 3000).
+   - Tự động kiểm tra phụ thuộc (`depends_on`), khởi chạy chỉ với 1 lệnh `docker-compose up -d --build`.
+2. **Khởi chạy cục bộ 1-Click (Local Development):**
+   - Cung cấp sẵn file `run.bat` (Windows) và Run Configuration trên IntelliJ IDEA khởi động đồng thời Backend Spring Boot + Frontend React Vite, tự động mở trình duyệt `http://localhost:3000`.

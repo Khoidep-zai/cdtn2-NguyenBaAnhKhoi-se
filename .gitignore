@@ -39,3 +39,6 @@ pnpm-debug.log*
 # Database
 *.log
 *.sqlite
+*.mv.db
+data/
+backend/data/

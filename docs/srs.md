@@ -1,96 +1,90 @@
 # ĐẶC TẢ YÊU CẦU PHẦN MỀM (SOFTWARE REQUIREMENTS SPECIFICATION - SRS)
 
-**Đề tài:** Nền tảng quản lý freelance & marketplace việc làm part-time cho sinh viên  
+**Dự án:** Nền tảng quản lý freelance & marketplace việc làm part-time cho sinh viên  
 **Học phần:** Chuyên đề tốt nghiệp 2 — Khoa CNTT — Trường Đại học Văn Lang  
 **Nhóm thực hiện:** Nhóm 8 (261_71ITGR40303_04)  
-**Phiên bản:** 1.0 (Phát hành Sprint 1)  
+**Phiên bản:** v1.2 (Cập nhật nghiệm thu đồ án)  
 
 ---
 
-## 1. GIỚI THIỆU (INTRODUCTION)
+## 1. GIỚI THIỆU VÀ CÁC TÁC NHÂN (ACTORS)
 
 ### 1.1. Mục đích tài liệu
-Tài liệu này đặc tả chi tiết các yêu cầu chức năng (Functional Requirements) và phi chức năng (Non-Functional Requirements) của hệ thống "Student Freelance & Part-time Marketplace". Tài liệu đóng vai trò là căn cứ chuyển giao kỹ thuật giữa BA, PM, Developer và QA/Tester.
+Tài liệu xác định đầy đủ, súc tích các yêu cầu chức năng (FR), yêu cầu phi chức năng (NFR) và quy tắc nghiệp vụ (BR) của hệ thống sàn việc làm sinh viên. Đây là căn cứ kỹ thuật chuẩn hóa để phát triển, kiểm thử và nghiệm thu sản phẩm.
 
-### 1.2. Đối tượng thụ hưởng & Các tác nhân (Actors)
-1. **Khách vãng lai (Guest):** Người dùng chưa đăng nhập, có thể tra cứu thông tin chung, danh mục việc làm và xem chi tiết tin tuyển dụng.
-2. **Sinh viên (Student - `ROLE_STUDENT`):** Người tìm việc làm thêm hoặc công việc dự án freelance ngắn hạn; có hồ sơ cá nhân thể hiện kỹ năng, ngành học; nộp hồ sơ ứng tuyển, theo dõi trạng thái đơn và đánh giá nhà tuyển dụng.
-3. **Nhà tuyển dụng (Employer - `ROLE_EMPLOYER`):** Doanh nghiệp, cửa hàng hoặc cá nhân có nhu cầu thuê nhân sự; đăng bài tuyển dụng, duyệt hồ sơ ứng viên, cập nhật tiến độ công việc và đánh giá năng lực sinh viên.
-4. **Quản trị viên (Admin - `ROLE_ADMIN`):** Kiểm soát toàn bộ hệ thống; quản lý người dùng, quản lý tin đăng, theo dõi các chỉ số thống kê và xử lý khiếu nại/vi phạm.
+### 1.2. Danh sách các tác nhân (Actors)
+
+| Tác nhân | Mã vai trò | Quyền hạn và phạm vi hoạt động |
+|---|---|---|
+| **Khách vãng lai** | `GUEST` | Xem trang chủ, tìm kiếm/lọc tin tuyển dụng, xem chi tiết công việc, xem đánh giá công khai. |
+| **Sinh viên** | `ROLE_STUDENT` | Quản lý hồ sơ cá nhân (kỹ năng, trường, CV link), nộp hồ sơ ứng tuyển, theo dõi trạng thái đơn, nhận thông báo, đánh giá nhà tuyển dụng sau khi hoàn thành. |
+| **Nhà tuyển dụng** | `ROLE_EMPLOYER` | Cập nhật thông tin đơn vị/công ty, đăng bài tuyển dụng, sửa/xóa/đổi trạng thái tin, xem danh sách hồ sơ ứng viên, duyệt hoặc từ chối đơn kèm lý do, đánh giá sinh viên sau khi hoàn thành. |
+| **Quản trị viên** | `ROLE_ADMIN` | Xem bảng số liệu KPI hệ thống, quản lý danh sách người dùng, kích hoạt/khóa tài khoản vi phạm, gỡ bỏ tin tuyển dụng không phù hợp. |
 
 ---
 
 ## 2. YÊU CẦU CHỨC NĂNG (FUNCTIONAL REQUIREMENTS - FR)
 
-### FR-01: Quản lý Xác thực & Tài khoản (Authentication)
-- **FR-01.1 Đăng ký:** Cho phép người dùng đăng ký tài khoản mới bằng Email, Mật khẩu, Họ tên, Số điện thoại và lựa chọn vai trò (`ROLE_STUDENT` hoặc `ROLE_EMPLOYER`). Mật khẩu được mã hóa an toàn bằng thuật toán BCrypt.
-- **FR-01.2 Đăng nhập:** Cho phép đăng nhập bằng Email và Mật khẩu. Hệ thống xác thực và cấp mã JWT (JSON Web Token) có thời hạn hiệu lực.
-- **FR-01.3 Lấy thông tin cá nhân hiện tại:** Endpoint `/api/v1/auth/me` trả về thông tin người dùng đang đăng nhập dựa trên JWT token được gửi kèm trong header.
+### FR-01: Quản lý Xác thực & Phân quyền (Authentication & Authorization)
+- **FR-01.1 Đăng ký tài khoản:** Cho phép người dùng đăng ký tài khoản với email, mật khẩu, họ tên, số điện thoại và chọn vai trò (`ROLE_STUDENT` hoặc `ROLE_EMPLOYER`). Mật khẩu được băm bằng thuật toán BCrypt.
+- **FR-01.2 Đăng nhập:** Xác thực bằng Email và Mật khẩu. Trả về JWT Access Token (HS256) chứa thông tin định danh và vai trò.
+- **FR-01.3 Lấy thông tin phiên hiện tại:** API `GET /api/v1/auth/me` trả về thông tin cá nhân và quyền hạn của người dùng đang đăng nhập dựa trên Bearer token.
 
 ### FR-02: Quản lý Hồ sơ cá nhân (User Profiles)
-- **FR-02.1 Xem hồ sơ:** Người dùng có thể xem hồ sơ chi tiết của bản thân.
-- **FR-02.2 Cập nhật hồ sơ Sinh viên:** Sinh viên có thể cập nhật thông tin giới thiệu (bio), danh sách kỹ năng (skills), trường đại học (university), chuyên ngành (major), liên kết CV/Portfolio.
-- **FR-02.3 Cập nhật hồ sơ Nhà tuyển dụng:** Nhà tuyển dụng có thể cập nhật tên đơn vị/công ty (company_name), địa chỉ hoạt động (company_address), mô tả công ty (bio).
+- **FR-02.1 Xem thông tin hồ sơ:** Xem chi tiết hồ sơ người dùng theo ID (`GET /api/v1/users/{id}`).
+- **FR-02.2 Cập nhật hồ sơ cá nhân:**
+  - *Sinh viên:* Cập nhật tiểu sử (`bio`), kỹ năng chuyên môn (`skills`), trường đại học (`university`), chuyên ngành (`major`), liên kết CV (`cvUrl`).
+  - *Nhà tuyển dụng:* Cập nhật tên đơn vị (`company_name`), địa chỉ trụ sở (`company_address`), mô tả giới thiệu (`bio`).
 
-### FR-03: Quản lý Danh mục công việc (Job Categories)
-- **FR-03.1 Danh sách danh mục:** Xem danh sách tất cả các ngành nghề/danh mục việc làm (CNTT, Đồ họa, Gia sư, Phục vụ, Viết nội dung...).
+### FR-03: Quản lý Danh mục ngành nghề (Job Categories)
+- **FR-03.1 Xem danh mục:** Lấy danh sách tất cả ngành nghề việc làm kèm biểu tượng đại diện (`GET /api/v1/categories`).
+- **FR-03.2 Chi tiết danh mục:** Tra cứu thông tin danh mục theo mã định danh (`GET /api/v1/categories/{id}`).
 
 ### FR-04: Quản lý Tin tuyển dụng (Job Management)
-- **FR-04.1 Đăng tin việc làm:** Nhà tuyển dụng có thể tạo tin mới với đầy đủ thông tin: Tiêu đề, mô tả chi tiết, yêu cầu công việc, loại công việc (`PART_TIME`, `FREELANCE`, `INTERNSHIP`), hình thức làm việc (`ONSITE`, `REMOTE`, `HYBRID`), địa điểm, loại lương (`HOURLY`, `FIXED_PROJECT`, `MONTHLY`), số tiền lương, số lượng cần tuyển, hạn nộp hồ sơ.
-- **FR-04.2 Danh sách & Tìm kiếm / Lọc tin:** Tìm kiếm tin việc làm theo từ khóa trong tiêu đề/mô tả; lọc theo danh mục, hình thức làm việc, loại công việc, trạng thái tin.
-- **FR-04.3 Xem chi tiết tin:** Xem toàn bộ thông tin chi tiết của tin tuyển dụng kèm thông tin nhà tuyển dụng đăng tin và các đánh giá liên quan.
-- **FR-04.4 Cập nhật / Đóng tin:** Nhà tuyển dụng sở hữu tin có thể sửa thông tin tin đăng hoặc chuyển trạng thái sang `IN_PROGRESS`, `COMPLETED`, `CLOSED`.
+- **FR-04.1 Đăng tin việc làm:** Nhà tuyển dụng tạo tin mới gồm: Tiêu đề, mô tả, yêu cầu, danh mục, loại việc (`PART_TIME`, `FREELANCE`, `INTERNSHIP`), hình thức (`ONSITE`, `REMOTE`, `HYBRID`), địa điểm, loại lương (`HOURLY`, `FIXED_PROJECT`, `MONTHLY`), số tiền lương, số lượng cần tuyển, hạn nộp hồ sơ.
+- **FR-04.2 Tìm kiếm & Lọc việc làm:** Lọc đa điều kiện theo từ khóa (`keyword`), danh mục (`categoryId`), loại công việc (`jobType`), hình thức làm việc (`workMode`) và trạng thái tin (`status`).
+- **FR-04.3 Xem chi tiết tin:** Xem thông tin công việc, thông tin liên hệ của NTD, số lượng ứng tuyển hiện tại.
+- **FR-04.4 Chuyển đổi trạng thái tin:** NTD sở hữu tin cập nhật vòng đời tin: `OPEN` ➔ `IN_PROGRESS` ➔ `COMPLETED` ➔ `CLOSED`.
+- **FR-04.5 Quản lý tin của tôi:** NTD xem danh sách toàn bộ các tin do chính tài khoản mình đăng tải (`GET /api/v1/jobs/my-jobs`).
 
-### FR-05: Quản lý Ứng tuyển (Job Applications)
-- **FR-05.1 Nộp hồ sơ ứng tuyển:** Sinh viên có thể nộp đơn ứng tuyển cho tin đang mở (`OPEN`), gửi kèm thư giới thiệu (cover letter) và đường dẫn liên kết CV. Mỗi sinh viên chỉ được nộp một lần cho mỗi công việc.
-- **FR-05.2 Xem danh sách đơn ứng tuyển của tôi (Sinh viên):** Sinh viên theo dõi tất cả các công việc mình đã nộp hồ sơ cùng trạng thái duyệt (`PENDING`, `REVIEWING`, `ACCEPTED`, `REJECTED`).
-- **FR-05.3 Quản lý ứng viên theo tin tuyển dụng (Nhà tuyển dụng):** Nhà tuyển dụng xem danh sách tất cả ứng viên đã nộp vào tin của mình, xem hồ sơ, duyệt nhận (`ACCEPTED`) hoặc từ chối (`REJECTED`) kèm lý do từ chối.
+### FR-05: Quản lý Đơn ứng tuyển (Application Management)
+- **FR-05.1 Nộp hồ sơ ứng tuyển:** Sinh viên nộp đơn cho tin đang mở (`OPEN`), gửi kèm thư giới thiệu (`coverLetter`) và liên kết CV (`cvUrl`). Hệ thống ràng buộc mỗi sinh viên chỉ được nộp 1 đơn/tin.
+- **FR-05.2 Theo dõi đơn của tôi:** Sinh viên xem danh sách các công việc đã nộp kèm trạng thái duyệt thời gian thực (`PENDING`, `REVIEWING`, `ACCEPTED`, `REJECTED`) và lý do từ chối nếu có.
+- **FR-05.3 Quản lý ứng viên theo tin:** NTD xem toàn bộ danh sách hồ sơ nộp vào tin của mình, xem link CV và thư giới thiệu.
+- **FR-05.4 Xét duyệt hồ sơ:** NTD cập nhật trạng thái đơn: Chấp thuận (`ACCEPTED`) hoặc Từ chối (`REJECTED`) kèm lý do cụ thể (`rejectionReason`).
 
-### FR-06: Đánh giá & Xếp hạng 2 chiều (Reviews & Ratings)
-- **FR-06.1 Sinh viên đánh giá Nhà tuyển dụng:** Sau khi công việc được đánh dấu `COMPLETED` và ứng viên đã được nhận, Sinh viên gửi đánh giá từ 1 đến 5 sao và nhận xét về đơn vị tuyển dụng.
-- **FR-06.2 Nhà tuyển dụng đánh giá Sinh viên:** Nhà tuyển dụng gửi đánh giá số sao và nhận xét về thái độ, hiệu quả làm việc của Sinh viên.
-- **FR-06.3 Xem danh sách đánh giá:** Mọi người dùng có thể xem lịch sử đánh giá của một công việc hoặc một người dùng.
+### FR-06: Đánh giá & Xếp hạng hai chiều (Two-Way Reviews)
+- **FR-06.1 Sinh viên đánh giá NTD:** Sinh viên trúng tuyển gửi đánh giá (1–5 sao kèm nhận xét) cho NTD sau khi công việc hoàn thành (`COMPLETED`).
+- **FR-06.2 NTD đánh giá Sinh viên:** NTD gửi đánh giá chất lượng và thái độ của sinh viên (1–5 sao kèm nhận xét).
+- **FR-06.3 Tra cứu đánh giá:** Xem lịch sử đánh giá theo công việc (`/api/v1/reviews/job/{id}`) hoặc theo người dùng (`/api/v1/reviews/user/{id}`).
 
-### FR-07: Quản lý Thông báo (Notifications)
-- **FR-07.1 Tạo thông báo tự động:** Hệ thống tự động gửi thông báo khi:
-  - Có ứng viên mới nộp đơn cho bài đăng của NTD.
-  - NTD cập nhật kết quả xét duyệt đơn của Sinh viên.
-  - Công việc hoàn thành và mời hai bên đánh giá.
-- **FR-07.2 Xem danh sách thông báo:** Người dùng xem danh sách thông báo của mình và đánh dấu đã đọc.
+### FR-07: Quản lý Thông báo (Notification Service)
+- **FR-07.1 Tạo thông báo tự động:** Hệ thống phát thông báo sự kiện: Ứng viên mới nộp đơn, NTD duyệt nhận/từ chối đơn, công việc được đánh dấu hoàn thành.
+- **FR-07.2 Quản lý trạng thái đọc:** Xem danh sách thông báo, đánh dấu đã đọc từng thông báo (`PATCH /{id}/read`) hoặc tất cả (`PATCH /read-all`).
 
 ### FR-08: Quản trị Hệ thống (Admin Portal)
-- **FR-08.1 Thống kê tổng quan:** Thống kê tổng số người dùng, số lượng tin đăng, số lượt ứng tuyển và tỉ lệ hoàn thành.
-- **FR-08.2 Quản lý người dùng:** Admin có quyền xem danh sách tất cả tài khoản, kích hoạt hoặc khóa tài khoản vi phạm.
-- **FR-08.3 Quản lý tin đăng:** Admin có quyền kiểm duyệt hoặc gỡ bỏ tin tuyển dụng có nội dung không phù hợp.
+- **FR-08.1 Thống kê hệ thống:** Cung cấp chỉ số: Tổng số người dùng, tổng tin đăng, tổng đơn ứng tuyển, tổng lượt đánh giá (`GET /api/v1/admin/stats`).
+- **FR-08.2 Quản lý tài khoản:** Xem danh sách toàn bộ tài khoản, thực hiện thao tác kích hoạt hoặc khóa tài khoản (`PATCH /admin/users/{id}/toggle-status`).
+- **FR-08.3 Kiểm duyệt tin đăng:** Quản trị viên xóa bỏ tin tuyển dụng có nội dung không phù hợp (`DELETE /admin/jobs/{id}`).
 
 ---
 
 ## 3. YÊU CẦU PHI CHỨC NĂNG (NON-FUNCTIONAL REQUIREMENTS - NFR)
 
-### NFR-01: Hiệu năng (Performance)
-- Thời gian phản hồi API trung bình < 300ms đối với các truy vấn đọc dữ liệu thông thường.
-- CSDL được đánh chỉ mục (Index) đầy đủ trên các trường tìm kiếm thường xuyên (`email`, `category_id`, `employer_id`, `status`, `job_type`).
-
-### NFR-02: Bảo mật (Security)
-- Xác thực không lưu phiên (Stateless) bằng JWT có chữ ký số bí mật (HS256).
-- Mật khẩu người dùng bắt buộc mã hóa bằng BCrypt với hệ số Salt tối ưu (Cost factor >= 10).
-- Áp dụng phân quyền RBAC phân tầng tại cả cấp độ URL Pattern lẫn phương thức nghiệp vụ.
-- Ngăn chặn lỗi bảo mật phổ biến: SQL Injection (JPA PreparedStatement), XSS, Broken Access Control.
-
-### NFR-03: Tính sẵn sàng & Đóng gói (Availability & DevOps)
-- Đóng gói toàn bộ kiến trúc thành các container độc lập bằng Docker (Database, Spring Boot API, React Web Nginx).
-- Triển khai chạy được ngay thông qua một lệnh `docker-compose up -d`.
-
-### NFR-04: Tính khả dụng & Thẩm mỹ giao diện (Usability & UI/UX)
-- Giao diện thân thiện, tuân thủ nguyên tắc thiết kế hiện đại (Design System nhất quán, màu sắc hài hòa, độ tương phản văn bản chuẩn WCAG 2.1 AA).
-- Sử dụng icon vector SVG chuẩn (Lucide icons), tuyệt đối không dùng emoji thay thế icon chức năng.
-- Tương thích tốt trên màn hình máy tính để bàn (Desktop >= 1024px), máy tính bảng (Tablet >= 768px) và điện thoại thông minh (Mobile >= 375px).
+| Mã NFR | Phân nhóm | Chỉ số cam kết kỹ thuật |
+|---|---|---|
+| **NFR-01** | **Hiệu năng (Performance)** | - Thời gian phản hồi API trung bình < 300ms đối với các tác vụ đọc.<br>- Cơ sở dữ liệu thiết lập đầy đủ 13 Indexes trên các trường lọc/khóa ngoại.<br>- Sử dụng Connection Pool HikariCP với cấu hình tối ưu. |
+| **NFR-02** | **Bảo mật (Security)** | - Xác thực không lưu phiên (Stateless) bằng JWT ký số thuật toán HS256.<br>- Băm mật khẩu bằng BCrypt với hệ số Salt = 10.<br>- Áp dụng phân quyền RBAC phân tầng: Bảo vệ tại URL Pattern và phương thức nghiệp vụ.<br>- Ngăn chặn SQL Injection qua JPA PreparedStatement, chống XSS, kiểm tra hợp lệ dữ liệu đầu vào bằng Jakarta Validation. |
+| **NFR-03** | **Đóng gói & Vận hành (DevOps)** | - Container hóa chuẩn Docker: 3 container độc lập (PostgreSQL, Spring Boot Backend, React Web Frontend).<br>- Khởi động toàn bộ cụm dịch vụ qua 1 lệnh duy nhất: `docker-compose up -d --build`.<br>- Hỗ trợ khởi chạy 1-Click trên Windows qua `run.bat` và IntelliJ IDEA. |
+| **NFR-04** | **Giao diện & Khả năng sử dụng (UI/UX)** | - Giao diện hiện đại (Modern Dark Theme), màu sắc trực quan, độ tương phản văn bản đạt chuẩn WCAG 2.1 AA.<br>- Sử dụng biểu tượng vector Lucide SVG đồng nhất, chuyên nghiệp.<br>- Thiết kế Responsive linh hoạt trên màn hình Desktop (>=1024px), Tablet (>=768px) và Mobile (>=375px). |
 
 ---
 
-## 4. QUY TẮC NGHIỆP VỤ (BUSINESS RULES - BR)
-- **BR-01:** Chỉ tài khoản có vai trò `ROLE_STUDENT` mới được nộp hồ sơ ứng tuyển vào công việc.
-- **BR-02:** Chỉ tài khoản có vai trò `ROLE_EMPLOYER` mới được tạo bài đăng tuyển dụng.
-- **BR-03:** Nhà tuyển dụng chỉ có quyền xem danh sách ứng viên và thay đổi trạng thái ứng tuyển của các tin do chính tài khoản đó đăng tải.
-- **BR-04:** Sinh viên chỉ có thể đánh giá Nhà tuyển dụng sau khi đơn ứng tuyển của mình đã được duyệt (`ACCEPTED`).
-- **BR-05:** Mỗi ứng viên chỉ được đánh giá một lần cho mỗi công việc hoàn thành.
+## 4. QUY TẮC NGHIỆP VỤ BẮT BUỘC (BUSINESS RULES - BR)
+
+- **BR-01 (Quyền ứng tuyển):** Chỉ người dùng có vai trò `ROLE_STUDENT` mới có quyền nộp đơn ứng tuyển vào tin việc làm.
+- **BR-02 (Quyền đăng tin):** Chỉ người dùng có vai trò `ROLE_EMPLOYER` (hoặc `ROLE_ADMIN`) mới có quyền tạo và chỉnh sửa bài đăng tuyển dụng.
+- **BR-03 (Chống trùng đơn):** Mỗi sinh viên chỉ được nộp đúng 1 đơn ứng tuyển cho 1 tin việc làm. Cơ sở dữ liệu cưỡng chế qua ràng buộc `UNIQUE (job_id, student_id)`.
+- **BR-04 (Quyền quản lý ứng viên):** Chỉ chính NTD đăng tin đó (hoặc Admin) mới có quyền xem danh sách ứng viên và thay đổi trạng thái xét duyệt của tin.
+- **BR-05 (Điều kiện đánh giá 2 chiều):** Đánh giá chỉ được thực hiện khi công việc có trạng thái `COMPLETED` và ứng viên đã được duyệt nhận (`ACCEPTED`). Mỗi bên chỉ được gửi đánh giá tối đa 1 lần (`UNIQUE (job_id, reviewer_id)`). Điểm đánh giá bắt buộc từ 1 đến 5 sao.
+- **BR-06 (Khóa tài khoản):** Khi tài khoản có trạng thái `isActive = false`, hệ thống lập tức từ chối cấp JWT token và chặn mọi yêu cầu truy cập nghiệp vụ.

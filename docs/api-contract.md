@@ -1,15 +1,15 @@
-# TÀI LIỆU HỢP ĐỒNG API REST (API CONTRACT SPECIFICATION)
+# HỢP ĐỒNG API REST (RESTFUL API CONTRACT SPECIFICATION)
 
 **Dự án:** Student Freelance & Part-time Job Marketplace  
 **Base URL:** `http://localhost:8080/api/v1`  
-**Định dạng trao đổi:** `application/json`  
-**Chuẩn xác thực:** JWT Bearer Token (`Authorization: Bearer <token>`)  
+**Chuẩn dữ liệu:** `application/json` (UTF-8)  
+**Cơ chế xác thực:** HTTP Header `Authorization: Bearer <jwt_token>`  
 
 ---
 
-## 1. CẤU TRÚC PHẢN HỒI CHUẨN (STANDARD API RESPONSE)
+## 1. QUY CHUẨN CẤU TRÚC PHẢN HỒI (STANDARD RESPONSE ENVELOPE)
 
-### Phản hồi thành công (Success Envelope)
+### 1.1. Phản hồi thành công (HTTP 200 OK / HTTP 201 Created)
 ```json
 {
   "success": true,
@@ -18,33 +18,61 @@
 }
 ```
 
-### Phản hồi lỗi (Error Response)
+### 1.2. Phản hồi lỗi (HTTP 400 / 401 / 403 / 404 / 500)
 ```json
 {
   "success": false,
-  "message": "Chi tiết thông báo lỗi",
+  "message": "Thông báo nguyên nhân lỗi cụ thể",
   "data": null
 }
 ```
 
 ---
 
-## 2. DANH SÁCH CÁC ENDPOINT THEO PHÂN HỆ
+## 2. BẢNG TỔNG HỢP CÁC ENDPOINTS THEO PHÂN HỆ
 
-### 2.1. Phân hệ Xác thực (Authentication - `/api/v1/auth`)
+| Phân hệ | Phương thức | Endpoint URI | Phân quyền truy cập | Mô tả chức năng |
+|---|---|---|---|---|
+| **Auth** | `POST` | `/auth/register` | Public | Đăng ký tài khoản mới (Sinh viên / NTD) |
+| | `POST` | `/auth/login` | Public | Đăng nhập hệ thống, nhận JWT Access Token |
+| | `GET` | `/auth/me` | Authenticated | Lấy thông tin tài khoản đang đăng nhập |
+| **Categories** | `GET` | `/categories` | Public | Lấy danh sách toàn bộ danh mục việc làm |
+| | `GET` | `/categories/{id}` | Public | Lấy thông tin chi tiết một danh mục |
+| **Jobs** | `GET` | `/jobs` | Public | Tìm kiếm, lọc và phân trang việc làm |
+| | `GET` | `/jobs/{id}` | Public | Xem thông tin chi tiết một tin tuyển dụng |
+| | `GET` | `/jobs/my-jobs` | `ROLE_EMPLOYER` | Xem danh sách tin do chính NTD đăng |
+| | `POST` | `/jobs` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Đăng tin tuyển dụng mới |
+| | `PUT` | `/jobs/{id}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Cập nhật thông tin tin tuyển dụng |
+| | `PATCH`| `/jobs/{id}/status` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Đổi trạng thái tin (`OPEN`, `IN_PROGRESS`, `COMPLETED`, `CLOSED`) |
+| | `DELETE`| `/jobs/{id}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Xóa tin tuyển dụng |
+| **Applications** | `POST` | `/applications` | `ROLE_STUDENT` | Nộp hồ sơ ứng tuyển kèm CV |
+| | `GET` | `/applications/my-applications` | `ROLE_STUDENT` | Lịch sử nộp đơn của sinh viên hiện tại |
+| | `GET` | `/applications/job/{jobId}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Xem danh sách ứng viên nộp vào tin |
+| | `PATCH`| `/applications/{id}/status` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Duyệt (`ACCEPTED`) hoặc từ chối (`REJECTED`) đơn |
+| **Reviews** | `POST` | `/reviews` | Authenticated | Gửi đánh giá hai chiều (1–5 sao kèm nhận xét) |
+| | `GET` | `/reviews/job/{jobId}` | Public | Lấy tất cả đánh giá của một công việc |
+| | `GET` | `/reviews/user/{userId}` | Public | Lấy tất cả đánh giá nhận được của một người dùng |
+| **Users** | `GET` | `/users/{id}` | Public | Xem hồ sơ công khai của người dùng theo ID |
+| | `PUT` | `/users/profile` | Authenticated | Cập nhật hồ sơ cá nhân của tài khoản hiện tại |
+| **Notifications** | `GET` | `/notifications` | Authenticated | Lấy danh sách thông báo của tài khoản hiện tại |
+| | `PATCH`| `/notifications/{id}/read` | Authenticated | Đánh dấu 1 thông báo đã đọc |
+| | `PATCH`| `/notifications/read-all` | Authenticated | Đánh dấu toàn bộ thông báo đã đọc |
+| **Admin** | `GET` | `/admin/stats` | `ROLE_ADMIN` | Thống kê KPI: người dùng, tin đăng, đơn ứng tuyển, đánh giá |
+| | `GET` | `/admin/users` | `ROLE_ADMIN` | Xem danh sách toàn bộ tài khoản trong hệ thống |
+| | `PATCH`| `/admin/users/{id}/toggle-status` | `ROLE_ADMIN` | Khóa hoặc kích hoạt lại tài khoản người dùng |
+| | `DELETE`| `/admin/jobs/{id}` | `ROLE_ADMIN` | Xóa/gỡ bỏ tin tuyển dụng vi phạm |
 
-| Phương thức | Đường dẫn | Quyền hạn (Role) | Mô tả chức năng |
-|---|---|---|---|
-| `POST` | `/api/v1/auth/register` | Public (Mọi người) | Đăng ký tài khoản Sinh viên / NTD |
-| `POST` | `/api/v1/auth/login` | Public (Mọi người) | Đăng nhập hệ thống, trả về JWT Token |
-| `GET` | `/api/v1/auth/me` | Authenticated (Đã đăng nhập) | Lấy thông tin tài khoản hiện tại kèm quyền |
+---
 
-#### Request Payload: `POST /api/v1/auth/register`
+## 3. CHI TIẾT REQUEST / RESPONSE TIÊU BIỂU
+
+### 3.1. Đăng ký tài khoản (`POST /api/v1/auth/register`)
+- **Request Body:**
 ```json
 {
   "email": "sinhvien.moi@vanlanguni.vn",
   "password": "Password123@",
-  "fullName": "Trần Văn A",
+  "fullName": "Trần Thị Mai",
   "phone": "0987654321",
   "role": "ROLE_STUDENT",
   "university": "Trường ĐH Văn Lang",
@@ -52,85 +80,77 @@
   "companyName": null
 }
 ```
+- **Response (201 Created):**
+```json
+{
+  "success": true,
+  "message": "Đăng ký tài khoản thành công",
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "tokenType": "Bearer",
+    "role": "ROLE_STUDENT",
+    "email": "sinhvien.moi@vanlanguni.vn",
+    "fullName": "Trần Thị Mai"
+  }
+}
+```
 
-#### Request Payload: `POST /api/v1/auth/login`
+### 3.2. Đăng nhập hệ thống (`POST /api/v1/auth/login`)
+- **Request Body:**
 ```json
 {
   "email": "sinhvien.tai@vanlanguni.vn",
   "password": "Password123@"
 }
 ```
+- **Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Đăng nhập thành công",
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "tokenType": "Bearer",
+    "role": "ROLE_STUDENT",
+    "email": "sinhvien.tai@vanlanguni.vn",
+    "fullName": "Nguyễn Tấn Tài"
+  }
+}
+```
 
----
-
-### 2.2. Phân hệ Danh mục công việc (Categories - `/api/v1/categories`)
-
-| Phương thức | Đường dẫn | Quyền hạn | Mô tả chức năng |
-|---|---|---|---|
-| `GET` | `/api/v1/categories` | Public | Lấy danh sách tất cả các danh mục |
-| `GET` | `/api/v1/categories/{id}` | Public | Lấy chi tiết một danh mục theo ID |
-
----
-
-### 2.3. Phân hệ Tin tuyển dụng (Jobs - `/api/v1/jobs`)
-
-| Phương thức | Đường dẫn | Quyền hạn | Mô tả chức năng |
-|---|---|---|---|
-| `GET` | `/api/v1/jobs` | Public | Tìm kiếm, lọc và phân trang tin việc làm |
-| `GET` | `/api/v1/jobs/{id}` | Public | Xem chi tiết tin tuyển dụng |
-| `POST` | `/api/v1/jobs` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Đăng tin tuyển dụng mới |
-| `PUT` | `/api/v1/jobs/{id}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Chỉnh sửa tin tuyển dụng |
-| `PATCH` | `/api/v1/jobs/{id}/status` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Đổi trạng thái tin (`OPEN`, `IN_PROGRESS`, `COMPLETED`, `CLOSED`) |
-| `DELETE` | `/api/v1/jobs/{id}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Xóa tin tuyển dụng |
-| `GET` | `/api/v1/jobs/my-jobs` | `ROLE_EMPLOYER` | Danh sách các tin do chính NTD đăng |
-
-#### Query Parameters: `GET /api/v1/jobs`
-- `keyword` (string, tùy chọn): Tìm kiếm trong tiêu đề hoặc mô tả
-- `categoryId` (number, tùy chọn): Lọc theo ID danh mục
-- `jobType` (string, tùy chọn): `PART_TIME`, `FREELANCE`, `INTERNSHIP`
-- `workMode` (string, tùy chọn): `ONSITE`, `REMOTE`, `HYBRID`
-- `status` (string, tùy chọn, mặc định `OPEN`): Trạng thái tin
-- `page` (number, mặc định `0`)
-- `size` (number, mặc định `10`)
-
-#### Request Payload: `POST /api/v1/jobs`
+### 3.3. Đăng tin tuyển dụng (`POST /api/v1/jobs`)
+- **Headers:** `Authorization: Bearer <employer_token>`
+- **Request Body:**
 ```json
 {
   "categoryId": 1,
-  "title": "Lập trình ReactJS làm giao diện Dashboard",
-  "description": "Xây dựng các trang quản trị bằng React và Tailwind CSS...",
-  "requirements": "Thành thạo ReactJS, TypeScript, có tinh thần trách nhiệm",
+  "title": "Tuyển lập trình viên Frontend ReactJS làm Dashboard",
+  "description": "Xây dựng các trang quản trị hệ thống bằng React 18 và TypeScript.",
+  "requirements": "Biết ReactJS, HTML/CSS, Git cơ bản. Ưu tiên sinh viên năm 3, 4.",
   "jobType": "FREELANCE",
   "workMode": "REMOTE",
   "location": "Toàn quốc",
   "salaryType": "FIXED_PROJECT",
-  "salaryAmount": 3000000.00,
-  "slotsAvailable": 2,
+  "salaryAmount": 2500000.00,
+  "slotsAvailable": 1,
   "deadline": "2026-11-30T23:59:59"
 }
 ```
 
----
-
-### 2.4. Phân hệ Ứng tuyển (Applications - `/api/v1/applications`)
-
-| Phương thức | Đường dẫn | Quyền hạn | Mô tả chức năng |
-|---|---|---|---|
-| `POST` | `/api/v1/applications` | `ROLE_STUDENT` | Nộp hồ sơ ứng tuyển vào công việc |
-| `GET` | `/api/v1/applications/my-applications` | `ROLE_STUDENT` | Lịch sử nộp đơn của sinh viên hiện tại |
-| `GET` | `/api/v1/applications/job/{jobId}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Danh sách ứng viên đã nộp vào một công việc |
-| `PATCH` | `/api/v1/applications/{id}/status` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Duyệt / Từ chối đơn (`ACCEPTED` / `REJECTED`) |
-
-#### Request Payload: `POST /api/v1/applications`
+### 3.4. Nộp đơn ứng tuyển (`POST /api/v1/applications`)
+- **Headers:** `Authorization: Bearer <student_token>`
+- **Request Body:**
 ```json
 {
   "jobId": 2,
-  "coverLetter": "Em có 1 năm kinh nghiệm làm việc với React và rất mong muốn được thử sức.",
-  "cvUrl": "https://example.com/cv.pdf"
+  "coverLetter": "Em đã hoàn thành nhiều đồ án ReactJS tại trường, mong muốn được thử sức với dự án.",
+  "cvUrl": "https://drive.google.com/sample_cv.pdf"
 }
 ```
 
-#### Request Payload: `PATCH /api/v1/applications/{id}/status`
+### 3.5. Duyệt đơn ứng tuyển (`PATCH /api/v1/applications/{id}/status`)
+- **Headers:** `Authorization: Bearer <employer_token>`
+- **Request Body:**
 ```json
 {
   "status": "ACCEPTED",
@@ -138,65 +158,30 @@
 }
 ```
 
----
-
-### 2.5. Phân hệ Đánh giá 2 chiều (Reviews - `/api/v1/reviews`)
-
-| Phương thức | Đường dẫn | Quyền hạn | Mô tả chức năng |
-|---|---|---|---|
-| `POST` | `/api/v1/reviews` | Authenticated | Gửi đánh giá cho đối phương (SV <-> NTD) |
-| `GET` | `/api/v1/reviews/job/{jobId}` | Public | Lấy danh sách đánh giá của một công việc |
-| `GET` | `/api/v1/reviews/user/{userId}` | Public | Lấy danh sách đánh giá của một người dùng |
-
-#### Request Payload: `POST /api/v1/reviews`
+### 3.6. Đánh giá hai chiều sau khi hoàn thành (`POST /api/v1/reviews`)
+- **Headers:** `Authorization: Bearer <token>`
+- **Request Body:**
 ```json
 {
   "jobId": 2,
   "revieweeId": 3,
   "rating": 5,
-  "comment": "Nhà tuyển dụng hướng dẫn chi tiết, giao tiếp tốt và thanh toán đúng hẹn!"
+  "comment": "Nhà tuyển dụng hỗ trợ nhiệt tình, thanh toán đúng hạn và giao tiếp rất rõ ràng!"
 }
 ```
 
----
-
-### 2.6. Phân hệ Quản lý Hồ sơ người dùng (Users - `/api/v1/users`)
-
-| Phương thức | Đường dẫn | Quyền hạn | Mô tả chức năng |
-|---|---|---|---|
-| `GET` | `/api/v1/users/{id}` | Public | Xem thông tin hồ sơ người dùng theo ID |
-| `PUT` | `/api/v1/users/profile` | Authenticated | Cập nhật hồ sơ cá nhân của người dùng hiện tại |
-
-#### Request Payload: `PUT /api/v1/users/profile`
+### 3.7. Thống kê KPI quản trị viên (`GET /api/v1/admin/stats`)
+- **Headers:** `Authorization: Bearer <admin_token>`
+- **Response (200 OK):**
 ```json
 {
-  "fullName": "Nguyễn Tấn Tài",
-  "phone": "0934567890",
-  "bio": "Lập trình viên nhiệt huyết, đam mê Java Spring Boot",
-  "skills": "Java, Spring Boot, PostgreSQL, Docker",
-  "university": "Trường ĐH Văn Lang",
-  "major": "Công nghệ thông tin",
-  "companyName": null,
-  "companyAddress": null
+  "success": true,
+  "message": "Lấy dữ liệu thống kê thành công",
+  "data": {
+    "totalUsers": 6,
+    "totalJobs": 4,
+    "totalApplications": 2,
+    "totalReviews": 2
+  }
 }
 ```
-
----
-
-### 2.7. Phân hệ Thông báo (Notifications - `/api/v1/notifications`)
-
-| Phương thức | Đường dẫn | Quyền hạn | Mô tả chức năng |
-|---|---|---|---|
-| `GET` | `/api/v1/notifications` | Authenticated | Lấy danh sách thông báo của tài khoản hiện tại |
-| `PATCH` | `/api/v1/notifications/{id}/read` | Authenticated | Đánh dấu thông báo đã đọc |
-| `PATCH` | `/api/v1/notifications/read-all` | Authenticated | Đánh dấu tất cả thông báo đã đọc |
-
----
-
-### 2.8. Phân hệ Quản trị (Admin - `/api/v1/admin`)
-
-| Phương thức | Đường dẫn | Quyền hạn | Mô tả chức năng |
-|---|---|---|---|
-| `GET` | `/api/v1/admin/stats` | `ROLE_ADMIN` | Thống kê số lượng người dùng, tin đăng, ứng tuyển |
-| `GET` | `/api/v1/admin/users` | `ROLE_ADMIN` | Danh sách tất cả người dùng trong hệ thống |
-| `PATCH` | `/api/v1/admin/users/{id}/toggle-status` | `ROLE_ADMIN` | Khóa hoặc mở khóa kích hoạt tài khoản |

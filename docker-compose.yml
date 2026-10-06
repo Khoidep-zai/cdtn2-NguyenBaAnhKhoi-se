@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # 1. Database Service (PostgreSQL)
+  postgres_db:
+    image: postgres:16-alpine
+    container_name: nhom8_freelance_db
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-freelance_db}
+      POSTGRES_USER: ${DB_USER:-freelance_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-SecretPassword2026!}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./database/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - freelance_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-freelance_user} -d ${DB_NAME:-freelance_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. Backend REST API Service (Spring Boot)
+  backend_api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nhom8_freelance_backend
+    restart: on-failure
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5432/${DB_NAME:-freelance_db}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER:-freelance_user}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-SecretPassword2026!}
+      JWT_SECRET: ${JWT_SECRET:-9a7f8e3b2c1d0f5e4a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
+      SERVER_PORT: 8080
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    networks:
+      - freelance_network
+
+  # 3. Frontend Web Service (React + Nginx)
+  frontend_web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nhom8_freelance_frontend
+    restart: always
+    depends_on:
+      - backend_api
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    networks:
+      - freelance_network
+
+networks:
+  freelance_network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local

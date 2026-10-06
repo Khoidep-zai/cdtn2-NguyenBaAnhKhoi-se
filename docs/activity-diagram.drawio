@@ -1,0 +1,104 @@
+<mxfile host="app.diagrams.net" modified="2026-10-06T12:00:00.000Z" agent="Mozilla/5.0" version="22.1.0" type="device">
+  <diagram id="activity-diagram" name="Activity Diagram - Main Business Flow">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Swimlane: Nhà tuyển dụng (Employer) -->
+        <mxCell id="lane_emp" value="Nhà tuyển dụng (Employer)" style="swimlane;whiteSpace=wrap;html=1;startSize=30;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="40" width="320" height="740" as="geometry" />
+        </mxCell>
+
+        <!-- Swimlane: Hệ thống (System) -->
+        <mxCell id="lane_sys" value="Hệ thống Marketplace (System)" style="swimlane;whiteSpace=wrap;html=1;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="40" width="320" height="740" as="geometry" />
+        </mxCell>
+
+        <!-- Swimlane: Sinh viên (Student) -->
+        <mxCell id="lane_stu" value="Sinh viên (Student)" style="swimlane;whiteSpace=wrap;html=1;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="720" y="40" width="320" height="740" as="geometry" />
+        </mxCell>
+
+        <!-- Start Node -->
+        <mxCell id="start_node" value="" style="ellipse;fillColor=#000000;strokeColor=none;" vertex="1" parent="lane_emp">
+          <mxGeometry x="145" y="50" width="30" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_create_job" value="1. Điền thông tin &amp;&#xa;Đăng tin tuyển dụng" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;" vertex="1" parent="lane_emp">
+          <mxGeometry x="90" y="110" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_sys_publish" value="2. Lưu CSDL &amp; Hiển thị&#xa;tin ở trạng thái OPEN" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="lane_sys">
+          <mxGeometry x="90" y="110" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_stu_browse" value="3. Tìm kiếm &amp; Lọc việc&#xa;Xem chi tiết tin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="lane_stu">
+          <mxGeometry x="90" y="180" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_stu_apply" value="4. Nộp đơn ứng tuyển&#xa;(Cover Letter + Link CV)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="lane_stu">
+          <mxGeometry x="90" y="260" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_sys_notif_emp" value="5. Tạo đơn PENDING &amp;&#xa;Gửi thông báo tới NTD" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="lane_sys">
+          <mxGeometry x="90" y="260" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_emp_review" value="6. Xem xét hồ sơ ứng viên" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;" vertex="1" parent="lane_emp">
+          <mxGeometry x="90" y="340" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="decision_accept" value="Duyệt nhận?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;" vertex="1" parent="lane_emp">
+          <mxGeometry x="110" y="420" width="100" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_emp_reject" value="Từ chối đơn kèm lý do&#xa;(Status: REJECTED)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;" vertex="1" parent="lane_emp">
+          <mxGeometry x="10" y="500" width="130" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_emp_approve" value="Chấp nhận đơn&#xa;(Status: ACCEPTED)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;" vertex="1" parent="lane_emp">
+          <mxGeometry x="170" y="500" width="130" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_work_done" value="7. Thực hiện công việc &amp;&#xa;Đánh dấu COMPLETED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;" vertex="1" parent="lane_emp">
+          <mxGeometry x="170" y="580" width="130" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_two_way_review" value="8. Mở cổng đánh giá&#xa;hai chiều (1 - 5 sao)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;" vertex="1" parent="lane_sys">
+          <mxGeometry x="90" y="580" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_stu_rate" value="9. SV đánh giá NTD&#xa;(Thái độ, thanh toán)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="lane_stu">
+          <mxGeometry x="90" y="650" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act_emp_rate" value="10. NTD đánh giá SV&#xa;(Chất lượng, đúng hạn)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;" vertex="1" parent="lane_emp">
+          <mxGeometry x="90" y="650" width="140" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="end_node" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="lane_sys">
+          <mxGeometry x="145" y="660" width="30" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Edges connecting steps -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="start_node" target="act_create_job"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="act_create_job" target="act_sys_publish"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="act_sys_publish" target="act_stu_browse"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="act_stu_browse" target="act_stu_apply"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="act_stu_apply" target="act_sys_notif_emp"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="act_sys_notif_emp" target="act_emp_review"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="act_emp_review" target="decision_accept"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e8" value="Không" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="decision_accept" target="act_emp_reject"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e9" value="Đồng ý" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="decision_accept" target="act_emp_approve"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="act_emp_approve" target="act_work_done"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="act_work_done" target="act_two_way_review"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="act_two_way_review" target="act_stu_rate"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="act_two_way_review" target="act_emp_rate"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="act_stu_rate" target="end_node"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" edge="1" parent="1" source="act_emp_rate" target="end_node"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

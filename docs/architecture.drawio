@@ -1,0 +1,82 @@
+<mxfile host="app.diagrams.net" modified="2026-10-06T12:00:00.000Z" agent="Mozilla/5.0" version="22.1.0" type="device">
+  <diagram id="arch-diagram" name="System Architecture">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Frontend Tier -->
+        <mxCell id="client_tier" value="CLIENT TIER (Frontend SPA)&#xa;React 18 + Vite + TypeScript&#xa;Tailwind / Modern CSS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="120" y="80" width="880" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- Web Browser Users -->
+        <mxCell id="user_student" value="Sinh viên&#xa;(Student)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="220" y="-40" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="user_employer" value="Nhà tuyển dụng&#xa;(Employer)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="540" y="-40" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="user_admin" value="Quản trị viên&#xa;(Admin)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="840" y="-40" width="30" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Connections from Actors to Client Tier -->
+        <mxCell id="edge1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="user_student" target="client_tier">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="user_employer" target="client_tier">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="user_admin" target="client_tier">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- HTTP/REST Arrow -->
+        <mxCell id="edge_api" value="REST API (HTTPS / JSON / JWT Bearer)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontStyle=1;" edge="1" parent="1" source="client_tier" target="backend_tier">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Backend Tier Box -->
+        <mxCell id="backend_tier" value="APPLICATION TIER (Backend REST API) - Spring Boot 3.x" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=14;startSize=30;" vertex="1" parent="1">
+          <mxGeometry x="120" y="240" width="880" height="230" as="geometry" />
+        </mxCell>
+
+        <mxCell id="mod_security" value="Spring Security &amp; JWT&#xa;(Authentication / RBAC Filter)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="backend_tier">
+          <mxGeometry x="30" y="50" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="mod_controllers" value="Controllers Layer&#xa;(Auth, Job, Application,&#xa;Review, Notification, Admin)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="backend_tier">
+          <mxGeometry x="240" y="50" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="mod_services" value="Services Layer&#xa;(Business Logic &amp; Rules)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="backend_tier">
+          <mxGeometry x="450" y="50" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="mod_repos" value="Repositories Layer&#xa;(Spring Data JPA)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="backend_tier">
+          <mxGeometry x="660" y="50" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="mod_docs" value="OpenAPI / Swagger UI Docs&#xa;(/swagger-ui.html)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="backend_tier">
+          <mxGeometry x="240" y="140" width="180" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="mod_exception" value="Global Exception Handler&#xa;(@RestControllerAdvice)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;" vertex="1" parent="backend_tier">
+          <mxGeometry x="450" y="140" width="180" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Database Tier Box -->
+        <mxCell id="db_tier" value="DATA TIER (Database)&#xa;PostgreSQL 16 Server&#xa;Tables: users, roles, categories, jobs, applications, reviews, notifications" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="360" y="530" width="400" height="120" as="geometry" />
+        </mxCell>
+
+        <!-- Connection from Repos to DB -->
+        <mxCell id="edge_db" value="JDBC / HikariCP Pool" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontStyle=1;" edge="1" parent="1" source="mod_repos" target="db_tier">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

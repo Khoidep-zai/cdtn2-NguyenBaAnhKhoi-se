@@ -1,0 +1,19 @@
+# FIGMA DESIGN SPECIFICATION & ASSETS
+Project: Student Freelance & Part-time Job Marketplace
+Team: Nhóm 8 (Chuyên đề tốt nghiệp 2 - ĐH Văn Lang)
+
+Figma Project URL: https://www.figma.com/file/marketplace-freelance-student-team8
+Design Tokens:
+- Primary Color: #2563EB (Blue 600)
+- Secondary Color: #10B981 (Emerald 500)
+- Background Dark: #0F172A (Slate 900)
+- Background Light: #F8FAFC (Slate 50)
+- Typography: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto
+
+Screens Included:
+1. Public: Home Landing Page, Job Browse & Multi-filter, Job Details with Apply modal
+2. Auth: Login, Register with role selector (Student / Employer)
+3. Student Portal: Dashboard, My Applications Tracker, Profile Edit & CV link
+4. Employer Portal: Dashboard, Post Job Form, My Jobs Manager, Applicants Review Modal
+5. Admin Portal: Dashboard Stats, Users Management (Active/Deactivate), Job Moderation
+6. Interactive HTML Wireframe available at: docs/wireframes.html

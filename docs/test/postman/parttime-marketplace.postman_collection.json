@@ -1,0 +1,280 @@
+{
+  "info": {
+    "_postman_id": "7b89d41e-3a42-4f33-8a0b-1e2f3a4b5c6d",
+    "name": "Part-time & Freelance Marketplace API (Nhóm 8 - CDTN2)",
+    "description": "Bộ sưu tập kiểm thử tự động toàn diện cho hệ thống Marketplace Việc Làm Part-time & Freelance Cho Sinh Viên.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api/v1", "type": "string" },
+    { "key": "studentToken", "value": "", "type": "string" },
+    { "key": "employerToken", "value": "", "type": "string" },
+    { "key": "adminToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "1.1 Login as Student",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.accessToken) { pm.collectionVariables.set('studentToken', jsonData.data.accessToken); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"sinhvien.tai@vanlanguni.vn\",\n  \"password\": \"Password123@\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "1.2 Login as Employer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.accessToken) { pm.collectionVariables.set('employerToken', jsonData.data.accessToken); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"recruiter@thecoffee.vn\",\n  \"password\": \"Password123@\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "1.3 Login as Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.accessToken) { pm.collectionVariables.set('adminToken', jsonData.data.accessToken); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@freelancehub.vn\",\n  \"password\": \"Password123@\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "1.4 Get Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{studentToken}}" }],
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Categories",
+      "item": [
+        {
+          "name": "2.1 List Categories",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/categories", "host": ["{{baseUrl}}"], "path": ["categories"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Jobs",
+      "item": [
+        {
+          "name": "3.1 Search & Filter Jobs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/jobs?keyword=React&status=OPEN&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["jobs"],
+              "query": [
+                { "key": "keyword", "value": "React" },
+                { "key": "status", "value": "OPEN" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "3.2 Get Job Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/jobs/1", "host": ["{{baseUrl}}"], "path": ["jobs", "1"] }
+          }
+        },
+        {
+          "name": "3.3 Post New Job (Employer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{employerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"categoryId\": 1,\n  \"title\": \"Lập trình Spring Boot REST API cho ứng dụng quản lý\",\n  \"description\": \"Xây dựng các API cơ bản, kết nối PostgreSQL, viết unit test\",\n  \"requirements\": \"Hiểu biết về Java 17, Spring Boot, Git\",\n  \"jobType\": \"FREELANCE\",\n  \"workMode\": \"REMOTE\",\n  \"location\": \"Toàn quốc\",\n  \"salaryType\": \"FIXED_PROJECT\",\n  \"salaryAmount\": 3000000,\n  \"slotsAvailable\": 1,\n  \"deadline\": \"2026-11-30T23:59:59\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/jobs", "host": ["{{baseUrl}}"], "path": ["jobs"] }
+          }
+        },
+        {
+          "name": "3.4 Get Employer's Jobs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{employerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/jobs/my-jobs", "host": ["{{baseUrl}}"], "path": ["jobs", "my-jobs"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Applications",
+      "item": [
+        {
+          "name": "4.1 Apply for Job (Student)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{studentToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jobId\": 1,\n  \"coverLetter\": \"Em có kinh nghiệm và thời gian phù hợp ca tối, mong được nhận việc.\",\n  \"cvUrl\": \"https://example.com/cv-tai.pdf\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/applications", "host": ["{{baseUrl}}"], "path": ["applications"] }
+          }
+        },
+        {
+          "name": "4.2 Get My Applications (Student)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{studentToken}}" }],
+            "url": { "raw": "{{baseUrl}}/applications/my-applications", "host": ["{{baseUrl}}"], "path": ["applications", "my-applications"] }
+          }
+        },
+        {
+          "name": "4.3 Get Applicants for Job (Employer)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{employerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/applications/job/2", "host": ["{{baseUrl}}"], "path": ["applications", "job", "2"] }
+          }
+        },
+        {
+          "name": "4.4 Update Application Status (Employer)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{employerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACCEPTED\",\n  \"rejectionReason\": null\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/applications/2/status", "host": ["{{baseUrl}}"], "path": ["applications", "2", "status"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Reviews",
+      "item": [
+        {
+          "name": "5.1 Post Review (Two-way)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{studentToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jobId\": 2,\n  \"revieweeId\": 3,\n  \"rating\": 5,\n  \"comment\": \"Dự án rõ ràng, hướng dẫn nhiệt tình và thanh toán sòng phẳng!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/reviews", "host": ["{{baseUrl}}"], "path": ["reviews"] }
+          }
+        },
+        {
+          "name": "5.2 Get Reviews for Job",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/reviews/job/2", "host": ["{{baseUrl}}"], "path": ["reviews", "job", "2"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Notifications",
+      "item": [
+        {
+          "name": "6.1 Get Notifications",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{studentToken}}" }],
+            "url": { "raw": "{{baseUrl}}/notifications", "host": ["{{baseUrl}}"], "path": ["notifications"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Admin",
+      "item": [
+        {
+          "name": "7.1 Get System Stats",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/stats", "host": ["{{baseUrl}}"], "path": ["admin", "stats"] }
+          }
+        },
+        {
+          "name": "7.2 Get Users List",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/users", "host": ["{{baseUrl}}"], "path": ["admin", "users"] }
+          }
+        }
+      ]
+    }
+  ]
+}

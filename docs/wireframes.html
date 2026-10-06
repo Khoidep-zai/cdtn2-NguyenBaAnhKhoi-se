@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe & UI Prototype - Marketplace Việc Làm Sinh Viên</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 24px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 { font-size: 1.8rem; margin-bottom: 8px; color: #60a5fa; }
+    .subtitle { color: var(--text-muted); font-size: 0.95rem; }
+    .nav-tabs {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover, .tab-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+    .wireframe-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #090d16;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .wf-section { display: none; }
+    .wf-section.active { display: block; }
+    .mock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background: var(--card-bg);
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+    .mock-logo { font-weight: bold; font-size: 1.2rem; color: #38bdf8; }
+    .mock-nav { display: flex; gap: 16px; font-size: 0.9rem; }
+    .mock-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .mock-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-open { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .badge-pending { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .btn {
+      display: inline-block;
+      padding: 8px 16px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Hệ thống Marketplace Việc Làm Part-time & Freelance Cho Sinh Viên</h1>
+    <div class="subtitle">Bản thiết kế giao diện Wireframe & Luồng trải nghiệm người dùng (Nhóm 8 - CDTN2)</div>
+  </header>
+
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showTab('home')">1. Trang chủ (Home)</button>
+    <button class="tab-btn" onclick="showTab('browse')">2. Tìm việc & Lọc tin</button>
+    <button class="tab-btn" onclick="showTab('detail')">3. Chi tiết & Ứng tuyển</button>
+    <button class="tab-btn" onclick="showTab('student')">4. Dashboard Sinh viên</button>
+    <button class="tab-btn" onclick="showTab('employer')">5. Dashboard Nhà tuyển dụng</button>
+    <button class="tab-btn" onclick="showTab('admin')">6. Quản trị viên (Admin)</button>
+  </div>
+
+  <div class="wireframe-container">
+    <!-- 1. Home Tab -->
+    <div id="home" class="wf-section active">
+      <div class="mock-header">
+        <div class="mock-logo">StudentWork Hub</div>
+        <div class="mock-nav">
+          <span>Tìm việc</span>
+          <span>Doanh nghiệp</span>
+          <span>Đăng ký</span>
+          <span>Đăng nhập</span>
+        </div>
+      </div>
+      <div style="text-align: center; padding: 40px 20px;">
+        <h2 style="font-size: 2rem; margin-bottom: 12px; color: #fff;">Tìm việc làm Part-time & Dự án Freelance dành riêng cho sinh viên</h2>
+        <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 24px;">Kết nối sinh viên tài năng với các cơ hội việc làm linh hoạt ca học từ nhà tuyển dụng uy tín.</p>
+        <div style="max-width: 500px; margin: 0 auto; display: flex; gap: 8px;">
+          <input type="text" placeholder="Tìm theo chức danh, kỹ năng, vị trí..." style="flex: 1; padding: 12px; border-radius: 6px; border: 1px solid var(--border); background: #1e293b; color: white;">
+          <button class="btn" style="margin-top: 0;">Tìm kiếm</button>
+        </div>
+      </div>
+      <div class="mock-grid">
+        <div class="mock-card">
+          <div style="color: #38bdf8; font-weight: bold;">Lập trình & CNTT</div>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 6px;">Web, App, sửa lỗi máy tính, hỗ trợ IT</p>
+        </div>
+        <div class="mock-card">
+          <div style="color: #38bdf8; font-weight: bold;">Thiết kế & Media</div>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 6px;">Banner, Poster, dựng video ngắn</p>
+        </div>
+        <div class="mock-card">
+          <div style="color: #38bdf8; font-weight: bold;">Gia sư & Dạy kèm</div>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 6px;">Toán, Lý, Tiếng Anh giao tiếp</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Browse Tab -->
+    <div id="browse" class="wf-section">
+      <div style="display: grid; grid-template-columns: 240px 1fr; gap: 20px;">
+        <div style="background: var(--card-bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+          <h3 style="font-size: 1rem; margin-bottom: 12px;">Bộ lọc tìm kiếm</h3>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 6px;">Danh mục ngành nghề</p>
+          <select style="width: 100%; padding: 8px; margin-bottom: 12px; background: #0f172a; color: white; border: 1px solid var(--border); border-radius: 4px;">
+            <option>Tất cả danh mục</option>
+            <option>Lập trình & CNTT</option>
+            <option>Thiết kế đồ họa</option>
+          </select>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 6px;">Hình thức</p>
+          <div style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 6px;">
+            <label><input type="checkbox" checked> On-site (Tại chỗ)</label>
+            <label><input type="checkbox" checked> Remote (Từ xa)</label>
+          </div>
+        </div>
+        <div>
+          <div class="mock-card" style="margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+              <div>
+                <h4>Lập trình Landing Page giới thiệu sản phẩm bằng React</h4>
+                <div style="color: #60a5fa; font-size: 0.85rem; margin-top: 4px;">Innovate Media & Tech • Toàn quốc</div>
+              </div>
+              <span class="badge badge-open">OPEN</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 8px;">Xây dựng trang đích quảng bá sản phẩm mới dựa trên bản thiết kế Figma...</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+              <span style="font-weight: bold; color: #34d399;">2,500,000 đ / Dự án</span>
+              <button class="btn" style="margin: 0;">Xem chi tiết</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Detail Tab -->
+    <div id="detail" class="wf-section">
+      <div class="mock-card">
+        <h2>Lập trình Landing Page giới thiệu sản phẩm bằng React</h2>
+        <div style="color: #60a5fa; margin: 8px 0 16px;">Đăng bởi: Innovate Studio • Mức lương: 2,500,000 đ • Hạn nộp: 30/11/2026</div>
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 16px 0;">
+        <h3>Mô tả công việc:</h3>
+        <p style="color: var(--text-muted); margin-bottom: 16px;">Xây dựng trang web chuẩn Responsive trên điện thoại và máy tính, tối ưu hóa tốc độ tải trang...</p>
+        <h3>Yêu cầu ứng viên:</h3>
+        <p style="color: var(--text-muted); margin-bottom: 16px;">Thành thạo ReactJS, CSS, có tinh thần trách nhiệm và hoàn thành đúng deadline.</p>
+        <button class="btn" style="font-size: 1rem; padding: 10px 24px;">Ứng tuyển ngay</button>
+      </div>
+    </div>
+
+    <!-- 4. Student Tab -->
+    <div id="student" class="wf-section">
+      <h3>Đơn ứng tuyển của tôi</h3>
+      <div class="mock-card" style="margin-top: 16px;">
+        <div style="display: flex; justify-content: space-between;">
+          <div>
+            <h4>Lập trình Landing Page giới thiệu sản phẩm</h4>
+            <div style="color: var(--text-muted); font-size: 0.85rem;">Ngày nộp: 02/10/2026 • NTD: Innovate Studio</div>
+          </div>
+          <span class="badge badge-open" style="background: rgba(16,185,129,0.2); color: #34d399;">ACCEPTED (Đã trúng tuyển)</span>
+        </div>
+        <div style="margin-top: 12px;">
+          <button class="btn" style="background: #eab308; color: #000; margin-top: 0;">Đánh giá nhà tuyển dụng</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Employer Tab -->
+    <div id="employer" class="wf-section">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3>Quản lý tin tuyển dụng đã đăng</h3>
+        <button class="btn" style="margin-top: 0;">+ Đăng tin mới</button>
+      </div>
+      <div class="mock-card">
+        <div style="display: flex; justify-content: space-between;">
+          <div>
+            <h4>Lập trình Landing Page giới thiệu sản phẩm bằng React</h4>
+            <div style="color: var(--text-muted); font-size: 0.85rem;">2 ứng viên đã nộp • 1 vị trí đã nhận</div>
+          </div>
+          <button class="btn" style="background: #3b82f6; margin-top: 0;">Xem danh sách ứng viên (2)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Admin Tab -->
+    <div id="admin" class="wf-section">
+      <h3>Bảng quản trị hệ thống</h3>
+      <div class="mock-grid" style="margin-bottom: 24px;">
+        <div class="mock-card">
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Tổng số người dùng</div>
+          <div style="font-size: 1.8rem; font-weight: bold; color: #60a5fa;">128</div>
+        </div>
+        <div class="mock-card">
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Tổng tin việc làm</div>
+          <div style="font-size: 1.8rem; font-weight: bold; color: #34d399;">45</div>
+        </div>
+        <div class="mock-card">
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Lượt ứng tuyển thành công</div>
+          <div style="font-size: 1.8rem; font-weight: bold; color: #f59e0b;">38</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(id) {
+      document.querySelectorAll('.wf-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>

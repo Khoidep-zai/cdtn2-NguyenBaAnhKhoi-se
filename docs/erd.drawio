@@ -1,0 +1,67 @@
+<mxfile host="app.diagrams.net" modified="2026-10-06T12:00:00.000Z" agent="Mozilla/5.0" version="22.1.0" type="device">
+  <diagram id="erd-diagram" name="Entity Relationship Diagram (ERD)">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Table ROLES -->
+        <mxCell id="tbl_roles" value="ROLES&#xa;-----------------------------&#xa;+ id: SERIAL [PK]&#xa;* name: VARCHAR(50) [UNIQUE]&#xa;  description: VARCHAR(255)" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="60" y="60" width="220" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Table USERS -->
+        <mxCell id="tbl_users" value="USERS&#xa;-----------------------------&#xa;+ id: SERIAL [PK]&#xa;* email: VARCHAR(150) [UNIQUE]&#xa;* password_hash: VARCHAR(255)&#xa;* full_name: VARCHAR(150)&#xa;  phone: VARCHAR(20)&#xa;* role_id: INT [FK]&#xa;  avatar_url: VARCHAR(500)&#xa;  bio: TEXT&#xa;  skills: TEXT&#xa;  university: VARCHAR(150)&#xa;  major: VARCHAR(150)&#xa;  company_name: VARCHAR(150)&#xa;  company_address: VARCHAR(255)&#xa;  is_active: BOOLEAN&#xa;  created_at: TIMESTAMP&#xa;  updated_at: TIMESTAMP" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="360" y="40" width="260" height="300" as="geometry" />
+        </mxCell>
+
+        <!-- Table CATEGORIES -->
+        <mxCell id="tbl_categories" value="CATEGORIES&#xa;-----------------------------&#xa;+ id: SERIAL [PK]&#xa;* name: VARCHAR(100) [UNIQUE]&#xa;* slug: VARCHAR(120) [UNIQUE]&#xa;  icon: VARCHAR(100)&#xa;  description: VARCHAR(255)" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="720" y="60" width="220" height="120" as="geometry" />
+        </mxCell>
+
+        <!-- Table JOBS -->
+        <mxCell id="tbl_jobs" value="JOBS&#xa;-----------------------------&#xa;+ id: SERIAL [PK]&#xa;* employer_id: INT [FK]&#xa;* category_id: INT [FK]&#xa;* title: VARCHAR(255)&#xa;* description: TEXT&#xa;  requirements: TEXT&#xa;* job_type: VARCHAR(50)&#xa;  work_mode: VARCHAR(50)&#xa;  location: VARCHAR(255)&#xa;* salary_type: VARCHAR(50)&#xa;* salary_amount: DECIMAL(12,2)&#xa;  slots_available: INT&#xa;  status: VARCHAR(50)&#xa;  deadline: TIMESTAMP&#xa;  created_at: TIMESTAMP&#xa;  updated_at: TIMESTAMP" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="700" y="260" width="260" height="290" as="geometry" />
+        </mxCell>
+
+        <!-- Table APPLICATIONS -->
+        <mxCell id="tbl_applications" value="APPLICATIONS&#xa;-----------------------------&#xa;+ id: SERIAL [PK]&#xa;* job_id: INT [FK]&#xa;* student_id: INT [FK]&#xa;  cover_letter: TEXT&#xa;  cv_url: VARCHAR(500)&#xa;* status: VARCHAR(50)&#xa;  rejection_reason: VARCHAR(255)&#xa;  applied_at: TIMESTAMP&#xa;  updated_at: TIMESTAMP" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="360" y="440" width="260" height="180" as="geometry" />
+        </mxCell>
+
+        <!-- Table REVIEWS -->
+        <mxCell id="tbl_reviews" value="REVIEWS&#xa;-----------------------------&#xa;+ id: SERIAL [PK]&#xa;* job_id: INT [FK]&#xa;* reviewer_id: INT [FK]&#xa;* reviewee_id: INT [FK]&#xa;* rating: INT (1-5)&#xa;  comment: TEXT&#xa;  created_at: TIMESTAMP" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="60" y="440" width="220" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- Table NOTIFICATIONS -->
+        <mxCell id="tbl_notifications" value="NOTIFICATIONS&#xa;-----------------------------&#xa;+ id: SERIAL [PK]&#xa;* user_id: INT [FK]&#xa;* title: VARCHAR(200)&#xa;* message: TEXT&#xa;* type: VARCHAR(50)&#xa;  reference_id: INT&#xa;  is_read: BOOLEAN&#xa;  created_at: TIMESTAMP" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="60" y="240" width="220" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="rel_role_user" value="1..N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.3;" edge="1" parent="1" source="tbl_roles" target="tbl_users">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="rel_user_job" value="1..N (employer)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.7;entryX=0;entryY=0.3;" edge="1" parent="1" source="tbl_users" target="tbl_jobs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="rel_cat_job" value="1..N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="tbl_categories" target="tbl_jobs">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="rel_user_app" value="1..N (student)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="tbl_users" target="tbl_applications">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="rel_job_app" value="1..N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.8;entryX=1;entryY=0.5;" edge="1" parent="1" source="tbl_jobs" target="tbl_applications">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

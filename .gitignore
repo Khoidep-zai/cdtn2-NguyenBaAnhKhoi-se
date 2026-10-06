@@ -26,7 +26,11 @@ yarn-error.log*
 pnpm-debug.log*
 
 # IDE & Editors
-.idea/
+.idea/*
+!.idea/runConfigurations
+!.idea/misc.xml
+!.idea/modules.xml
+.idea/workspace.xml
 *.iml
 .vscode/
 *.sublime-project

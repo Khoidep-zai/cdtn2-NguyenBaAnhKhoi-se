@@ -5,22 +5,29 @@ server:
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/freelance_db}
-    username: ${SPRING_DATASOURCE_USERNAME:freelance_user}
-    password: ${SPRING_DATASOURCE_PASSWORD:SecretPassword2026!}
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:file:./data/freelancedb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 
 app:
   jwt:
     secret: ${JWT_SECRET:9a7f8e3b2c1d0f5e4a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f}
     expiration-ms: 86400000
+  dev:
+    auto-start-frontend: true
 
 logging:
   level:
-    com.nhom8.freelance: DEBUG
+    com.nhom8.freelance: INFO

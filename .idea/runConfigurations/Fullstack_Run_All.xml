@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="⚡ Fullstack - Compound (BE + FE)" type="CompoundRunConfigurationType">
+    <toRun name="1. Backend - Spring Boot" type="Application" />
+    <toRun name="2. Frontend - React Dev" type="js.build_tools.npm" />
+    <method v="2" />
+  </configuration>
+</component>

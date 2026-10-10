@@ -6,7 +6,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   loading: boolean;
-  login: (data: any) => Promise<void>;
+  login: (data: { email: string; password: string }) => Promise<void>;
   register: (data: any) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
@@ -16,16 +16,25 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const savedUser = authService.getCurrentUser();
-    if (savedUser && token) {
-      setUser(savedUser);
+    // Kiểm tra token hợp lệ và chưa expired khi app khởi động
+    if (authService.isAuthenticated()) {
+      const savedUser = authService.getCurrentUser();
+      const savedToken = authService.getToken();
+      if (savedUser && savedToken) {
+        setUser(savedUser);
+        setToken(savedToken);
+      }
+    } else {
+      // Token không hợp lệ hoặc expired - đảm bảo state sạch
+      setUser(null);
+      setToken(null);
     }
     setLoading(false);
-  }, [token]);
+  }, []);
 
   const handleAuthSuccess = (res: AuthResponse) => {
     localStorage.setItem('token', res.accessToken);
@@ -40,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(userInfo);
   };
 
-  const login = async (data: any) => {
+  const login = async (data: { email: string; password: string }) => {
     const res = await authService.login(data);
     handleAuthSuccess(res);
   };
@@ -65,7 +74,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         register,
         logout,
-        isAuthenticated: !!token,
+        // isAuthenticated dựa trên cả token state VÀ user state
+        isAuthenticated: !!token && !!user,
       }}
     >
       {children}

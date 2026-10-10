@@ -36,6 +36,14 @@ public class ApplicationService {
             throw new BadRequestException("Công việc này hiện không còn nhận hồ sơ");
         }
 
+        if (job.getDeadline() != null && job.getDeadline().isBefore(java.time.LocalDateTime.now())) {
+            throw new BadRequestException("Công việc này đã hết hạn nộp hồ sơ!");
+        }
+
+        if (job.getEmployer().getId().equals(studentId)) {
+            throw new BadRequestException("Bạn không thể tự ứng tuyển vào công việc do chính mình đăng!");
+        }
+
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thông tin sinh viên"));
 
@@ -69,10 +77,55 @@ public class ApplicationService {
         return applicationRepository.findByJobId(jobId);
     }
 
+    public List<Application> getApplicationsByJobSecure(Long jobId, Long requesterId, java.util.Collection<? extends org.springframework.security.core.GrantedAuthority> authorities) {
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() -> new ResourceNotFoundException("Công việc không tồn tại"));
+
+        boolean isAdmin = authorities != null && authorities.stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        if (!isAdmin && (requesterId == null || !job.getEmployer().getId().equals(requesterId))) {
+            throw new BadRequestException("Bạn không có quyền xem danh sách ứng viên của công việc này");
+        }
+        return applicationRepository.findByJobId(jobId);
+    }
+
     @Transactional
-    public Application updateApplicationStatus(Long applicationId, String status, String rejectionReason) {
+    public Application cancelApplication(Long applicationId, Long studentId) {
         Application application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn ứng tuyển"));
+
+        if (!application.getStudent().getId().equals(studentId)) {
+            throw new BadRequestException("Bạn không thể hủy đơn ứng tuyển của người khác!");
+        }
+
+        if (!"PENDING".equalsIgnoreCase(application.getStatus())) {
+            throw new BadRequestException("Chỉ có thể hủy đơn ứng tuyển khi hồ sơ ở trạng thái Chờ duyệt (PENDING)!");
+        }
+
+        application.setStatus("CANCELLED");
+        return applicationRepository.save(application);
+    }
+
+    @Transactional
+    public Application updateApplicationStatus(Long applicationId, String status, String rejectionReason) {
+        return updateApplicationStatus(applicationId, status, rejectionReason, null, null);
+    }
+
+    @Transactional
+    public Application updateApplicationStatus(Long applicationId, String status, String rejectionReason,
+                                               Long requesterId, java.util.Collection<? extends org.springframework.security.core.GrantedAuthority> authorities) {
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy đơn ứng tuyển"));
+
+        // Admin có thể update bất kỳ đơn nào; Employer chỉ update đơn thuộc job của mình
+        boolean isAdmin = authorities != null && authorities.stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        if (!isAdmin && requesterId != null) {
+            Long jobEmployerId = application.getJob().getEmployer().getId();
+            if (!jobEmployerId.equals(requesterId)) {
+                throw new BadRequestException("Bạn không có quyền xét duyệt đơn ứng tuyển này");
+            }
+        }
 
         application.setStatus(status);
         if (rejectionReason != null) {
@@ -95,3 +148,4 @@ public class ApplicationService {
         return saved;
     }
 }
+

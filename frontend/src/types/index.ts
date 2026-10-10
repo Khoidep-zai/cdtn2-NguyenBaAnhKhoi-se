@@ -13,6 +13,7 @@ export interface User {
   skills?: string;
   avatarUrl?: string;
   bio?: string;
+  cvUrl?: string;
 }
 
 export interface Category {
@@ -57,7 +58,7 @@ export interface Application {
   studentId?: number;
   coverLetter?: string;
   cvUrl?: string;
-  status: 'PENDING' | 'REVIEWING' | 'ACCEPTED' | 'REJECTED';
+  status: 'PENDING' | 'REVIEWING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
   rejectionReason?: string;
   appliedAt: string;
   job?: Job;

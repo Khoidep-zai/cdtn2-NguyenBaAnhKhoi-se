@@ -26,8 +26,13 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
+      // Xóa token và redirect về trang đăng nhập
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      // Tránh vòng lặp redirect - chỉ redirect nếu chưa ở trang login
+      if (!window.location.pathname.includes('/login')) {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

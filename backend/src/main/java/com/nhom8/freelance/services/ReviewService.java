@@ -5,6 +5,7 @@ import com.nhom8.freelance.exceptions.ResourceNotFoundException;
 import com.nhom8.freelance.models.Job;
 import com.nhom8.freelance.models.Review;
 import com.nhom8.freelance.models.User;
+import com.nhom8.freelance.repositories.ApplicationRepository;
 import com.nhom8.freelance.repositories.JobRepository;
 import com.nhom8.freelance.repositories.ReviewRepository;
 import com.nhom8.freelance.repositories.UserRepository;
@@ -21,6 +22,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final JobRepository jobRepository;
     private final UserRepository userRepository;
+    private final ApplicationRepository applicationRepository;
     private final NotificationService notificationService;
 
     @Transactional
@@ -42,8 +44,31 @@ public class ReviewService {
         User reviewee = userRepository.findById(revieweeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Người được đánh giá không tồn tại"));
 
+        if (!"COMPLETED".equalsIgnoreCase(job.getStatus())) {
+            throw new BadRequestException("Chỉ có thể đánh giá sau khi công việc đã ở trạng thái HOÀN THÀNH (COMPLETED)!");
+        }
+
         if (reviewRepository.existsByJobIdAndReviewerId(jobId, reviewerId)) {
             throw new BadRequestException("Bạn đã gửi đánh giá cho công việc này rồi!");
+        }
+
+        // Kiểm tra tính hợp lệ của hai bên tham gia công việc
+        boolean isEmployer = job.getEmployer() != null && reviewerId.equals(job.getEmployer().getId());
+        if (isEmployer) {
+            // NTD đánh giá sinh viên: sinh viên phải có đơn được ACCEPTED trong job này
+            boolean isAcceptedApplicant = applicationRepository.existsByJobIdAndStudentIdAndStatus(jobId, revieweeId, "ACCEPTED");
+            if (!isAcceptedApplicant) {
+                throw new BadRequestException("Chỉ có thể đánh giá sinh viên đã được chấp nhận làm việc cho công việc này!");
+            }
+        } else {
+            // Sinh viên đánh giá NTD: sinh viên phải là người được ACCEPTED và reviewee phải là NTD
+            boolean isAcceptedApplicant = applicationRepository.existsByJobIdAndStudentIdAndStatus(jobId, reviewerId, "ACCEPTED");
+            if (!isAcceptedApplicant) {
+                throw new BadRequestException("Chỉ sinh viên đã được duyệt làm công việc này mới có quyền đánh giá!");
+            }
+            if (job.getEmployer() != null && !revieweeId.equals(job.getEmployer().getId())) {
+                throw new BadRequestException("Sinh viên chỉ có thể đánh giá nhà tuyển dụng của công việc này!");
+            }
         }
 
         Review review = Review.builder()
@@ -66,6 +91,10 @@ public class ReviewService {
         );
 
         return savedReview;
+    }
+
+    public boolean hasUserReviewed(Long jobId, Long userId) {
+        return reviewRepository.existsByJobIdAndReviewerId(jobId, userId);
     }
 
     public List<Review> getReviewsByJob(Long jobId) {

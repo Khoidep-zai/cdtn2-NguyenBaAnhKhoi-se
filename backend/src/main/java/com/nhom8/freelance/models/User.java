@@ -49,6 +49,7 @@ public class User {
 
     private String university;
     private String major;
+    private String cvUrl;
     private String companyName;
     private String companyAddress;
 

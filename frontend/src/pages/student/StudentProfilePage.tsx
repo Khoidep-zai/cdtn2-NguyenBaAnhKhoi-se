@@ -26,6 +26,7 @@ export const StudentProfilePage: React.FC = () => {
   const [major, setMajor] = useState(user?.major || '');
   const [skills, setSkills] = useState(user?.skills || '');
   const [bio, setBio] = useState(user?.bio || '');
+  const [cvUrl, setCvUrl] = useState(user?.cvUrl || '');
 
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -44,6 +45,7 @@ export const StudentProfilePage: React.FC = () => {
       setMajor(user.major || '');
       setSkills(user.skills || '');
       setBio(user.bio || '');
+      setCvUrl(user.cvUrl || '');
 
       // Load user reviews
       setLoadingReviews(true);
@@ -72,7 +74,8 @@ export const StudentProfilePage: React.FC = () => {
         university,
         major,
         skills,
-        bio
+        bio,
+        cvUrl
       });
       setSuccessMsg('Cập nhật hồ sơ thành công!');
       setTimeout(() => setSuccessMsg(''), 4000);
@@ -297,6 +300,32 @@ export const StudentProfilePage: React.FC = () => {
                   resize: 'vertical'
                 }}
               />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--text-main)' }}>
+                Liên kết CV / Hồ sơ năng lực (Link PDF, Google Drive, Portfolio)
+              </label>
+              <div style={{ position: 'relative' }}>
+                <input
+                  type="url"
+                  value={cvUrl}
+                  placeholder="https://drive.google.com/... hoặc https://my-portfolio.dev"
+                  onChange={(e) => setCvUrl(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.65rem 0.85rem 0.65rem 2.25rem',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: 'var(--radius-md)',
+                    outline: 'none',
+                    fontSize: '0.9rem'
+                  }}
+                />
+                <FileText size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)' }} />
+              </div>
+              <small style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginTop: '0.25rem', display: 'block' }}>
+                CV này sẽ được tự động điền khi bạn nộp đơn ứng tuyển các việc làm.
+              </small>
             </div>
 
             <button

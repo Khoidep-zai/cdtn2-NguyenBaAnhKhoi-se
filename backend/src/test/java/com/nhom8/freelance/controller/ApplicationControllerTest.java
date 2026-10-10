@@ -82,9 +82,9 @@ class ApplicationControllerTest {
         Map<String, String> body = new HashMap<>();
         body.put("status", "ACCEPTED");
 
-        when(applicationService.updateApplicationStatus(eq(1L), eq("ACCEPTED"), any())).thenReturn(application);
+        when(applicationService.updateApplicationStatus(eq(1L), eq("ACCEPTED"), any(), any(), any())).thenReturn(application);
 
-        ResponseEntity<ApiResponse<Application>> response = applicationController.updateStatus(1L, body);
+        ResponseEntity<ApiResponse<Application>> response = applicationController.updateStatus(1L, studentPrincipal, body);
 
         assertNotNull(response);
         assertEquals(200, response.getStatusCode().value());

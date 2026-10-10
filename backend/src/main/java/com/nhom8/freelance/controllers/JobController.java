@@ -19,6 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/jobs")
@@ -27,6 +28,7 @@ import java.util.List;
 public class JobController {
 
     private final JobService jobService;
+
 
     @GetMapping
     @Operation(summary = "Tìm kiếm và lọc tin việc làm đa tiêu chí")
@@ -83,9 +85,15 @@ public class JobController {
     @Operation(summary = "Cập nhật trạng thái vòng đời công việc")
     public ResponseEntity<ApiResponse<Job>> updateStatus(
             @PathVariable Long id,
-            @RequestParam String status
+            @RequestParam String status,
+            @AuthenticationPrincipal UserPrincipal currentUser
     ) {
-        Job job = jobService.updateJobStatus(id, status);
+        // Validate status value
+        if (!Set.of("OPEN", "IN_PROGRESS", "COMPLETED", "CLOSED").contains(status.toUpperCase())) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Trạng thái không hợp lệ. Chỉ chấp nhận: OPEN, IN_PROGRESS, COMPLETED, CLOSED"));
+        }
+        Job job = jobService.updateJobStatus(id, status.toUpperCase(), currentUser.getId(), currentUser.getAuthorities());
         return ResponseEntity.ok(ApiResponse.ok("Cập nhật trạng thái công việc thành công", job));
     }
 }

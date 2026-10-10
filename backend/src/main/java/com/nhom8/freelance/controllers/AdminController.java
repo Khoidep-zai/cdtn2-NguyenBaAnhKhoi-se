@@ -61,7 +61,7 @@ public class AdminController {
     @DeleteMapping("/jobs/{id}")
     @Operation(summary = "Quản trị viên gỡ bỏ tin tuyển dụng")
     public ResponseEntity<ApiResponse<Void>> deleteJob(@PathVariable Long id) {
-        jobRepository.deleteById(id);
+        jobService.deleteJob(id);
         return ResponseEntity.ok(ApiResponse.ok("Đã xóa tin tuyển dụng", null));
     }
 }

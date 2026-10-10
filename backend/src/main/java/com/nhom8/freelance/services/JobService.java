@@ -23,6 +23,8 @@ public class JobService {
     private final JobRepository jobRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final com.nhom8.freelance.repositories.ApplicationRepository applicationRepository;
+    private final com.nhom8.freelance.repositories.ReviewRepository reviewRepository;
 
     public Page<Job> searchJobs(String keyword, Long categoryId, String jobType, String workMode, String province, Boolean studentFriendly, Pageable pageable) {
         String cleanKeyword = (keyword != null && !keyword.trim().isEmpty()) ? keyword.trim() : null;
@@ -60,6 +62,11 @@ public class JobService {
                 .jobType(request.getJobType())
                 .workMode(request.getWorkMode() != null ? request.getWorkMode() : "ONSITE")
                 .location(request.getLocation())
+                .province(request.getProvince())
+                .salaryText(request.getSalaryText())
+                .workingHours(request.getWorkingHours())
+                .benefits(request.getBenefits())
+                .studentFriendly(request.getStudentFriendly() != null ? request.getStudentFriendly() : true)
                 .salaryType(request.getSalaryType())
                 .salaryAmount(request.getSalaryAmount())
                 .slotsAvailable(request.getSlotsAvailable() != null ? request.getSlotsAvailable() : 1)
@@ -75,5 +82,32 @@ public class JobService {
         Job job = getJobById(jobId);
         job.setStatus(status);
         return jobRepository.save(job);
+    }
+
+    @Transactional
+    public Job updateJobStatus(Long jobId, String status, Long requesterId,
+                               java.util.Collection<? extends org.springframework.security.core.GrantedAuthority> authorities) {
+        Job job = getJobById(jobId);
+        boolean isAdmin = authorities != null && authorities.stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        if (!isAdmin && (requesterId == null || !job.getEmployer().getId().equals(requesterId))) {
+            throw new com.nhom8.freelance.exceptions.BadRequestException("Bạn không có quyền cập nhật trạng thái công việc này");
+        }
+        job.setStatus(status);
+        return jobRepository.save(job);
+    }
+
+    @Transactional
+    public void deleteJob(Long id) {
+        Job job = getJobById(id);
+        var apps = applicationRepository.findByJobId(id);
+        if (apps != null && !apps.isEmpty()) {
+            applicationRepository.deleteAll(apps);
+        }
+        var reviews = reviewRepository.findByJobId(id);
+        if (reviews != null && !reviews.isEmpty()) {
+            reviewRepository.deleteAll(reviews);
+        }
+        jobRepository.delete(job);
     }
 }

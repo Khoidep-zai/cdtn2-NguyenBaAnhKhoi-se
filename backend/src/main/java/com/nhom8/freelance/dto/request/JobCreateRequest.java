@@ -26,6 +26,11 @@ public class JobCreateRequest {
 
     private String workMode; // ONSITE, REMOTE, HYBRID
     private String location;
+    private String province; // Tỉnh thành
+    private String salaryText; // Hiển thị chi tiết lương
+    private String workingHours; // Ca làm việc
+    private String benefits; // Phúc lợi
+    private Boolean studentFriendly = true; // Phù hợp sinh viên
 
     @NotBlank(message = "Hình thức thù lao không được để trống")
     private String salaryType; // HOURLY, FIXED_PROJECT, MONTHLY

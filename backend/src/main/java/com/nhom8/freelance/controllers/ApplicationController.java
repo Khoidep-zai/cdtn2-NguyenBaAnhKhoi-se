@@ -30,6 +30,9 @@ public class ApplicationController {
             @AuthenticationPrincipal UserPrincipal currentUser,
             @RequestBody Map<String, Object> payload
     ) {
+        if (payload.get("jobId") == null) {
+            throw new com.nhom8.freelance.exceptions.BadRequestException("jobId là trường bắt buộc");
+        }
         Long jobId = Long.valueOf(payload.get("jobId").toString());
         String coverLetter = (String) payload.get("coverLetter");
         String cvUrl = (String) payload.get("cvUrl");
@@ -65,10 +68,24 @@ public class ApplicationController {
     @PreAuthorize("hasAnyRole('EMPLOYER', 'ADMIN')")
     @Operation(summary = "Nhà tuyển dụng xem danh sách ứng viên của tin đăng")
     public ResponseEntity<ApiResponse<List<Application>>> getJobApplications(
-            @PathVariable Long jobId
+            @PathVariable Long jobId,
+            @AuthenticationPrincipal UserPrincipal currentUser
     ) {
-        List<Application> applications = applicationService.getApplicationsByJob(jobId);
+        List<Application> applications = applicationService.getApplicationsByJobSecure(
+                jobId, currentUser.getId(), currentUser.getAuthorities()
+        );
         return ResponseEntity.ok(ApiResponse.ok("Lấy danh sách ứng viên thành công", applications));
+    }
+
+    @PatchMapping("/{applicationId}/cancel")
+    @PreAuthorize("hasRole('STUDENT')")
+    @Operation(summary = "Sinh viên rút / hủy đơn ứng tuyển đang chờ duyệt")
+    public ResponseEntity<ApiResponse<Application>> cancelApplication(
+            @PathVariable Long applicationId,
+            @AuthenticationPrincipal UserPrincipal currentUser
+    ) {
+        Application cancelled = applicationService.cancelApplication(applicationId, currentUser.getId());
+        return ResponseEntity.ok(ApiResponse.ok("Hủy đơn ứng tuyển thành công", cancelled));
     }
 
     @PatchMapping("/{applicationId}/status")
@@ -76,11 +93,17 @@ public class ApplicationController {
     @Operation(summary = "Nhà tuyển dụng xét duyệt ứng viên (Chấp nhận hoặc Từ chối)")
     public ResponseEntity<ApiResponse<Application>> updateStatus(
             @PathVariable Long applicationId,
+            @AuthenticationPrincipal UserPrincipal currentUser,
             @RequestBody Map<String, String> payload
     ) {
         String status = payload.get("status"); // ACCEPTED, REJECTED
+        if (status == null || (!status.equals("ACCEPTED") && !status.equals("REJECTED"))) {
+            throw new com.nhom8.freelance.exceptions.BadRequestException("Trạng thái không hợp lệ. Chỉ chấp nhận: ACCEPTED hoặc REJECTED");
+        }
         String reason = payload.get("rejectionReason");
-        Application application = applicationService.updateApplicationStatus(applicationId, status, reason);
+        Application application = applicationService.updateApplicationStatus(
+                applicationId, status, reason, currentUser.getId(), currentUser.getAuthorities()
+        );
         return ResponseEntity.ok(ApiResponse.ok("Cập nhật trạng thái xét duyệt thành công", application));
     }
 }

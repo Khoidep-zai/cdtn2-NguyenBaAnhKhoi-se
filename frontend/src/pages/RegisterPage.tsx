@@ -21,6 +21,10 @@ export const RegisterPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (password.length < 6) {
+      setError('Mật khẩu phải có tối thiểu 6 ký tự!');
+      return;
+    }
     setError('');
     setLoading(true);
 
@@ -36,7 +40,12 @@ export const RegisterPage: React.FC = () => {
       });
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại!');
+      const respData = err.response?.data;
+      if (respData?.data && typeof respData.data === 'object' && Object.keys(respData.data).length > 0) {
+        setError(Object.values(respData.data).join(' • '));
+      } else {
+        setError(respData?.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại!');
+      }
     } finally {
       setLoading(false);
     }
@@ -118,6 +127,7 @@ export const RegisterPage: React.FC = () => {
             <input
               type="password"
               required
+              minLength={6}
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

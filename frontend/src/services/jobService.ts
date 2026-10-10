@@ -55,6 +55,11 @@ export const jobService = {
     return res.data.data;
   },
 
+  async cancelApplication(applicationId: number): Promise<Application> {
+    const res = await apiClient.patch<ApiResponse<Application>>(`/applications/${applicationId}/cancel`);
+    return res.data.data;
+  },
+
   async getMyPostedJobs(): Promise<Job[]> {
     const res = await apiClient.get<ApiResponse<Job[]>>('/jobs/my-jobs');
     return res.data.data;

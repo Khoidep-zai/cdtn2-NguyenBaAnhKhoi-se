@@ -43,6 +43,9 @@ public class UserService {
         if (payload.containsKey("major")) {
             user.setMajor(payload.get("major"));
         }
+        if (payload.containsKey("cvUrl")) {
+            user.setCvUrl(payload.get("cvUrl"));
+        }
         if (payload.containsKey("companyName")) {
             user.setCompanyName(payload.get("companyName"));
         }

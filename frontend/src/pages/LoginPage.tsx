@@ -23,7 +23,12 @@ export const LoginPage: React.FC = () => {
       await login({ email, password });
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin!');
+      const respData = err.response?.data;
+      if (respData?.data && typeof respData.data === 'object' && Object.keys(respData.data).length > 0) {
+        setError(Object.values(respData.data).join(' • '));
+      } else {
+        setError(respData?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin!');
+      }
     } finally {
       setLoading(false);
     }

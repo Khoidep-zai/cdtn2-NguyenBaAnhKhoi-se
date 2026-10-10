@@ -103,6 +103,22 @@ export const MyApplicationsPage: React.FC = () => {
             <Clock size={14} /> Đang xem xét
           </span>
         );
+      case 'CANCELLED':
+        return (
+          <span style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+            padding: '0.35rem 0.75rem',
+            background: '#f1f5f9',
+            color: '#64748b',
+            borderRadius: '9999px',
+            fontSize: '0.82rem',
+            fontWeight: 600
+          }}>
+            <XCircle size={14} /> Đã rút đơn
+          </span>
+        );
       default:
         return (
           <span style={{
@@ -119,6 +135,16 @@ export const MyApplicationsPage: React.FC = () => {
             <Clock size={14} /> Chờ duyệt
           </span>
         );
+    }
+  };
+
+  const handleCancelApplication = async (applicationId: number) => {
+    if (!window.confirm('Bạn có chắc chắn muốn rút đơn ứng tuyển này?')) return;
+    try {
+      await jobService.cancelApplication(applicationId);
+      setApplications(prev => prev.map(a => a.id === applicationId ? { ...a, status: 'CANCELLED' } : a));
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Không thể hủy đơn ứng tuyển');
     }
   };
 
@@ -345,8 +371,23 @@ export const MyApplicationsPage: React.FC = () => {
                     )}
                   </div>
 
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    {app.status === 'ACCEPTED' && (
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    {app.status === 'PENDING' && (
+                      <button
+                        onClick={() => handleCancelApplication(app.id)}
+                        className="btn btn-secondary"
+                        style={{
+                          padding: '0.4rem 0.85rem',
+                          fontSize: '0.85rem',
+                          color: '#b91c1c',
+                          borderColor: '#fca5a5'
+                        }}
+                      >
+                        <XCircle size={14} /> Rút đơn
+                      </button>
+                    )}
+
+                    {app.status === 'ACCEPTED' && job?.status === 'COMPLETED' && (
                       <button
                         onClick={() => openReviewModal(app)}
                         className="btn btn-secondary"
@@ -354,6 +395,22 @@ export const MyApplicationsPage: React.FC = () => {
                       >
                         <Star size={15} color="#eab308" /> Đánh giá nhà tuyển dụng
                       </button>
+                    )}
+
+                    {app.status === 'ACCEPTED' && job?.status !== 'COMPLETED' && (
+                      <span style={{
+                        fontSize: '0.8rem',
+                        color: 'var(--text-muted)',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                        padding: '0.35rem 0.6rem',
+                        background: 'var(--bg-main)',
+                        borderRadius: 'var(--radius-sm)',
+                        border: '1px solid var(--border-color)'
+                      }}>
+                        <Clock size={13} /> Đánh giá mở khi hoàn thành việc
+                      </span>
                     )}
                     <Link
                       to={`/jobs/${jobId}`}

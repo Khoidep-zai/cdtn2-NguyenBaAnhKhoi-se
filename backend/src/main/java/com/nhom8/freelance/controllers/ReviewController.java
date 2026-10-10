@@ -44,6 +44,16 @@ public class ReviewController {
         return ResponseEntity.ok(ApiResponse.ok("Lấy danh sách đánh giá thành công", reviews));
     }
 
+    @GetMapping("/job/{jobId}/has-reviewed")
+    @Operation(summary = "Kiểm tra xem người dùng hiện tại đã đánh giá công việc này chưa")
+    public ResponseEntity<ApiResponse<Boolean>> hasUserReviewed(
+            @PathVariable Long jobId,
+            @AuthenticationPrincipal UserPrincipal currentUser
+    ) {
+        boolean reviewed = currentUser != null && reviewService.hasUserReviewed(jobId, currentUser.getId());
+        return ResponseEntity.ok(ApiResponse.ok("Kiểm tra trạng thái đánh giá thành công", reviewed));
+    }
+
     @GetMapping("/user/{userId}")
     @Operation(summary = "Lấy danh sách đánh giá của một người dùng")
     public ResponseEntity<ApiResponse<List<Review>>> getReviewsByUser(@PathVariable Long userId) {

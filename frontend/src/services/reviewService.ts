@@ -42,5 +42,14 @@ export const reviewService = {
   async getUserRating(userId: number): Promise<number> {
     const res = await apiClient.get<ApiResponse<number>>(`/reviews/user/${userId}/rating`);
     return res.data.data;
+  },
+
+  async hasUserReviewed(jobId: number): Promise<boolean> {
+    try {
+      const res = await apiClient.get<ApiResponse<boolean>>(`/reviews/job/${jobId}/has-reviewed`);
+      return !!res.data.data;
+    } catch {
+      return false;
+    }
   }
 };

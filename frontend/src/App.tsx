@@ -46,121 +46,122 @@ export const App: React.FC = () => {
       <LanguageProvider>
         <AuthProvider>
           <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            {/* Public Routes */}
-            <Route index element={<HomePage />} />
-            <Route path="jobs" element={<JobBrowsePage />} />
-            <Route path="jobs/:id" element={<JobDetailPage />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register" element={<RegisterPage />} />
+            <Routes>
+              <Route path="/" element={<MainLayout />}>
+                {/* Public Routes */}
+                <Route index element={<HomePage />} />
+                <Route path="jobs" element={<JobBrowsePage />} />
+                <Route path="jobs/:id" element={<JobDetailPage />} />
+                <Route path="login" element={<LoginPage />} />
+                <Route path="register" element={<RegisterPage />} />
 
-            {/* Smart Dashboard Dispatcher */}
-            <Route path="dashboard" element={<DashboardDispatcher />} />
+                {/* Smart Dashboard Dispatcher */}
+                <Route path="dashboard" element={<DashboardDispatcher />} />
 
-            {/* Student Protected Routes */}
-            <Route
-              path="student/dashboard"
-              element={
-                <ProtectedRoute allowedRoles={['ROLE_STUDENT']}>
-                  <StudentDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="student/applications"
-              element={
-                <ProtectedRoute allowedRoles={['ROLE_STUDENT']}>
-                  <MyApplicationsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="student/profile"
-              element={
-                <ProtectedRoute allowedRoles={['ROLE_STUDENT']}>
-                  <StudentProfilePage />
-                </ProtectedRoute>
-              }
-            />
+                {/* Student Protected Routes */}
+                <Route
+                  path="student/dashboard"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_STUDENT']}>
+                      <StudentDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="student/applications"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_STUDENT']}>
+                      <MyApplicationsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="student/profile"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_STUDENT']}>
+                      <StudentProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
 
-            {/* Employer Protected Routes */}
-            <Route
-              path="employer/dashboard"
-              element={
-                <ProtectedRoute allowedRoles={['ROLE_EMPLOYER']}>
-                  <EmployerDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="employer/my-jobs"
-              element={
-                <ProtectedRoute allowedRoles={['ROLE_EMPLOYER']}>
-                  <MyJobsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="employer/post-job"
-              element={
-                <ProtectedRoute allowedRoles={['ROLE_EMPLOYER']}>
-                  <PostJobPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="post-job"
-              element={
-                <ProtectedRoute allowedRoles={['ROLE_EMPLOYER']}>
-                  <PostJobPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="employer/jobs/:id/applicants"
-              element={
-                <ProtectedRoute allowedRoles={['ROLE_EMPLOYER']}>
-                  <ApplicantsPage />
-                </ProtectedRoute>
-              }
-            />
+                {/* Employer Protected Routes */}
+                <Route
+                  path="employer/dashboard"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_EMPLOYER']}>
+                      <EmployerDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="employer/my-jobs"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_EMPLOYER']}>
+                      <MyJobsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="employer/post-job"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_EMPLOYER']}>
+                      <PostJobPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="post-job"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_EMPLOYER']}>
+                      <PostJobPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="employer/jobs/:id/applicants"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_EMPLOYER']}>
+                      <ApplicantsPage />
+                    </ProtectedRoute>
+                  }
+                />
 
-            {/* Admin Protected Routes */}
-            <Route
-              path="admin/dashboard"
-              element={
-                <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="admin/users"
-              element={
-                <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
-                  <ManageUsersPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="admin/jobs"
-              element={
-                <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
-                  <ManageJobsPage />
-                </ProtectedRoute>
-              }
-            />
+                {/* Admin Protected Routes */}
+                <Route
+                  path="admin/dashboard"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="admin/users"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
+                      <ManageUsersPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="admin/jobs"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
+                      <ManageJobsPage />
+                    </ProtectedRoute>
+                  }
+                />
 
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
-  </LanguageProvider>
-</ThemeProvider>
+                {/* Fallback */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 };
 
 export default App;
+

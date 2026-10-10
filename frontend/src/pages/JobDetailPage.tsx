@@ -87,9 +87,16 @@ export const JobDetailPage: React.FC = () => {
   const [job, setJob] = useState<Job>(FALLBACK_JOBS[jobId] || FALLBACK_JOBS[1]);
   const [applied, setApplied] = useState(false);
   const [coverLetter, setCoverLetter] = useState('');
+  const [cvUrl, setCvUrl] = useState(user?.cvUrl || '');
   const [showModal, setShowModal] = useState(false);
   const [applying, setApplying] = useState(false);
   const [applyError, setApplyError] = useState('');
+
+  useEffect(() => {
+    if (user?.cvUrl) {
+      setCvUrl(user.cvUrl);
+    }
+  }, [user]);
 
   useEffect(() => {
     let isMounted = true;
@@ -123,13 +130,11 @@ export const JobDetailPage: React.FC = () => {
     setApplying(true);
     setApplyError('');
     try {
-      await jobService.applyJob(job.id, coverLetter);
+      await jobService.applyJob(job.id, coverLetter, cvUrl);
       setApplied(true);
       setShowModal(false);
-    } catch {
-      // Local fallback for smooth demo experience
-      setApplied(true);
-      setShowModal(false);
+    } catch (err: any) {
+      setApplyError(err?.response?.data?.message || 'Có lỗi xảy ra khi nộp hồ sơ. Vui lòng thử lại!');
     } finally {
       setApplying(false);
     }
@@ -269,14 +274,32 @@ export const JobDetailPage: React.FC = () => {
             )}
 
             <form onSubmit={handleApply}>
-              <textarea
-                required
-                rows={5}
-                placeholder={t('job.coverLetterPlaceholder')}
-                value={coverLetter}
-                onChange={(e) => setCoverLetter(e.target.value)}
-                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--bg-main)', color: 'var(--text-main)', marginBottom: '1.25rem', outline: 'none' }}
-              />
+              <div style={{ marginBottom: '1.25rem' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--text-main)' }}>
+                  {language === 'vi' ? 'Thư giới thiệu / Lời nhắn' : 'Cover Letter / Introduction'}
+                </label>
+                <textarea
+                  required
+                  rows={4}
+                  placeholder={t('job.coverLetterPlaceholder')}
+                  value={coverLetter}
+                  onChange={(e) => setCoverLetter(e.target.value)}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--bg-main)', color: 'var(--text-main)', outline: 'none' }}
+                />
+              </div>
+
+              <div style={{ marginBottom: '1.25rem' }}>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--text-main)' }}>
+                  {language === 'vi' ? 'Liên kết CV / Portfolio (Google Drive / PDF online)' : 'Online CV / Portfolio Link'}
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://drive.google.com/..."
+                  value={cvUrl}
+                  onChange={(e) => setCvUrl(e.target.value)}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--bg-main)', color: 'var(--text-main)', outline: 'none' }}
+                />
+              </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
                 <button type="button" onClick={() => setShowModal(false)} className="btn btn-secondary">{t('job.cancel')}</button>
                 <button type="submit" disabled={applying} className="btn btn-primary">

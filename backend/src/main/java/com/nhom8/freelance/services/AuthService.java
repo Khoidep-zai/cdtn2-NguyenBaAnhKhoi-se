@@ -39,8 +39,16 @@ public class AuthService {
             roleName = "ROLE_" + roleName;
         }
 
+        if ("ROLE_ADMIN".equalsIgnoreCase(roleName)) {
+            throw new BadRequestException("Không thể tự đăng ký tài khoản Quản trị viên (ADMIN)!");
+        }
+
+        if (!"ROLE_STUDENT".equalsIgnoreCase(roleName) && !"ROLE_EMPLOYER".equalsIgnoreCase(roleName)) {
+            throw new BadRequestException("Vai trò không hợp lệ: " + request.getRole());
+        }
+
         Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new BadRequestException("Vai trò không hợp lệ: " + request.getRole()));
+                .orElseThrow(() -> new BadRequestException("Vai trò không tồn tại trong hệ thống: " + request.getRole()));
 
         User user = User.builder()
                 .email(request.getEmail())
@@ -63,15 +71,19 @@ public class AuthService {
     }
 
     public JwtAuthResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new BadRequestException("Người dùng không tồn tại"));
+
+        if (Boolean.FALSE.equals(user.getIsActive())) {
+            throw new BadRequestException("Tài khoản của bạn đã bị khóa hoặc vô hiệu hóa. Vui lòng liên hệ Admin!");
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.generateToken(authentication);
-
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new BadRequestException("Người dùng không tồn tại"));
 
         return JwtAuthResponse.builder()
                 .accessToken(jwt)

@@ -4,6 +4,7 @@ import com.nhom8.freelance.exceptions.BadRequestException;
 import com.nhom8.freelance.models.Job;
 import com.nhom8.freelance.models.Review;
 import com.nhom8.freelance.models.User;
+import com.nhom8.freelance.repositories.ApplicationRepository;
 import com.nhom8.freelance.repositories.JobRepository;
 import com.nhom8.freelance.repositories.ReviewRepository;
 import com.nhom8.freelance.repositories.UserRepository;
@@ -37,6 +38,9 @@ class ReviewServiceTest {
     private UserRepository userRepository;
 
     @Mock
+    private ApplicationRepository applicationRepository;
+
+    @Mock
     private NotificationService notificationService;
 
     @InjectMocks
@@ -52,7 +56,7 @@ class ReviewServiceTest {
         student = User.builder().id(2L).email("student@test.com").fullName("Student Test").build();
         employer = User.builder().id(1L).email("employer@test.com").fullName("Employer Test").build();
 
-        job = Job.builder().id(10L).title("Lập trình Web").status("COMPLETED").build();
+        job = Job.builder().id(10L).title("Lập trình Web").status("COMPLETED").employer(employer).build();
 
         review = Review.builder()
                 .id(1L)
@@ -71,6 +75,7 @@ class ReviewServiceTest {
         when(jobRepository.findById(10L)).thenReturn(Optional.of(job));
         when(userRepository.findById(1L)).thenReturn(Optional.of(employer));
         when(reviewRepository.existsByJobIdAndReviewerId(10L, 2L)).thenReturn(false);
+        when(applicationRepository.existsByJobIdAndStudentIdAndStatus(10L, 2L, "ACCEPTED")).thenReturn(true);
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
         Review result = reviewService.createReview(2L, 10L, 1L, 5, "Tuyệt vời");
@@ -79,6 +84,33 @@ class ReviewServiceTest {
         assertEquals(5, result.getRating());
         verify(reviewRepository).save(any(Review.class));
         verify(notificationService).createNotification(eq(1L), anyString(), anyString(), eq("REVIEW"), anyLong());
+    }
+
+    @Test
+    @DisplayName("Ném BadRequestException khi công việc chưa COMPLETED")
+    void createReview_JobNotCompleted_ThrowsException() {
+        job.setStatus("OPEN");
+        when(userRepository.findById(2L)).thenReturn(Optional.of(student));
+        when(jobRepository.findById(10L)).thenReturn(Optional.of(job));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(employer));
+
+        assertThrows(BadRequestException.class, () ->
+                reviewService.createReview(2L, 10L, 1L, 5, "Chưa hoàn thành")
+        );
+    }
+
+    @Test
+    @DisplayName("Ném BadRequestException khi người đánh giá chưa được duyệt ACCEPTED")
+    void createReview_NotAcceptedApplicant_ThrowsException() {
+        when(userRepository.findById(2L)).thenReturn(Optional.of(student));
+        when(jobRepository.findById(10L)).thenReturn(Optional.of(job));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(employer));
+        when(reviewRepository.existsByJobIdAndReviewerId(10L, 2L)).thenReturn(false);
+        when(applicationRepository.existsByJobIdAndStudentIdAndStatus(10L, 2L, "ACCEPTED")).thenReturn(false);
+
+        assertThrows(BadRequestException.class, () ->
+                reviewService.createReview(2L, 10L, 1L, 5, "Chưa được duyệt")
+        );
     }
 
     @Test

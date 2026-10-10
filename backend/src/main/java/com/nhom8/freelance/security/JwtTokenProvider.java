@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Component
@@ -21,7 +22,8 @@ public class JwtTokenProvider {
     private long jwtExpirationInMs;
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        // Dùng UTF-8 explicit để đảm bảo nhất quán giữa các môi trường
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateToken(Authentication authentication) {

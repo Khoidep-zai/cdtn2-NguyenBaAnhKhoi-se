@@ -356,7 +356,7 @@ export const ApplicantsPage: React.FC = () => {
                       </>
                     )}
 
-                    {app.status === 'ACCEPTED' && student && (
+                    {app.status === 'ACCEPTED' && student && job?.status === 'COMPLETED' && (
                       <button
                         onClick={() => handleOpenReview(app)}
                         className="btn btn-secondary"
@@ -364,6 +364,22 @@ export const ApplicantsPage: React.FC = () => {
                       >
                         <Star size={15} color="#eab308" /> Đánh giá sinh viên
                       </button>
+                    )}
+
+                    {app.status === 'ACCEPTED' && student && job?.status !== 'COMPLETED' && (
+                      <span style={{
+                        fontSize: '0.8rem',
+                        color: 'var(--text-muted)',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                        padding: '0.35rem 0.6rem',
+                        background: 'var(--bg-main)',
+                        borderRadius: 'var(--radius-sm)',
+                        border: '1px solid var(--border-color)'
+                      }}>
+                        <Clock size={13} /> Đánh giá mở khi việc hoàn thành
+                      </span>
                     )}
                   </div>
                 </div>

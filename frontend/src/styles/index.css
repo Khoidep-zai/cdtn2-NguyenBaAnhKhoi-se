@@ -473,3 +473,85 @@ body {
   text-decoration: underline;
 }
 
+/* Universal Card & Panel System */
+.panel-card,
+.card-theme {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  color: var(--text-main);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.panel-card:hover {
+  border-color: var(--border-focus);
+}
+
+/* Global Form Controls for Dark/Light Harmony */
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([class*="auth-input"]):not([class*="search-input"]),
+textarea,
+select {
+  font-family: inherit;
+  background-color: var(--bg-card-subtle) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: var(--transition);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-light) !important;
+}
+
+/* Profile & Dashboard Component Helpers */
+.profile-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  color: var(--text-main);
+  transition: var(--transition);
+}
+
+.stat-box {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  color: var(--text-main);
+  transition: var(--transition);
+}
+
+.stat-box:hover {
+  border-color: var(--border-focus) !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.table-container {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.table-header {
+  background: var(--bg-card-subtle) !important;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+

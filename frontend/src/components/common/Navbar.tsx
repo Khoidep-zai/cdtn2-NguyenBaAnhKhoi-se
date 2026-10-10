@@ -44,6 +44,7 @@ export const Navbar: React.FC = () => {
               {user?.role === 'ROLE_EMPLOYER' && (
                 <>
                   <Link to="/employer/my-jobs" className="nav-link">{t('nav.myJobs')}</Link>
+                  <Link to="/employer/profile" className="nav-link">{t('nav.profile')}</Link>
                   <Link to="/employer/post-job" className="btn btn-primary" style={{ padding: '0.45rem 1rem' }}>
                     <PlusCircle size={18} /> {t('nav.postJob')}
                   </Link>
@@ -51,9 +52,12 @@ export const Navbar: React.FC = () => {
               )}
 
               {user?.role === 'ROLE_ADMIN' && (
-                <Link to="/admin/dashboard" className="btn btn-secondary" style={{ padding: '0.45rem 0.85rem', color: '#ef4444' }}>
-                  <Shield size={16} /> {t('nav.admin')}
-                </Link>
+                <>
+                  <Link to="/admin/profile" className="nav-link">{t('nav.profile')}</Link>
+                  <Link to="/admin/dashboard" className="btn btn-secondary" style={{ padding: '0.45rem 0.85rem', color: '#ef4444' }}>
+                    <Shield size={16} /> {t('nav.admin')}
+                  </Link>
+                </>
               )}
 
               <NotificationBell />

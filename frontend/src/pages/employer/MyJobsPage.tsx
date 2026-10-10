@@ -123,12 +123,14 @@ export const MyJobsPage: React.FC = () => {
         <div style={{
           textAlign: 'center',
           padding: '4rem 2rem',
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
           borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-color)'
+          border: '1px solid var(--border-color)',
+          boxShadow: 'var(--shadow-sm)'
         }}>
           <Briefcase size={48} color="var(--text-muted)" style={{ margin: '0 auto 1rem', opacity: 0.5 }} />
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>Không tìm thấy tin đăng nào</h3>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)' }}>Không tìm thấy tin đăng nào</h3>
           <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
             {selectedFilter === 'ALL'
               ? 'Bạn chưa đăng tin tuyển dụng nào. Hãy bắt đầu ngay hôm nay!'
@@ -144,7 +146,8 @@ export const MyJobsPage: React.FC = () => {
             <div
               key={job.id}
               style={{
-                background: 'white',
+                background: 'var(--bg-card)',
+                color: 'var(--text-main)',
                 borderRadius: 'var(--radius-lg)',
                 border: '1px solid var(--border-color)',
                 padding: '1.5rem',
@@ -206,7 +209,8 @@ export const MyJobsPage: React.FC = () => {
                       border: '1px solid var(--border-color)',
                       fontSize: '0.85rem',
                       fontWeight: 600,
-                      background: 'white',
+                      background: 'var(--bg-card-subtle)',
+                      color: 'var(--text-main)',
                       cursor: 'pointer'
                     }}
                   >

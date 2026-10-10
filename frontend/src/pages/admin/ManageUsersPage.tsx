@@ -97,7 +97,8 @@ export const ManageUsersPage: React.FC = () => {
 
       {/* Search and Filters */}
       <div style={{
-        background: 'white',
+        background: 'var(--bg-card)',
+        color: 'var(--text-main)',
         padding: '1.25rem',
         borderRadius: 'var(--radius-lg)',
         border: '1px solid var(--border-color)',
@@ -137,7 +138,8 @@ export const ManageUsersPage: React.FC = () => {
               borderRadius: 'var(--radius-md)',
               fontSize: '0.85rem',
               outline: 'none',
-              background: 'white'
+              background: 'var(--bg-card-subtle)',
+              color: 'var(--text-main)'
             }}
           >
             <option value="ALL">Tất cả vai trò</option>
@@ -150,7 +152,8 @@ export const ManageUsersPage: React.FC = () => {
 
       {/* Users Table */}
       <div style={{
-        background: 'white',
+        background: 'var(--bg-card)',
+        color: 'var(--text-main)',
         borderRadius: 'var(--radius-lg)',
         border: '1px solid var(--border-color)',
         overflow: 'hidden',

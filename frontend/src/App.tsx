@@ -94,6 +94,14 @@ export const App: React.FC = () => {
                   }
                 />
                 <Route
+                  path="employer/profile"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_EMPLOYER']}>
+                      <StudentProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="employer/my-jobs"
                   element={
                     <ProtectedRoute allowedRoles={['ROLE_EMPLOYER']}>
@@ -136,6 +144,14 @@ export const App: React.FC = () => {
                   }
                 />
                 <Route
+                  path="admin/profile"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
+                      <StudentProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="admin/users"
                   element={
                     <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
@@ -148,6 +164,16 @@ export const App: React.FC = () => {
                   element={
                     <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
                       <ManageJobsPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Universal Profile Route */}
+                <Route
+                  path="profile"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_STUDENT', 'ROLE_EMPLOYER', 'ROLE_ADMIN']}>
+                      <StudentProfilePage />
                     </ProtectedRoute>
                   }
                 />

@@ -121,7 +121,8 @@ export const ApplicantsPage: React.FC = () => {
 
       {/* Header */}
       <div style={{
-        background: 'white',
+        background: 'var(--bg-card)',
+        color: 'var(--text-main)',
         borderRadius: 'var(--radius-lg)',
         border: '1px solid var(--border-color)',
         padding: '1.75rem',
@@ -156,12 +157,14 @@ export const ApplicantsPage: React.FC = () => {
         <div style={{
           textAlign: 'center',
           padding: '4rem 2rem',
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
           borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-color)'
+          border: '1px solid var(--border-color)',
+          boxShadow: 'var(--shadow-sm)'
         }}>
           <Users size={48} color="var(--text-muted)" style={{ margin: '0 auto 1rem', opacity: 0.5 }} />
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>Chưa có ứng viên nào</h3>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)' }}>Chưa có ứng viên nào</h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
             Chưa có sinh viên nào nộp hồ sơ vào bài đăng này. Hãy kiểm tra lại sau!
           </p>
@@ -174,7 +177,8 @@ export const ApplicantsPage: React.FC = () => {
               <div
                 key={app.id}
                 style={{
-                  background: 'white',
+                  background: 'var(--bg-card)',
+                  color: 'var(--text-main)',
                   borderRadius: 'var(--radius-lg)',
                   border: '1px solid var(--border-color)',
                   padding: '1.5rem',
@@ -406,7 +410,9 @@ export const ApplicantsPage: React.FC = () => {
           padding: '1rem'
         }}>
           <div style={{
-            background: 'white',
+            background: 'var(--bg-card)',
+            color: 'var(--text-main)',
+            border: '1px solid var(--border-color)',
             borderRadius: 'var(--radius-lg)',
             padding: '2rem',
             maxWidth: '460px',

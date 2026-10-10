@@ -31,7 +31,8 @@ export const StudentDashboard: React.FC = () => {
     <div className="container" style={{ padding: '3rem 1.5rem' }}>
       {/* Profile Header */}
       <div style={{
-        background: 'white',
+        background: 'var(--bg-card)',
+        color: 'var(--text-main)',
         borderRadius: 'var(--radius-lg)',
         border: '1px solid var(--border-color)',
         padding: '2rem',
@@ -40,7 +41,8 @@ export const StudentDashboard: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '1.5rem'
+        gap: '1.5rem',
+        boxShadow: 'var(--shadow-sm)'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
           <div style={{
@@ -58,7 +60,7 @@ export const StudentDashboard: React.FC = () => {
             {user?.fullName?.charAt(0) || 'S'}
           </div>
           <div>
-            <h1 style={{ fontSize: '1.5rem', fontWeight: 800 }}>{user?.fullName}</h1>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)' }}>{user?.fullName}</h1>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{user?.university || 'Trường Đại học Văn Lang'} • {user?.major || 'Sinh viên'}</p>
             <div style={{ marginTop: '0.4rem', display: 'flex', gap: '0.5rem' }}>
               <span className="badge badge-open">Sinh viên</span>
@@ -83,15 +85,15 @@ export const StudentDashboard: React.FC = () => {
 
       {/* Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
-        <div style={{ background: 'white', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
+        <div style={{ background: 'var(--bg-card)', color: 'var(--text-main)', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
             <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>Tổng đơn đã nộp</span>
             <FileText size={20} color="var(--primary)" />
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800 }}>{applications.length}</div>
+          <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)' }}>{applications.length}</div>
         </div>
 
-        <div style={{ background: 'white', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
+        <div style={{ background: 'var(--bg-card)', color: 'var(--text-main)', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
             <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>Đã được nhận việc</span>
             <CheckCircle2 size={20} color="var(--success)" />
@@ -99,7 +101,7 @@ export const StudentDashboard: React.FC = () => {
           <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--success)' }}>{acceptedCount}</div>
         </div>
 
-        <div style={{ background: 'white', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
+        <div style={{ background: 'var(--bg-card)', color: 'var(--text-main)', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-sm)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
             <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>Đang chờ phản hồi</span>
             <Clock size={20} color="var(--warning)" />
@@ -110,18 +112,18 @@ export const StudentDashboard: React.FC = () => {
 
       {/* Recent Applications Section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800 }}>Đơn ứng tuyển gần đây</h2>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>Đơn ứng tuyển gần đây</h2>
         <Link to="/student/applications" style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.9rem' }}>
           Xem tất cả ({applications.length}) →
         </Link>
       </div>
 
-      <div style={{ background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', overflow: 'hidden' }}>
+      <div style={{ background: 'var(--bg-card)', color: 'var(--text-main)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
         {loading ? (
           <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)' }}>Đang tải dữ liệu...</div>
         ) : applications.length > 0 ? (
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
-            <thead style={{ background: 'var(--bg-main)', borderBottom: '1px solid var(--border-color)' }}>
+            <thead style={{ background: 'var(--bg-card-subtle)', borderBottom: '1px solid var(--border-color)' }}>
               <tr>
                 <th style={{ padding: '1rem' }}>Công việc</th>
                 <th style={{ padding: '1rem' }}>Nhà tuyển dụng</th>

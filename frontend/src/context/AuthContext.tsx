@@ -8,6 +8,7 @@ interface AuthContextType {
   loading: boolean;
   login: (data: { email: string; password: string }) => Promise<void>;
   register: (data: any) => Promise<void>;
+  updateUser: (data: Partial<User>) => void;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -59,6 +60,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     handleAuthSuccess(res);
   };
 
+  const updateUser = (data: Partial<User>) => {
+    if (user) {
+      const updatedUser = { ...user, ...data };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+    }
+  };
+
   const logout = () => {
     authService.logout();
     setToken(null);
@@ -73,6 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loading,
         login,
         register,
+        updateUser,
         logout,
         // isAuthenticated dựa trên cả token state VÀ user state
         isAuthenticated: !!token && !!user,

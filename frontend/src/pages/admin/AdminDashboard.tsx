@@ -10,7 +10,8 @@ import {
   ArrowRight, 
   UserCheck, 
   AlertTriangle,
-  Activity
+  Activity,
+  User as UserIcon
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -78,10 +79,13 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <Link to="/admin/users" className="btn btn-secondary" style={{ background: 'white', color: '#1e1b4b' }}>
+          <Link to="/admin/profile" className="btn btn-secondary">
+            <UserIcon size={16} /> Hồ sơ quản trị viên
+          </Link>
+          <Link to="/admin/users" className="btn btn-secondary">
             <Users size={16} /> Quản lý người dùng
           </Link>
-          <Link to="/admin/jobs" className="btn btn-secondary" style={{ background: 'white', color: '#1e1b4b' }}>
+          <Link to="/admin/jobs" className="btn btn-secondary">
             <Briefcase size={16} /> Quản lý việc làm
           </Link>
         </div>
@@ -95,7 +99,8 @@ export const AdminDashboard: React.FC = () => {
         marginBottom: '2.5rem'
       }}>
         <div style={{
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
           padding: '1.5rem',
           borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--border-color)',
@@ -116,7 +121,8 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div style={{
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
           padding: '1.5rem',
           borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--border-color)',
@@ -137,7 +143,8 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div style={{
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
           padding: '1.5rem',
           borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--border-color)',
@@ -158,7 +165,8 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div style={{
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
           padding: '1.5rem',
           borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--border-color)',
@@ -182,7 +190,8 @@ export const AdminDashboard: React.FC = () => {
       {/* Feature Navigation Modules */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' }}>
         <div style={{
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
           borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--border-color)',
           padding: '2rem',
@@ -206,7 +215,8 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div style={{
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
           borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--border-color)',
           padding: '2rem',

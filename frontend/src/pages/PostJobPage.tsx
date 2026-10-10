@@ -96,9 +96,9 @@ export const PostJobPage: React.FC = () => {
 
   return (
     <div className="container" style={{ padding: '3rem 1.5rem', maxWidth: '850px' }}>
-      <div style={{ background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', padding: '2.5rem', boxShadow: 'var(--shadow-sm)' }}>
+      <div style={{ background: 'var(--bg-card)', color: 'var(--text-main)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', padding: '2.5rem', boxShadow: 'var(--shadow-sm)' }}>
         <div style={{ marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Đăng tin tuyển dụng mới</h1>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)' }}>Đăng tin tuyển dụng mới</h1>
           <p style={{ color: 'var(--text-muted)' }}>Tiếp cận hàng nghìn sinh viên tài năng và nhiệt huyết</p>
         </div>
 
@@ -133,7 +133,7 @@ export const PostJobPage: React.FC = () => {
               <select
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
-                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'white' }}
+                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--bg-card-subtle)', color: 'var(--text-main)' }}
               >
                 {categories.length > 0 ? (
                   categories.map(cat => (
@@ -156,7 +156,7 @@ export const PostJobPage: React.FC = () => {
               <select
                 value={jobType}
                 onChange={(e) => setJobType(e.target.value)}
-                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'white' }}
+                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--bg-card-subtle)', color: 'var(--text-main)' }}
               >
                 <option value="PART_TIME">Việc làm Part-time</option>
                 <option value="FREELANCE">Dự án Freelance</option>
@@ -171,7 +171,7 @@ export const PostJobPage: React.FC = () => {
               <select
                 value={workMode}
                 onChange={(e) => setWorkMode(e.target.value)}
-                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'white' }}
+                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--bg-card-subtle)', color: 'var(--text-main)' }}
               >
                 <option value="ONSITE">Làm tại chỗ (Onsite)</option>
                 <option value="REMOTE">Làm việc từ xa (Remote)</option>
@@ -184,7 +184,7 @@ export const PostJobPage: React.FC = () => {
               <select
                 value={province}
                 onChange={(e) => setProvince(e.target.value)}
-                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'white' }}
+                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--bg-card-subtle)', color: 'var(--text-main)' }}
               >
                 {provinces.length > 0 ? (
                   provinces.map(p => (
@@ -220,7 +220,7 @@ export const PostJobPage: React.FC = () => {
               <select
                 value={salaryType}
                 onChange={(e) => setSalaryType(e.target.value)}
-                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'white' }}
+                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--bg-card-subtle)', color: 'var(--text-main)' }}
               >
                 <option value="HOURLY">Theo giờ (VNĐ/giờ)</option>
                 <option value="FIXED_PROJECT">Trọn gói theo dự án</option>

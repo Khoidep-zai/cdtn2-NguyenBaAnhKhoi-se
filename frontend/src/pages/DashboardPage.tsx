@@ -44,13 +44,13 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="container" style={{ padding: '3rem 1.5rem' }}>
       {/* Header Profile */}
-      <div style={{ background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', padding: '2rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem' }}>
+      <div style={{ background: 'var(--bg-card)', color: 'var(--text-main)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', padding: '2rem', marginBottom: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem', boxShadow: 'var(--shadow-sm)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
           <div style={{ width: '64px', height: '64px', borderRadius: 'var(--radius-full)', background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', fontWeight: 800, fontSize: '1.5rem' }}>
             {user?.fullName?.charAt(0) || 'U'}
           </div>
           <div>
-            <h1 style={{ fontSize: '1.5rem', fontWeight: 800 }}>{user?.fullName || 'Người dùng'}</h1>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)' }}>{user?.fullName || 'Người dùng'}</h1>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{user?.email}</p>
             <div style={{ marginTop: '0.4rem' }}>
               <Badge type={isEmployer ? 'FREELANCE' : 'PART_TIME'} label={isEmployer ? 'Nhà tuyển dụng' : 'Sinh viên'} />
@@ -81,10 +81,10 @@ export const DashboardPage: React.FC = () => {
       {/* Content for Student or Employer */}
       {isEmployer ? (
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1rem' }}>Danh sách tin tuyển dụng đã đăng</h2>
-          <div style={{ background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', overflow: 'hidden' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '1rem' }}>Danh sách tin tuyển dụng đã đăng</h2>
+          <div style={{ background: 'var(--bg-card)', color: 'var(--text-main)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
-              <thead style={{ background: 'var(--bg-main)', borderBottom: '1px solid var(--border-color)' }}>
+              <thead style={{ background: 'var(--bg-card-subtle)', borderBottom: '1px solid var(--border-color)' }}>
                 <tr>
                   <th style={{ padding: '1rem' }}>Tiêu đề công việc</th>
                   <th style={{ padding: '1rem' }}>Hình thức</th>
@@ -123,10 +123,10 @@ export const DashboardPage: React.FC = () => {
         </div>
       ) : (
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1rem' }}>Lịch sử công việc đã ứng tuyển</h2>
-          <div style={{ background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', overflow: 'hidden' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '1rem' }}>Lịch sử công việc đã ứng tuyển</h2>
+          <div style={{ background: 'var(--bg-card)', color: 'var(--text-main)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
-              <thead style={{ background: 'var(--bg-main)', borderBottom: '1px solid var(--border-color)' }}>
+              <thead style={{ background: 'var(--bg-card-subtle)', borderBottom: '1px solid var(--border-color)' }}>
                 <tr>
                   <th style={{ padding: '1rem' }}>Công việc</th>
                   <th style={{ padding: '1rem' }}>Nhà tuyển dụng</th>

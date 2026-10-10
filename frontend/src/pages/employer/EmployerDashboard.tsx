@@ -12,7 +12,8 @@ import {
   ArrowRight, 
   Building2,
   Calendar,
-  DollarSign
+  DollarSign,
+  User as UserIcon
 } from 'lucide-react';
 
 export const EmployerDashboard: React.FC = () => {
@@ -43,7 +44,8 @@ export const EmployerDashboard: React.FC = () => {
     <div className="container" style={{ padding: '3rem 1.5rem' }}>
       {/* Employer Profile Header */}
       <div style={{
-        background: 'white',
+        background: 'var(--bg-card)',
+        color: 'var(--text-main)',
         borderRadius: 'var(--radius-lg)',
         border: '1px solid var(--border-color)',
         padding: '2rem',
@@ -89,6 +91,9 @@ export const EmployerDashboard: React.FC = () => {
         </div>
 
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <Link to="/employer/profile" className="btn btn-secondary">
+            <UserIcon size={18} /> Chỉnh sửa hồ sơ
+          </Link>
           <Link to="/employer/post-job" className="btn btn-primary">
             <PlusCircle size={18} /> Đăng tin tuyển dụng
           </Link>
@@ -106,7 +111,8 @@ export const EmployerDashboard: React.FC = () => {
         marginBottom: '2.5rem'
       }}>
         <div style={{
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
           padding: '1.5rem',
           borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--border-color)',
@@ -122,7 +128,8 @@ export const EmployerDashboard: React.FC = () => {
         </div>
 
         <div style={{
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
           padding: '1.5rem',
           borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--border-color)',
@@ -138,7 +145,8 @@ export const EmployerDashboard: React.FC = () => {
         </div>
 
         <div style={{
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
           padding: '1.5rem',
           borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--border-color)',
@@ -154,7 +162,8 @@ export const EmployerDashboard: React.FC = () => {
         </div>
 
         <div style={{
-          background: 'white',
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
           padding: '1.5rem',
           borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--border-color)',
@@ -172,7 +181,8 @@ export const EmployerDashboard: React.FC = () => {
 
       {/* Recent Posted Jobs Section */}
       <div style={{
-        background: 'white',
+        background: 'var(--bg-card)',
+        color: 'var(--text-main)',
         borderRadius: 'var(--radius-lg)',
         border: '1px solid var(--border-color)',
         padding: '2rem',

@@ -60,7 +60,9 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
       padding: '1rem'
     }}>
       <div style={{
-        background: 'white',
+        background: 'var(--bg-card)',
+        color: 'var(--text-main)',
+        border: '1px solid var(--border-color)',
         borderRadius: 'var(--radius-lg)',
         padding: '2rem',
         maxWidth: '480px',

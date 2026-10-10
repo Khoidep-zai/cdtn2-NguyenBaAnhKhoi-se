@@ -12,7 +12,7 @@ export const Footer: React.FC = () => {
           Đồ án môn học: <strong>Chuyên đề tốt nghiệp 2</strong> (261_71ITGR40303_04) — Khoa Công nghệ Thông tin, Trường Đại học Văn Lang.
         </p>
         <p style={{ color: 'var(--text-light)', fontSize: '0.825rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem' }}>
-          Thực hiện bởi <strong>Nhóm 8: Nguyễn Tấn Tài (PM), Đăng Khôi (BA), Bảo Long (Tester)</strong> <Heart size={14} color="#ef4444" fill="#ef4444" />
+          Thực hiện bởi <strong>Nhóm 8: Nguyễn Tấn Tài (PM), Nguyễn Bá Anh Khôi (BA), Hoàng Bảo Long (Tester)</strong> <Heart size={14} color="#ef4444" fill="#ef4444" />
         </p>
       </div>
     </footer>

@@ -1,24 +1,48 @@
 version: '3.8'
 
 services:
-  # 1. Database Service (PostgreSQL)
+  # 1a. Database Service: PostgreSQL
   postgres_db:
     image: postgres:16-alpine
-    container_name: nhom8_freelance_db
+    container_name: nhom8_freelance_postgres
     restart: always
     environment:
       POSTGRES_DB: ${DB_NAME:-freelance_db}
-      POSTGRES_USER: ${DB_USER:-freelance_user}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-SecretPassword2026!}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-12345}
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
-      - ./database/migrations:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/postgres_init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - freelance_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-freelance_user} -d ${DB_NAME:-freelance_db}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-freelance_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 1b. Database Service: MySQL
+  mysql_db:
+    image: mysql:8.0
+    container_name: nhom8_freelance_mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-freelance_db}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-12345}
+      MYSQL_USER: ${DB_USER:-freelance_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-12345}
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/mysql_init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      - freelance_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-12345}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -30,13 +54,13 @@ services:
       dockerfile: Dockerfile
     container_name: nhom8_freelance_backend
     restart: on-failure
-    depends_on:
-      postgres_db:
-        condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5432/${DB_NAME:-freelance_db}
-      SPRING_DATASOURCE_USERNAME: ${DB_USER:-freelance_user}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-SecretPassword2026!}
+      SPRING_PROFILES_ACTIVE: ${DB_TYPE:-postgres}
+      DB_HOST: ${DB_HOST:-postgres_db}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-freelance_db}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-12345}
       JWT_SECRET: ${JWT_SECRET:-9a7f8e3b2c1d0f5e4a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f}
       JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
       SERVER_PORT: 8080
@@ -64,5 +88,7 @@ networks:
     driver: bridge
 
 volumes:
-  db_data:
+  postgres_data:
+    driver: local
+  mysql_data:
     driver: local

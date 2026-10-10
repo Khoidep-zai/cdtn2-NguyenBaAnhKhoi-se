@@ -3,7 +3,7 @@
 
 > **Học phần:** Chuyên đề tốt nghiệp 2 — Khoa CNTT — Trường Đại học Văn Lang  
 > **Nhóm thực hiện:** Nhóm 8 (261_71ITGR40303_04)  
-> **Thành viên:** Công Tài (PM), Anh Khôi (BA), Hoàng Long (Tester)  
+> **Thành viên:** Nguyễn Tấn Tài (PM), Nguyễn Bá Anh Khôi (BA), Hoàng Bảo Long (Tester)  
 > **Giảng viên hướng dẫn:** ThS. Nguyễn Văn Trung  
 
 ---
@@ -156,7 +156,8 @@ cdtn2-NguyenBaAnhKhoi-se/
 - Hoặc cài đặt thủ công:
   - Java JDK 17 hoặc 21
   - Node.js >= 18.x
-  - PostgreSQL >= 15.x
+  - **MySQL >= 8.x** (Cổng 3306) HOẶC **PostgreSQL >= 15.x** (Cổng 5433/5432)
+  - Mật khẩu cơ sở dữ liệu mặc định: `12345`
 
 ### 3.2. Khởi chạy nhanh bằng Docker Compose (Khuyến nghị)
 1. Sao chép tệp biến môi trường mẫu:
@@ -171,24 +172,23 @@ cdtn2-NguyenBaAnhKhoi-se/
    - **Frontend Web:** `http://localhost:3000`
    - **Backend API:** `http://localhost:8080/api/v1`
    - **Swagger API Docs:** `http://localhost:8080/api/v1/swagger-ui.html`
-   - **PostgreSQL Database:** `localhost:5432` (User: `freelance_user`, DB: `freelance_db`)
+   - **MySQL Database:** `localhost:3306` (User: `root`, DB: `freelance_db`, Password: `12345`)
+   - **PostgreSQL Database:** `localhost:5432` (User: `postgres`, DB: `freelance_db`, Password: `12345`)
 
-### 3.3. Khởi chạy 1-Click trên IntelliJ IDEA (Tự động mở trình duyệt chạy song song BE + FE)
+### 3.3. Khởi chạy 1-Click trên Windows (Hỗ trợ cả 2 CSDL)
+- **Chạy với MySQL:** Nhấp đúp vào `run-mysql.bat` (Kết nối MySQL cổng 3306, user `root`, pass `12345`).
+- **Chạy với PostgreSQL:** Nhấp đúp vào `run-postgres.bat` (Kết nối PostgreSQL cổng 5433/5432, user `postgres`, pass `12345`).
+- **Menu tương tác:** Nhấp đúp vào `run.bat` để chọn linh hoạt giữa MySQL, PostgreSQL hoặc H2 Database.
+
+### 3.4. Khởi chạy 1-Click trên IntelliJ IDEA
 Dự án đã được cấu hình sẵn toàn bộ Run Configurations tại `.idea/runConfigurations/`:
-1. Mở thư mục gốc `cdtn2-NguyenBaAnhKhoi-se` bằng **IntelliJ IDEA** (hỗ trợ cả Community và Ultimate).
-2. Tại thanh công cụ trên cùng, chọn cấu hình:
-   - **`🚀 Run Full Project (BE + FE)`** (được cấu hình mặc định sẵn).
+1. Mở thư mục gốc `cdtn2-NguyenBaAnhKhoi-se` bằng **IntelliJ IDEA**.
+2. Chọn profile mong muốn trong `application.yml` (`mysql` hoặc `postgres`) hoặc đặt qua `-Dspring.profiles.active=mysql`.
 3. Bấm nút **Run (▶)** (hoặc `Shift + F10`):
    - **Backend Spring Boot** tự động khởi động tại `http://localhost:8080/api/v1`.
-   - Cơ sở dữ liệu tự động kích hoạt (hỗ trợ H2 Database nhúng nếu máy chưa cài PostgreSQL hoặc tự động kết nối PostgreSQL nếu có).
-   - `DataInitializer` tự động nạp sẵn dữ liệu mẫu (Roles, Categories, tài khoản Admin, Nhà tuyển dụng, Sinh viên, Tin đăng, Ứng tuyển).
+   - `DataInitializer` tự động nạp sẵn dữ liệu mẫu vào CSDL đã chọn.
    - **Frontend React Vite** tự động được kích hoạt chạy song song tại `http://localhost:3000`.
-   - **Trình duyệt Web mặc định (Chrome/Edge) sẽ TỰ ĐỘNG MỞ NGAY LẬP TỨC** trang web `http://localhost:3000`.
-   - Khi bấm nút Stop (■) trên IntelliJ, cả Backend và Frontend sẽ tự động dừng an toàn.
-
-### 3.4. Khởi chạy 1-Click bằng tệp `run.bat` (Windows)
-- Chỉ cần **nhấp đúp chuột** vào tệp `run.bat` tại thư mục gốc của dự án.
-- Tệp sẽ tự động khởi động Backend và Frontend chạy song song, sau đó tự động bật trình duyệt `http://localhost:3000`.
+   - **Trình duyệt Web tự động mở** trang web `http://localhost:3000`.
 
 ### 3.5. Tài khoản mẫu dùng thử (Mật khẩu chung: `Password123@`)
 | Vai trò | Email đăng nhập | Mật khẩu | Chức năng chính |
@@ -207,6 +207,6 @@ Dự án đã được cấu hình sẵn toàn bộ Run Configurations tại `.i
 - Nhánh `develop`: Nhánh tích hợp chính của cả nhóm.
 - Nhánh tính năng:
   - `feature/auth-jwt`: Nguyễn Tấn Tài phụ trách
-  - `feature/job-management`: Đăng Khôi phụ trách
-  - `feature/ui-ux-marketplace`: Bảo Long phụ trách
+  - `feature/job-management`: Nguyễn Bá Anh Khôi phụ trách
+  - `feature/ui-ux-marketplace`: Hoàng Bảo Long phụ trách
 - Mỗi Pull Request phải được ít nhất 1 thành viên review và pass toàn bộ Unit Test trước khi merge.

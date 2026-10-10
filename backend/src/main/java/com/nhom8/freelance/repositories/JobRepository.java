@@ -16,7 +16,9 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     Page<Job> findByStatus(String status, Pageable pageable);
 
     @Query("SELECT j FROM Job j WHERE j.status = 'OPEN' AND " +
-           "(:keyword IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(j.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND " +
+           "(CAST(:keyword AS string) IS NULL OR CAST(:keyword AS string) = '' OR " +
+           "LOWER(j.title) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%')) OR " +
+           "LOWER(j.description) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%'))) AND " +
            "(:categoryId IS NULL OR j.category.id = :categoryId) AND " +
            "(:jobType IS NULL OR j.jobType = :jobType) AND " +
            "(:workMode IS NULL OR j.workMode = :workMode)")

@@ -27,8 +27,8 @@ INSERT INTO users (id, email, password_hash, full_name, phone, role_id, universi
 (2, 'recruiter@thecoffee.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Nguyễn Thị Tuyết (The Coffee House)', '0912345678', 2, NULL, NULL, 'The Coffee House Bình Thạnh', 'Chuỗi cà phê chuyên tuyển nhân sự sinh viên theo ca'),
 (3, 'techlead@innovate.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Trần Văn Minh (Innovate Studio)', '0923456789', 2, NULL, NULL, 'Innovate Media & Tech', 'Agency thiết kế website và sản xuất nội dung số'),
 (4, 'sinhvien.tai@vanlanguni.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Nguyễn Tấn Tài', '0934567890', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, 'Sinh viên năm 4 đam mê Backend Java Spring Boot và cơ sở dữ liệu'),
-(5, 'sinhvien.khoi@vanlanguni.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Đăng Khôi', '0945678901', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, 'Sinh viên năm 4 chuyên ngành CNPM, có kinh nghiệm phân tích nghiệp vụ và ReactJS'),
-(6, 'sinhvien.long@vanlanguni.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Bảo Long', '0956789012', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, 'Sinh viên năm 4 yêu thích UI/UX, kiểm thử phần mềm tự động')
+(5, 'sinhvien.khoi@vanlanguni.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Nguyễn Bá Anh Khôi', '0945678901', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, 'Sinh viên năm 4 chuyên ngành CNPM, có kinh nghiệm phân tích nghiệp vụ và ReactJS'),
+(6, 'sinhvien.long@vanlanguni.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Hoàng Bảo Long', '0956789012', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, 'Sinh viên năm 4 yêu thích UI/UX, kiểm thử phần mềm tự động')
 ON CONFLICT (id) DO NOTHING;
 
 -- 4. Insert Demo Jobs

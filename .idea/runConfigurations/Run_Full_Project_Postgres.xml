@@ -1,10 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="🚀 Run Full Project (BE + FE)" type="Application" factoryName="Application">
+  <configuration default="false" name="🚀 Run Full Project (PostgreSQL)" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.nhom8.freelance.FreelancePlatformApplication" />
     <module name="freelance-platform" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <envs>
-      <env name="SPRING_PROFILES_ACTIVE" value="mysql" />
+      <env name="SPRING_PROFILES_ACTIVE" value="postgres" />
+      <env name="DB_PORT" value="5433" />
       <env name="DB_PASSWORD" value="12345" />
     </envs>
     <method v="2">

@@ -89,7 +89,7 @@ public class DataInitializer implements CommandLineRunner {
         User studentKhoi = getOrCreateUser(
                 "sinhvien.khoi@vanlanguni.vn",
                 defaultPasswordHash,
-                "Đăng Khôi",
+                "Nguyễn Bá Anh Khôi",
                 "0945678901",
                 studentRole,
                 "Trường Đại học Văn Lang",

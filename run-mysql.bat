@@ -1,9 +1,10 @@
 @echo off
 chcp 65001 >nul
-title FreelanceHub - He thong viec lam sinh vien (Nhom 8)
+title FreelanceHub - He thong viec lam sinh vien (Nhom 8) - Che do MySQL
 
 echo ========================================================================
 echo   🚀 FREELANCEHUB - CHUYEN DE TOT NGHIEP 2 (NHOM 8 - DH VAN LANG)
+echo   🗄️ CSDL: MySQL (Port: 3306 - User: root - Pass: 12345)
 echo ========================================================================
 echo.
 
@@ -26,42 +27,14 @@ if %ERRORLEVEL% EQU 0 (
     )
 )
 
-echo   Vui long chon co so du lieu ban muon su dung:
-echo.
-echo   [1] MySQL      (Port: 3306 - User: root - Pass: 12345) [Khuyen nghi]
-echo   [2] PostgreSQL (Port: 5433/5432 - User: postgres - Pass: 12345)
-echo   [3] H2 In-Memory (CSDL nhe chay trong RAM, khong can cai DBMS)
-echo   [4] Doc tu file .env
-echo.
-set /p DB_CHOICE=">> Nhap lua chon cua ban (1-4, Enter mac dinh la 1): "
-
-if "%DB_CHOICE%"=="" set DB_CHOICE=1
-if "%DB_CHOICE%"=="1" (
-    set "PROFILE=mysql"
-    echo   ==^> Dang khoi dong voi MySQL...
-) else if "%DB_CHOICE%"=="2" (
-    set "PROFILE=postgres"
-    echo   ==^> Dang khoi dong voi PostgreSQL...
-) else if "%DB_CHOICE%"=="3" (
-    set "PROFILE=dev"
-    echo   ==^> Dang khoi dong voi H2 In-Memory...
-) else if "%DB_CHOICE%"=="4" (
-    set "PROFILE=mysql"
-    echo   ==^> Dang khoi dong theo cau hinh .env...
-) else (
-    set "PROFILE=mysql"
-    echo   ==^> Lua chon khong hop le, mac dinh chon MySQL...
-)
-
-echo.
-echo [1/2] Dang khoi dong Backend Spring Boot...
+echo [1/2] Dang khoi dong Backend Spring Boot voi profile MySQL...
 cd /d "%~dp0backend"
-start "Backend - Spring Boot (%PROFILE%)" cmd /c "title Backend Spring Boot (%PROFILE%) && %MVN_EXEC% spring-boot:run -Dspring-boot.run.profiles=%PROFILE%"
+start "Backend - Spring Boot (MySQL)" cmd /c "title Backend Spring Boot (MySQL) && %MVN_EXEC% spring-boot:run -Dspring-boot.run.profiles=mysql"
 
 echo [2/2] Frontend va trinh duyet se duoc tu dong khoi dong boi Backend!
 echo.
 echo ========================================================================
-echo   ✅ HE THONG DANG DUOC KHOI DONG!
+echo   ✅ HE THONG DANG KHOI DONG THANH CONG!
 echo.
 echo   🌐 Ung dung Frontend:   http://localhost:3000
 echo   🔌 Backend API:          http://localhost:8080/api/v1

@@ -28,8 +28,8 @@ INSERT INTO users (id, email, password_hash, full_name, phone, role_id, universi
 (2, 'recruiter@thecoffee.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Nguyễn Thị Tuyết (The Coffee House)', '0912345678', 2, NULL, NULL, 'The Coffee House Bình Thạnh', 'Bình Thạnh, TP.HCM', 'Chuỗi cà phê chuyên tuyển nhân sự sinh viên theo ca linh hoạt'),
 (3, 'techlead@innovate.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Trần Văn Minh (Innovate Studio)', '0923456789', 2, NULL, NULL, 'Innovate Media & Tech', 'Quận 1, TP.HCM', 'Agency thiết kế website và sản xuất nội dung số'),
 (4, 'sinhvien.tai@vanlanguni.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Nguyễn Tấn Tài', '0934567890', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, NULL, 'Sinh viên năm 4 đam mê Backend Java Spring Boot và cơ sở dữ liệu'),
-(5, 'sinhvien.khoi@vanlanguni.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Đăng Khôi', '0945678901', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, NULL, 'Sinh viên năm 4 chuyên ngành CNPM, có kinh nghiệm phân tích nghiệp vụ và ReactJS'),
-(6, 'sinhvien.long@vanlanguni.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Bảo Long', '0956789012', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, NULL, 'Sinh viên năm 4 yêu thích UI/UX, kiểm thử phần mềm tự động')
+(5, 'sinhvien.khoi@vanlanguni.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Nguyễn Bá Anh Khôi', '0945678901', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, NULL, 'Sinh viên năm 4 chuyên ngành CNPM, có kinh nghiệm phân tích nghiệp vụ và ReactJS'),
+(6, 'sinhvien.long@vanlanguni.vn', '$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2', 'Hoàng Bảo Long', '0956789012', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, NULL, 'Sinh viên năm 4 yêu thích UI/UX, kiểm thử phần mềm tự động')
 ON CONFLICT (id) DO NOTHING;
 
 -- 4. Insert Demo Jobs
@@ -56,7 +56,7 @@ ON CONFLICT (id) DO NOTHING;
 INSERT INTO notifications (id, user_id, title, message, type, reference_id, is_read) VALUES
 (1, 4, 'Đơn ứng tuyển được chấp nhận', 'Chúc mừng bạn! Nhà tuyển dụng Innovate Studio đã chấp nhận đơn ứng tuyển của bạn cho công việc "Lập trình Landing Page".', 'APPLICATION_STATUS', 1, false),
 (2, 5, 'Đơn ứng tuyển đã gửi', 'Bạn đã nộp đơn thành công cho công việc "Lập trình Landing Page". Hãy chờ phản hồi từ nhà tuyển dụng.', 'APPLICATION_STATUS', 2, true),
-(3, 3, 'Có ứng viên mới', 'Sinh viên Đăng Khôi vừa nộp đơn ứng tuyển cho công việc "Lập trình Landing Page".', 'NEW_APPLICATION', 2, false)
+(3, 3, 'Có ứng viên mới', 'Sinh viên Nguyễn Bá Anh Khôi vừa nộp đơn ứng tuyển cho công việc "Lập trình Landing Page".', 'NEW_APPLICATION', 2, false)
 ON CONFLICT (id) DO NOTHING;
 
 -- Reset sequence counters

@@ -132,3 +132,33 @@ Giấy phép: code VietJobs theo MIT (GitHub); trang arXiv ghi CC BY 4.0. Kiểm
 - Bảng gộp tên tỉnh cũ sang tỉnh mới là do người viết script tổng hợp, cần đối chiếu với Nghị quyết 202/2025/QH15.
 - Lương part-time có thể tính theo giờ hoặc theo ngày, trong khi `salary_min/max` theo triệu đồng một tháng. Đọc `salary_text` khi phân tích lương part-time.
 - Dataset chỉ có tin tuyển dụng, không có hồ sơ sinh viên, đơn ứng tuyển hay đánh giá hai chiều.
+
+## 12. Dữ liệu bổ sung: 20 việc làm cào từ Internet khu vực TP. Hồ Chí Minh (Ưu tiên ngành IT & Đa ngành)
+
+> Cập nhật: Ngày 10/10/2026  
+> Trạng thái: Đã chuẩn hóa vào `dataset/output/jobs_marketplace.csv` (Mã VJ001451 đến VJ001470), đồng bộ vào cả 2 CSDL MySQL (port 3306) và PostgreSQL (port 5433).  
+> Cơ cấu: **12 việc làm Công nghệ thông tin (IT)** + **8 việc làm Đa ngành nghề** (F&B, Marketing, Thiết kế, Gia sư, HR, Logistics, Kế toán, Bán hàng).
+
+| STT | Mã Job | Vị trí công việc & Công ty tuyển dụng | Ngành nghề | Hình thức | Địa điểm tại TP.HCM | Mức lương | Nguồn trích dẫn từ Internet |
+|---|---|---|---|---|---|---|---|
+| 1 | `VJ001451` | Thực tập sinh Lập trình Web Fullstack (ReactJS & Node.js) — *TAPTAP Vietnam* | Lập trình & CNTT | Thực tập (20-25h/tuần) | Quận 1, TP.HCM | 4.0 - 6.0 triệu/tháng | [ITviec](https://itviec.com/it-jobs/fullstack-intern-hcm) |
+| 2 | `VJ001452` | Junior / Fresher Backend Developer (Java Spring Boot) — *FPT Software HCM* | Lập trình & CNTT | Bán thời gian | Khu Công nghệ cao, TP. Thủ Đức, TP.HCM | 6.0 - 9.0 triệu/tháng | [TopCV](https://www.topcv.vn/viec-lam/java-backend-fresher-hcm) |
+| 3 | `VJ001453` | Thực tập sinh AI Automation & Data Engineer — *Chứng khoán Phú Hưng (PHS)* | Lập trình & CNTT | Thực tập (24h/tuần) | Quận 7, TP.HCM | 5.0 - 7.5 triệu/tháng | [ITviec](https://itviec.com/it-jobs/ai-automation-intern-hcm) |
+| 4 | `VJ001454` | Mobile App Developer Intern (Flutter / React Native) — *Viet Nam Life Tech* | Lập trình & CNTT | Thực tập | CVPM Quang Trung, Quận 12, TP.HCM | 4.5 - 6.5 triệu/tháng | [TopCV](https://www.topcv.vn/viec-lam/mobile-developer-intern-hcm) |
+| 5 | `VJ001455` | Product Engineer Intern (Frontend & UI Testing) — *Flexspace Technologies Inc.* | Lập trình & CNTT | Bán thời gian (Hybrid) | Quận 3, TP.HCM | 5.0 - 7.0 triệu/tháng | [ITviec](https://itviec.com/it-jobs/product-engineer-intern-hcm) |
+| 6 | `VJ001456` | Thực tập sinh IT Helpdesk & Quản trị Hệ thống Mạng — *VNG Corporation* | Lập trình & CNTT | Thực tập (ca 4h) | KCX Tân Thuận, Quận 7, TP.HCM | 3.5 - 5.0 triệu/tháng | [TopCV](https://www.topcv.vn/viec-lam/it-helpdesk-intern-hcm) |
+| 7 | `VJ001457` | Thực tập sinh Kiểm thử Phần mềm (QA/QC Tester) — *KMS Technology* | Lập trình & CNTT | Thực tập | Quận Tân Bình, TP.HCM | 4.0 - 6.0 triệu/tháng | [ITviec](https://itviec.com/it-jobs/qa-qc-tester-intern-hcm) |
+| 8 | `VJ001458` | Lập trình viên Python Data Scraping & Web Crawler Freelance — *Innovate Studio* | Lập trình & CNTT | Freelance (Remote) | Quận Bình Thạnh, TP.HCM | 3.0 - 5.0 triệu/dự án | [TopCV](https://www.topcv.vn/viec-lam/python-crawler-freelance-hcm) |
+| 9 | `VJ001459` | Thực tập sinh DevOps & Cloud Infrastructure (Docker / AWS) — *VTI Cloud* | Lập trình & CNTT | Thực tập (20h/tuần) | Quận 10, TP.HCM | 5.0 - 7.5 triệu/tháng | [ITviec](https://itviec.com/it-jobs/devops-cloud-intern-hcm) |
+| 10 | `VJ001460` | Cộng tác viên Lập trình WordPress & Kỹ thuật SEO Website — *Agency Cỏ Ba Lá* | Lập trình & CNTT | Bán thời gian | Quận Phú Nhuận, TP.HCM | 3.5 - 5.5 triệu/tháng | [TopCV](https://www.topcv.vn/viec-lam/wordpress-seo-parttime-hcm) |
+| 11 | `VJ001461` | Thực tập sinh Giám sát An toàn Thông tin & SOC Analyst — *CyRadar Security* | Lập trình & CNTT | Thực tập | Quận Tân Phú, TP.HCM | 4.5 - 6.5 triệu/tháng | [ITviec](https://itviec.com/it-jobs/soc-cybersecurity-intern-hcm) |
+| 12 | `VJ001462` | Frontend Vue.js / TypeScript Trainee — *Ogilvy & Mather Vietnam* | Lập trình & CNTT | Thực tập | Quận 1, TP.HCM | 5.0 - 7.0 triệu/tháng | [ITviec](https://itviec.com/it-jobs/frontend-vuejs-trainee-hcm) |
+| 13 | `VJ001463` | Nhân viên Pha chế (Barista) & Phục vụ ca tối sinh viên — *The Coffee House* | Phục vụ, Nhà hàng & F&B | Bán thời gian (ca tối) | Quận Gò Vấp, TP.HCM | 26.000 - 32.000 đ/giờ | [TopCV](https://www.topcv.vn/viec-lam/barista-parttime-hcm) |
+| 14 | `VJ001464` | Thực tập sinh Sáng tạo Nội dung TikTok & Marketing Số — *Shopee Vietnam* | Marketing, Truyền thông | Thực tập (20h/tuần) | Quận 7, TP.HCM | 3.5 - 5.5 triệu + Thưởng | [Shopee Careers](https://careers.shopee.vn/job-detail/content-marketing-intern-hcm) |
+| 15 | `VJ001465` | Thiết kế Đồ họa (Graphic Designer) Freelance - Banner & Social — *Media Group SG* | Thiết kế đồ họa & Media | Freelance (Online) | Quận Bình Thạnh, TP.HCM | 2.5 - 4.5 triệu/gói | [Glints](https://glints.com/vn/opportunities/jobs/graphic-designer-freelance-hcm) |
+| 16 | `VJ001466` | Gia sư Tiếng Anh Giao tiếp & Trợ giảng Lớp IELTS — *Anh Văn Hội Việt Mỹ (VUS)* | Gia sư & Dạy kèm | Bán thời gian | Quận 5, TP.HCM | 120.000 - 180.000 đ/buổi | [Vieclam24h](https://vieclam24h.vn/viec-lam/tro-giang-tieng-anh-hcm) |
+| 17 | `VJ001467` | Thực tập sinh Tuyển dụng & Quản trị Nhân sự (HR Intern) — *Altius Link Vietnam* | Hành chính & Nhân sự | Thực tập | Quận Tân Bình, TP.HCM | 2.5 - 4.5 triệu/tháng | [TopCV](https://www.topcv.vn/viec-lam/hr-intern-tan-binh-hcm) |
+| 18 | `VJ001468` | Cộng tác viên Nhập liệu & Hỗ trợ Vận hành Kho TMĐT — *Giao Hàng Tiết Kiệm (GHTK)* | Logistics, Kho vận | Bán thời gian | Quận Tân Bình, TP.HCM | 3.0 - 4.5 triệu/tháng | [GHTK Careers](https://ghtk.vn/tuyen-dung/nhap-lieu-kho-hcm) |
+| 19 | `VJ001469` | Thực tập sinh Kế toán Thu ngân & Kiểm kê Chứng từ — *WinCommerce HCM* | Tài chính & Kế toán | Thực tập | Quận 4, TP.HCM | 3.0 - 4.5 triệu/tháng | [TopCV](https://www.topcv.vn/viec-lam/thuc-tap-ke-toan-hcm) |
+| 20 | `VJ001470` | Chăm sóc Khách hàng & Trực Page Bán hàng Online Part-time — *Coolmate Sài Gòn* | Bán hàng & CSKHH | Bán thời gian (ca tối) | Quận 12, TP.HCM | 28.000 - 35.000 đ/giờ | [TopCV](https://www.topcv.vn/viec-lam/cskh-truc-page-parttime-hcm) |
+

@@ -4,6 +4,7 @@ import { Search, Filter, Sparkles, MapPin, RotateCcw, ChevronLeft, ChevronRight,
 import { JobCard } from '../components/jobs/JobCard';
 import { Job, Category } from '../types';
 import { jobService } from '../services/jobService';
+import { useLanguage } from '../context/LanguageContext';
 
 const DEFAULT_CATEGORIES: Category[] = [
   { id: 1, name: 'Lập trình & CNTT', slug: 'lap-trinh-cntt' },
@@ -107,6 +108,7 @@ const INITIAL_FALLBACK_JOBS: Job[] = [
 ];
 
 export const JobBrowsePage: React.FC = () => {
+  const { t, language } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialKeyword = searchParams.get('keyword') || '';
   const initialProvince = searchParams.get('province') || 'ALL';
@@ -223,21 +225,21 @@ export const JobBrowsePage: React.FC = () => {
     <div className="container" style={{ padding: '2.5rem 1.5rem' }}>
       {/* Header section */}
       <div style={{ marginBottom: '2rem' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#ecfdf5', color: '#047857', padding: '0.3rem 0.8rem', borderRadius: 'var(--radius-full)', fontSize: '0.825rem', fontWeight: 700, marginBottom: '0.75rem' }}>
-          <Sparkles size={14} /> Dữ liệu việc làm thực tế VietJobs (1.450+ việc làm đã chuẩn hóa)
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(16, 185, 129, 0.12)', color: '#10b981', padding: '0.35rem 0.85rem', borderRadius: 'var(--radius-full)', fontSize: '0.825rem', fontWeight: 700, marginBottom: '0.75rem', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
+          <Sparkles size={14} /> {t('browse.headerBadge')}
         </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
-          Tìm kiếm việc làm part-time, thực tập & freelance
+        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', marginBottom: '0.5rem' }}>
+          {t('browse.title')}
         </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: '800px' }}>
-          Tuyển chọn công việc bán thời gian, dự án freelance và thực tập sinh an toàn, minh bạch, phù hợp với lịch học sinh viên theo Nghị quyết 202/2025/QH15.
+        <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: '800px', lineHeight: 1.6 }}>
+          {t('browse.desc')}
         </p>
       </div>
 
       {/* Main Filter Panel */}
       <div
         style={{
-          background: 'white',
+          background: 'var(--bg-card)',
           padding: '1.5rem',
           borderRadius: 'var(--radius-lg)',
           border: '1px solid var(--border-color)',
@@ -261,7 +263,7 @@ export const JobBrowsePage: React.FC = () => {
             <Search size={18} color="var(--text-muted)" />
             <input
               type="text"
-              placeholder="Nhập tên việc làm, kỹ năng, công ty (Barista, React, Marketing, Gia sư...)..."
+              placeholder={t('browse.searchPlaceholder')}
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               style={{
@@ -281,7 +283,7 @@ export const JobBrowsePage: React.FC = () => {
             className="btn btn-primary"
             style={{ padding: '0.65rem 1.5rem', fontWeight: 700 }}
           >
-            <Search size={16} /> Tìm kiếm
+            <Search size={16} /> {t('browse.searchBtn')}
           </button>
 
           {(keyword || selectedType !== 'ALL' || selectedMode !== 'ALL' || selectedProvince !== 'ALL' || selectedCategory !== 'ALL' || studentOnly) && (
@@ -289,9 +291,9 @@ export const JobBrowsePage: React.FC = () => {
               onClick={handleResetFilters}
               className="btn btn-secondary"
               style={{ padding: '0.65rem 1rem', fontSize: '0.875rem' }}
-              title="Đặt lại bộ lọc"
+              title={t('browse.clearFilters')}
             >
-              <RotateCcw size={15} /> Xóa bộ lọc
+              <RotateCcw size={15} /> {t('browse.clearFilters')}
             </button>
           )}
         </div>
@@ -301,7 +303,7 @@ export const JobBrowsePage: React.FC = () => {
           {/* Province Filter */}
           <div>
             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.35rem', textTransform: 'uppercase' }}>
-              Tỉnh / Thành phố
+              {t('browse.provinceLabel')}
             </label>
             <select
               value={selectedProvince}
@@ -311,14 +313,14 @@ export const JobBrowsePage: React.FC = () => {
                 padding: '0.6rem 0.85rem',
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--border-color)',
-                background: 'white',
+                background: 'var(--bg-card)',
                 outline: 'none',
                 fontSize: '0.9rem',
                 fontWeight: 600,
                 color: 'var(--text-main)',
               }}
             >
-              <option value="ALL">📍 Tất cả tỉnh thành ({provinces.length})</option>
+              <option value="ALL">{t('browse.allProvinces')} ({provinces.length})</option>
               {provinces.map((prov) => (
                 <option key={prov} value={prov}>
                   {prov}
@@ -330,7 +332,7 @@ export const JobBrowsePage: React.FC = () => {
           {/* Category Filter */}
           <div>
             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.35rem', textTransform: 'uppercase' }}>
-              Ngành nghề / Danh mục
+              {t('browse.categoryLabel')}
             </label>
             <select
               value={selectedCategory}
@@ -340,14 +342,14 @@ export const JobBrowsePage: React.FC = () => {
                 padding: '0.6rem 0.85rem',
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--border-color)',
-                background: 'white',
+                background: 'var(--bg-card)',
                 outline: 'none',
                 fontSize: '0.9rem',
                 fontWeight: 600,
                 color: 'var(--text-main)',
               }}
             >
-              <option value="ALL">📁 Tất cả ngành nghề ({categories.length})</option>
+              <option value="ALL">{t('browse.allCategories')} ({categories.length})</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
@@ -359,7 +361,7 @@ export const JobBrowsePage: React.FC = () => {
           {/* Job Type Filter */}
           <div>
             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.35rem', textTransform: 'uppercase' }}>
-              Hình thức công việc
+              {t('browse.typeLabel')}
             </label>
             <select
               value={selectedType}
@@ -369,24 +371,24 @@ export const JobBrowsePage: React.FC = () => {
                 padding: '0.6rem 0.85rem',
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--border-color)',
-                background: 'white',
+                background: 'var(--bg-card)',
                 outline: 'none',
                 fontSize: '0.9rem',
                 fontWeight: 600,
                 color: 'var(--text-main)',
               }}
             >
-              <option value="ALL">💼 Tất cả hình thức</option>
-              <option value="PART_TIME">Việc làm Part-time</option>
-              <option value="FREELANCE">Dự án Freelance</option>
-              <option value="INTERNSHIP">Thực tập sinh (Internship)</option>
+              <option value="ALL">{t('browse.allTypes')}</option>
+              <option value="PART_TIME">{t('browse.partTime')}</option>
+              <option value="FREELANCE">{t('browse.freelance')}</option>
+              <option value="INTERNSHIP">{t('browse.internship')}</option>
             </select>
           </div>
 
           {/* Work Mode Filter */}
           <div>
             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '0.35rem', textTransform: 'uppercase' }}>
-              Chế độ làm việc
+              {t('browse.modeLabel')}
             </label>
             <select
               value={selectedMode}
@@ -396,17 +398,17 @@ export const JobBrowsePage: React.FC = () => {
                 padding: '0.6rem 0.85rem',
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--border-color)',
-                background: 'white',
+                background: 'var(--bg-card)',
                 outline: 'none',
                 fontSize: '0.9rem',
                 fontWeight: 600,
                 color: 'var(--text-main)',
               }}
             >
-              <option value="ALL">🏢 Tất cả chế độ</option>
-              <option value="ONSITE">Làm tại chỗ (Onsite)</option>
-              <option value="REMOTE">Làm việc từ xa (Remote)</option>
-              <option value="HYBRID">Linh hoạt kết hợp (Hybrid)</option>
+              <option value="ALL">{t('browse.allModes')}</option>
+              <option value="ONSITE">{t('browse.onsite')}</option>
+              <option value="REMOTE">{t('browse.remote')}</option>
+              <option value="HYBRID">{t('browse.hybrid')}</option>
             </select>
           </div>
         </div>
@@ -414,7 +416,7 @@ export const JobBrowsePage: React.FC = () => {
         {/* Quick Filter Pills Row */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', paddingTop: '0.75rem', borderTop: '1px solid var(--border-color)' }}>
           <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginRight: '0.25rem' }}>
-            Lọc nhanh:
+            {t('browse.quickFilter')}
           </span>
 
           {/* Student Friendly Pill */}
@@ -430,13 +432,13 @@ export const JobBrowsePage: React.FC = () => {
               fontWeight: 700,
               cursor: 'pointer',
               transition: 'var(--transition)',
-              background: studentOnly ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : '#f1f5f9',
+              background: studentOnly ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'var(--bg-card-subtle)',
               color: studentOnly ? 'white' : 'var(--text-main)',
-              border: studentOnly ? '1px solid #059669' : '1px solid #cbd5e1',
+              border: studentOnly ? '1px solid #059669' : '1px solid var(--border-color)',
             }}
           >
             {studentOnly && <Check size={14} />}
-            <Sparkles size={14} /> Phù hợp sinh viên
+            <Sparkles size={14} /> {t('browse.studentFriendly')}
           </button>
 
           {/* Popular Province Pills */}
@@ -456,7 +458,7 @@ export const JobBrowsePage: React.FC = () => {
                   fontWeight: 600,
                   cursor: 'pointer',
                   transition: 'var(--transition)',
-                  background: isSelected ? 'var(--primary)' : '#f8fafc',
+                  background: isSelected ? 'var(--primary)' : 'var(--bg-card-subtle)',
                   color: isSelected ? 'white' : 'var(--text-muted)',
                   border: isSelected ? '1px solid var(--primary)' : '1px solid var(--border-color)',
                 }}
@@ -471,14 +473,14 @@ export const JobBrowsePage: React.FC = () => {
       {/* Results Bar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.5rem' }}>
         <div style={{ fontWeight: 600, color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-          Tìm thấy <strong style={{ color: 'var(--text-main)', fontSize: '1.1rem' }}>{totalElements > 0 ? totalElements.toLocaleString('vi-VN') : jobs.length}</strong> công việc phù hợp
-          {selectedProvince !== 'ALL' && <span> tại <strong>{selectedProvince}</strong></span>}
-          {studentOnly && <span style={{ color: '#059669' }}> (dành cho sinh viên)</span>}
+          {t('browse.found')} <strong style={{ color: 'var(--text-main)', fontSize: '1.1rem' }}>{totalElements > 0 ? totalElements.toLocaleString(language === 'vi' ? 'vi-VN' : 'en-US') : jobs.length}</strong> {t('browse.matchingJobs')}
+          {selectedProvince !== 'ALL' && <span> {t('browse.in')} <strong>{selectedProvince}</strong></span>}
+          {studentOnly && <span style={{ color: '#059669' }}> {t('browse.forStudents')}</span>}
         </div>
 
         {totalPages > 1 && (
           <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-            Trang {currentPage + 1} / {totalPages}
+            {t('browse.page')} {currentPage + 1} / {totalPages}
           </div>
         )}
       </div>
@@ -486,8 +488,8 @@ export const JobBrowsePage: React.FC = () => {
       {/* Jobs Grid or Empty State */}
       {loading ? (
         <div style={{ textAlign: 'center', padding: '4rem 0', color: 'var(--text-muted)' }}>
-          <div style={{ display: 'inline-block', width: '36px', height: '36px', border: '3px solid #e2e8f0', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', marginBottom: '1rem' }} />
-          <div>Đang tải dữ liệu việc làm từ hệ thống...</div>
+          <div style={{ display: 'inline-block', width: '36px', height: '36px', border: '3px solid var(--border-color)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', marginBottom: '1rem' }} />
+          <div>{t('browse.loading')}</div>
         </div>
       ) : jobs.length > 0 ? (
         <>
@@ -506,7 +508,7 @@ export const JobBrowsePage: React.FC = () => {
                 className="btn btn-secondary"
                 style={{ padding: '0.5rem 0.85rem', opacity: currentPage === 0 ? 0.5 : 1 }}
               >
-                <ChevronLeft size={16} /> Trang trước
+                <ChevronLeft size={16} /> {t('browse.prevPage')}
               </button>
 
               <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
@@ -525,7 +527,7 @@ export const JobBrowsePage: React.FC = () => {
                         borderRadius: 'var(--radius-md)',
                         border: '1px solid',
                         borderColor: currentPage === pageNum ? 'var(--primary)' : 'var(--border-color)',
-                        background: currentPage === pageNum ? 'var(--primary)' : 'white',
+                        background: currentPage === pageNum ? 'var(--primary)' : 'var(--bg-card)',
                         color: currentPage === pageNum ? 'white' : 'var(--text-main)',
                         fontWeight: 700,
                         cursor: 'pointer',
@@ -544,18 +546,18 @@ export const JobBrowsePage: React.FC = () => {
                 className="btn btn-secondary"
                 style={{ padding: '0.5rem 0.85rem', opacity: currentPage >= totalPages - 1 ? 0.5 : 1 }}
               >
-                Trang sau <ChevronRight size={16} />
+                {t('browse.nextPage')} <ChevronRight size={16} />
               </button>
             </div>
           )}
         </>
       ) : (
-        <div style={{ textAlign: 'center', padding: '4rem 1.5rem', background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
+        <div style={{ textAlign: 'center', padding: '4rem 1.5rem', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
           <Filter size={44} color="var(--text-light)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>Không tìm thấy công việc phù hợp</h3>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Hãy thử xóa bớt bộ lọc hoặc tìm kiếm với từ khóa khác.</p>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>{t('browse.noJobsTitle')}</h3>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{t('browse.noJobsDesc')}</p>
           <button onClick={handleResetFilters} className="btn btn-primary">
-            <RotateCcw size={16} /> Xóa tất cả bộ lọc
+            <RotateCcw size={16} /> {t('browse.resetAll')}
           </button>
         </div>
       )}

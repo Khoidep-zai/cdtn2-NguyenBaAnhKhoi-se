@@ -21,8 +21,8 @@ Tùy theo phương án chạy, máy tính cần đáp ứng một trong các đi
 
 ### Phương án 1: Khởi chạy 1-Click bằng file Batch (Khuyên dùng cho Windows)
 Hệ thống cung cấp sẵn các kịch bản 1-click chuyên biệt cho từng loại cơ sở dữ liệu:
-1. **Chạy với MySQL:** Nhấp đúp vào `run-mysql.bat`. Hệ thống kết nối MySQL port 3306 (user `root`, pass `12345`), nạp 1.450+ việc làm và tự bật trình duyệt web.
-2. **Chạy với PostgreSQL:** Nhấp đúp vào `run-postgres.bat`. Hệ thống kết nối PostgreSQL port 5433 (user `postgres`, pass `12345`), nạp 1.450+ việc làm và tự bật trình duyệt web.
+1. **Chạy với MySQL:** Nhấp đúp vào `run-mysql.bat`. Hệ thống kết nối MySQL port 3306 (user `root`, pass `12345`), nạp 1.470+ việc làm và tự bật trình duyệt web.
+2. **Chạy với PostgreSQL:** Nhấp đúp vào `run-postgres.bat`. Hệ thống kết nối PostgreSQL port 5433 (user `postgres`, pass `12345`), nạp 1.470+ việc làm và tự bật trình duyệt web.
 3. **Menu lựa chọn tương tác:** Nhấp đúp vào `run.bat` để chọn nhanh chế độ khởi chạy mong muốn.
 
 ### Phương án 2: Khởi chạy 1-Click trên IntelliJ IDEA
@@ -79,8 +79,8 @@ Dành cho môi trường đóng gói độc lập:
 | **Giao diện Web (Frontend)** | `http://localhost:3000` | Trang giao diện chính thức cho người dùng |
 | **REST API (Backend)** | `http://localhost:8080/api/v1` | Cổng API gốc phục vụ trao đổi dữ liệu |
 | **Tài liệu Swagger UI** | `http://localhost:8080/swagger-ui.html` | Giao diện tra cứu và tương tác API trực quan |
-| **Cơ sở dữ liệu MySQL** | `localhost:3306` | DB: `freelance_db`, User: `root`, Pass: `12345` (1.450 jobs) |
-| **Cơ sở dữ liệu PostgreSQL** | `localhost:5433` (Local) / `5432` (Docker) | DB: `freelance_db`, User: `postgres`, Pass: `12345` (1.450 jobs) |
+| **Cơ sở dữ liệu MySQL** | `localhost:3306` | DB: `freelance_db`, User: `root`, Pass: `12345` (1.470 jobs) |
+| **Cơ sở dữ liệu PostgreSQL** | `localhost:5433` (Local) / `5432` (Docker) | DB: `freelance_db`, User: `postgres`, Pass: `12345` (1.470 jobs) |
 
 ---
 

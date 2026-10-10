@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { LanguageProvider } from './context/LanguageContext';
 import { MainLayout } from './layouts/MainLayout';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 
@@ -40,8 +42,10 @@ const DashboardDispatcher: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <ThemeProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainLayout />}>
             {/* Public Routes */}
@@ -154,6 +158,8 @@ export const App: React.FC = () => {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+  </LanguageProvider>
+</ThemeProvider>
   );
 };
 

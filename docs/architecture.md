@@ -35,7 +35,7 @@ Hệ thống được xây dựng theo mô hình **Kiến trúc phân tầng 3 l
 +-------------------------------------------------------------------------+
 |                    3. DATA TIER (Dual Database Architecture)            |
 |  - Hỗ trợ song song cả PostgreSQL 18 & MySQL 8 (Mật khẩu: 12345)        |
-|  - Tích hợp bộ dataset thực tế VietJobs (1.450+ việc làm chuẩn hóa)    |
+|  - Tích hợp bộ dataset thực tế chuẩn hóa (1.470+ việc làm thực tế)     |
 |  - Đảm bảo toàn vẹn giao dịch ACID, ràng buộc khóa ngoại (FK)           |
 |  - Đánh chỉ mục hiệu năng (13 B-Tree Indexes) trên trường tra cứu       |
 +-------------------------------------------------------------------------+
@@ -72,8 +72,8 @@ Mã nguồn backend tổ chức theo cấu trúc phân tầng nghiêm ngặt (`c
   - **MySQL 8.x:** Port 3306, cấu hình qua `application-mysql.yml` hoặc profile `mysql`.
   - **PostgreSQL 18.x / 16.x:** Port 5433 (Local) / 5432 (Docker), cấu hình qua `application-postgres.yml` hoặc profile `postgres`.
   - Cả 2 hệ thống đều dùng chung chuẩn mật khẩu `12345`, cấu hình Hibernate tự động tối ưu hóa phương ngữ (`MySQLDialect` / `PostgreSQLDialect`).
-- **Quy mô tập dữ liệu thực tế (VietJobs Dataset):**
-  - Hệ thống tích hợp sẵn **1.450+ việc làm bán thời gian, dự án freelance và thực tập sinh** đã qua chuẩn hóa và làm sạch.
+- **Quy mô tập dữ liệu thực tế (Dataset Scale):**
+  - Hệ thống tích hợp sẵn **1.470+ việc làm bán thời gian, dự án freelance và thực tập sinh** đã qua chuẩn hóa và làm sạch (VietJobs kết hợp dữ liệu cào mới từ Internet tại TP.HCM).
   - Phân loại theo **16 danh mục ngành nghề** tiêu chuẩn và bao phủ **34 tỉnh/thành phố**.
   - Bổ sung các trường dữ liệu thực tế: `province`, `salary_text`, `working_hours`, `benefits`, `student_friendly`.
 - **Bảng dữ liệu chính:** `roles`, `users`, `categories`, `jobs`, `applications`, `reviews`, `notifications`.

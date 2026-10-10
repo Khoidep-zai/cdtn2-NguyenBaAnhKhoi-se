@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Badge } from '../components/common/Badge';
 import { Building, MapPin, DollarSign, Calendar, CheckCircle2, ArrowLeft, Send, AlertCircle } from 'lucide-react';
 import { jobService } from '../services/jobService';
@@ -80,6 +81,7 @@ const FALLBACK_JOBS: Record<number, Job> = {
 export const JobDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user, isAuthenticated } = useAuth();
+  const { t, language } = useLanguage();
 
   const jobId = Number(id) || 1;
   const [job, setJob] = useState<Job>(FALLBACK_JOBS[jobId] || FALLBACK_JOBS[1]);
@@ -110,10 +112,10 @@ export const JobDetailPage: React.FC = () => {
   }, [jobId]);
 
   const formatSalary = (amount: number, type: string) => {
-    const formatted = new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
-    if (type === 'HOURLY') return `${formatted}/giờ`;
-    if (type === 'FIXED_PROJECT') return `${formatted} (trọn gói)`;
-    return `${formatted}/tháng`;
+    const formatted = new Intl.NumberFormat(language === 'vi' ? 'vi-VN' : 'en-US').format(amount) + ' đ';
+    if (type === 'HOURLY') return `${formatted}${language === 'vi' ? '/giờ' : '/hr'}`;
+    if (type === 'FIXED_PROJECT') return `${formatted}${language === 'vi' ? ' (trọn gói)' : ' (fixed)'}`;
+    return `${formatted}${language === 'vi' ? '/tháng' : '/mo'}`;
   };
 
   const handleApply = async (e: React.FormEvent) => {
@@ -136,15 +138,15 @@ export const JobDetailPage: React.FC = () => {
   return (
     <div className="container" style={{ padding: '3rem 1.5rem', maxWidth: '900px' }}>
       <Link to="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)', marginBottom: '1.5rem', fontWeight: 600 }}>
-        <ArrowLeft size={16} /> Quay lại danh sách việc làm
+        <ArrowLeft size={16} /> {t('job.back')}
       </Link>
 
-      <div style={{ background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', padding: '2.5rem', boxShadow: 'var(--shadow-sm)' }}>
+      <div style={{ background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', padding: '2.5rem', boxShadow: 'var(--shadow-sm)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
           <div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', marginBottom: '0.75rem' }}>
-              <Badge type={job.jobType} label={job.jobType === 'PART_TIME' ? 'Part-time' : job.jobType === 'INTERNSHIP' ? 'Thực tập sinh' : 'Freelance'} />
-              <Badge type={job.status} label={job.status === 'OPEN' ? 'Đang nhận hồ sơ' : job.status} />
+              <Badge type={job.jobType} label={job.jobType === 'PART_TIME' ? t('browse.partTime') : job.jobType === 'INTERNSHIP' ? t('browse.internship') : t('browse.freelance')} />
+              <Badge type={job.status} label={job.status === 'OPEN' ? t('job.open') : job.status} />
               {job.studentFriendly && (
                 <span
                   style={{
@@ -159,7 +161,7 @@ export const JobDetailPage: React.FC = () => {
                     color: 'white',
                   }}
                 >
-                  ✨ Phù hợp sinh viên
+                  ✨ {t('job.forStudentsBadge')}
                 </span>
               )}
               {job.category?.name && (
@@ -167,11 +169,11 @@ export const JobDetailPage: React.FC = () => {
                   style={{
                     fontSize: '0.75rem',
                     fontWeight: 600,
-                    color: '#047857',
-                    background: '#ecfdf5',
+                    color: '#10b981',
+                    background: 'rgba(16, 185, 129, 0.1)',
                     padding: '0.25rem 0.6rem',
                     borderRadius: 'var(--radius-sm)',
-                    border: '1px solid #a7f3d0',
+                    border: '1px solid rgba(16, 185, 129, 0.25)',
                   }}
                 >
                   📁 {job.category.name}
@@ -188,42 +190,42 @@ export const JobDetailPage: React.FC = () => {
 
           <div>
             {applied ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#dcfce7', color: '#166534', padding: '0.75rem 1.25rem', borderRadius: 'var(--radius-md)', fontWeight: 700 }}>
-                <CheckCircle2 size={20} /> Đã nộp hồ sơ ứng tuyển
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '0.75rem 1.25rem', borderRadius: 'var(--radius-md)', fontWeight: 700 }}>
+                <CheckCircle2 size={20} /> {t('job.applied')}
               </div>
             ) : isAuthenticated ? (
               user?.role === 'ROLE_STUDENT' ? (
                 <button onClick={() => setShowModal(true)} className="btn btn-primary" style={{ padding: '0.85rem 1.75rem' }}>
-                  <Send size={18} /> Ứng tuyển ngay
+                  <Send size={18} /> {t('job.applyNow')}
                 </button>
               ) : (
                 <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem', fontStyle: 'italic' }}>
-                  (Tài khoản Nhà tuyển dụng không thể ứng tuyển)
+                  {t('job.employerNotice')}
                 </div>
               )
             ) : (
               <Link to="/login" className="btn btn-primary" style={{ padding: '0.85rem 1.75rem' }}>
-                Đăng nhập để ứng tuyển
+                {t('job.loginToApply')}
               </Link>
             )}
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', background: 'var(--bg-main)', padding: '1.25rem', borderRadius: 'var(--radius-md)', marginBottom: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', background: 'var(--bg-card-subtle)', padding: '1.25rem', borderRadius: 'var(--radius-md)', marginBottom: '2rem', border: '1px solid var(--border-color)' }}>
           <div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Mức lương / Thù lao</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('job.salary')}</div>
             <div style={{ fontWeight: 700, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem', fontSize: '1.05rem' }}>
               <DollarSign size={18} /> {job.salaryText || formatSalary(job.salaryAmount, job.salaryType)}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Địa điểm làm việc</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('job.location')}</div>
             <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem' }}>
               <MapPin size={18} color="var(--primary)" /> {job.province ? `${job.province} - ${job.location || 'Tại chỗ'}` : (job.location || 'Toàn quốc (Remote)')}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Thời gian làm việc</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('job.workingHours')}</div>
             <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem' }}>
               <Calendar size={18} /> {job.workingHours || 'Linh hoạt theo lịch học'}
             </div>
@@ -231,32 +233,32 @@ export const JobDetailPage: React.FC = () => {
         </div>
 
         {job.benefits && (
-          <div style={{ marginBottom: '2rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: '#166534', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              🎁 Quyền lợi & Đãi ngộ
+          <div style={{ marginBottom: '2rem', background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.25)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              {t('job.benefits')}
             </h3>
-            <p style={{ lineHeight: 1.7, color: '#14532d', whiteSpace: 'pre-line' }}>{job.benefits}</p>
+            <p style={{ lineHeight: 1.7, color: 'var(--text-main)', whiteSpace: 'pre-line' }}>{job.benefits}</p>
           </div>
         )}
 
         <div style={{ marginBottom: '2rem' }}>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem' }}>Mô tả công việc</h3>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem' }}>{t('job.description')}</h3>
           <p style={{ lineHeight: 1.7, color: 'var(--text-main)', whiteSpace: 'pre-line' }}>{job.description}</p>
         </div>
 
         <div>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem' }}>Yêu cầu công việc</h3>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem' }}>{t('job.requirements')}</h3>
           <p style={{ lineHeight: 1.7, color: 'var(--text-main)', whiteSpace: 'pre-line' }}>{job.requirements || 'Không yêu cầu kinh nghiệm trước, sẽ được hướng dẫn khi nhận việc.'}</p>
         </div>
       </div>
 
       {/* Modal Apply */}
       {showModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
-          <div style={{ background: 'white', borderRadius: 'var(--radius-lg)', padding: '2rem', width: '100%', maxWidth: '500px' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1rem' }}>Nộp hồ sơ ứng tuyển</h3>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(3px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '1rem' }}>
+          <div style={{ background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', padding: '2rem', width: '100%', maxWidth: '500px', border: '1px solid var(--border-color)', boxShadow: 'var(--shadow-lg)' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.75rem', color: 'var(--text-main)' }}>{t('job.applyModalTitle')}</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>
-              Gửi lời giới thiệu ngắn (Cover letter) của bạn đến <strong>{job.employer?.companyName || job.employer?.fullName}</strong>.
+              {t('job.applyModalIntro')} <strong>{job.employer?.companyName || job.employer?.fullName}</strong>.
             </p>
 
             {applyError && (
@@ -270,15 +272,15 @@ export const JobDetailPage: React.FC = () => {
               <textarea
                 required
                 rows={5}
-                placeholder="Chào anh/chị, em là sinh viên trường ĐH Văn Lang, em rất quan tâm đến vị trí này và có thể đáp ứng lịch làm ca tối..."
+                placeholder={t('job.coverLetterPlaceholder')}
                 value={coverLetter}
                 onChange={(e) => setCoverLetter(e.target.value)}
-                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', marginBottom: '1.25rem', outline: 'none' }}
+                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--bg-main)', color: 'var(--text-main)', marginBottom: '1.25rem', outline: 'none' }}
               />
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-                <button type="button" onClick={() => setShowModal(false)} className="btn btn-secondary">Hủy</button>
+                <button type="button" onClick={() => setShowModal(false)} className="btn btn-secondary">{t('job.cancel')}</button>
                 <button type="submit" disabled={applying} className="btn btn-primary">
-                  {applying ? 'Đang gửi...' : 'Xác nhận gửi đơn'}
+                  {applying ? t('job.submitting') : t('job.submit')}
                 </button>
               </div>
             </form>

@@ -4,6 +4,7 @@ import { Search, Sparkles, TrendingUp, ShieldCheck, MapPin, Database, Award, Arr
 import { JobCard } from '../components/jobs/JobCard';
 import { Job } from '../types';
 import { jobService } from '../services/jobService';
+import { useLanguage } from '../context/LanguageContext';
 
 const MOCK_FEATURED_JOBS: Job[] = [
   {
@@ -75,17 +76,18 @@ const QUICK_PROVINCES = [
 ];
 
 const POPULAR_CATEGORIES = [
-  { id: 1, name: 'Lập trình & CNTT', icon: '💻' },
-  { id: 2, name: 'Thiết kế & Video', icon: '🎨' },
-  { id: 3, name: 'Gia sư & Dạy kèm', icon: '📚' },
-  { id: 4, name: 'Phục vụ & Pha chế', icon: '☕' },
-  { id: 7, name: 'Marketing & Media', icon: '📱' },
-  { id: 5, name: 'Bán hàng & Thu ngân', icon: '🛒' },
+  { id: 1, nameVi: 'Lập trình & CNTT', nameEn: 'Software & IT', icon: '💻' },
+  { id: 2, nameVi: 'Thiết kế & Video', nameEn: 'Design & Media', icon: '🎨' },
+  { id: 3, nameVi: 'Gia sư & Dạy kèm', nameEn: 'Tutoring & Teaching', icon: '📚' },
+  { id: 4, nameVi: 'Phục vụ & Pha chế', nameEn: 'F&B & Barista', icon: '☕' },
+  { id: 7, nameVi: 'Marketing & Media', nameEn: 'Marketing & Content', icon: '📱' },
+  { id: 5, nameVi: 'Bán hàng & Thu ngân', nameEn: 'Sales & Cashier', icon: '🛒' },
 ];
 
 export const HomePage: React.FC = () => {
   const [keyword, setKeyword] = useState('');
   const [featuredJobs, setFeaturedJobs] = useState<Job[]>(MOCK_FEATURED_JOBS);
+  const { t, language } = useLanguage();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -125,7 +127,7 @@ export const HomePage: React.FC = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.5rem',
-              background: 'white',
+              background: 'var(--bg-card)',
               padding: '0.4rem 1rem',
               borderRadius: 'var(--radius-full)',
               border: '1px solid var(--border-color)',
@@ -136,42 +138,41 @@ export const HomePage: React.FC = () => {
               boxShadow: 'var(--shadow-sm)',
             }}
           >
-            <Sparkles size={16} /> 1.450+ Việc làm VietJobs chuẩn hóa theo Nghị quyết 202/2025/QH15
+            <Sparkles size={16} /> {t('home.badge')}
           </div>
 
           <h1 className="hero-title">
-            Tìm việc làm thêm an toàn, <br />
-            <span className="hero-gradient">Bứt phá kỹ năng & Thu nhập</span>
+            {t('home.heroTitle1')} <br />
+            <span className="hero-gradient">{t('home.heroTitle2')}</span>
           </h1>
 
           <p className="hero-desc">
-            Nền tảng kết nối sinh viên với các công việc part-time, dự án freelance và kỳ thực tập ngắn hạn.
-            Xác minh độ uy tín, thanh toán minh bạch, linh hoạt theo lịch học trên cả hai nền tảng PostgreSQL & MySQL.
+            {t('home.heroDesc')}
           </p>
 
           <form onSubmit={handleSearch} className="search-box">
             <Search size={22} color="var(--text-light)" style={{ marginLeft: '0.5rem' }} />
             <input
               type="text"
-              placeholder="Nhập vị trí công việc, kỹ năng (ví dụ: Barista, Lập trình React, Gia sư, Content...)"
+              placeholder={t('home.searchPlaceholder')}
               className="search-input"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
             />
             <button type="submit" className="btn btn-primary" style={{ padding: '0.85rem 1.75rem', fontWeight: 700 }}>
-              Tìm kiếm việc làm
+              {t('home.searchBtn')}
             </button>
           </form>
 
           {/* Quick Province Links in Hero */}
           <div style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>Tỉnh thành phổ biến:</span>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>{t('home.popularProvinces')}</span>
             {QUICK_PROVINCES.map((prov) => (
               <button
                 key={prov}
                 onClick={() => navigate(`/jobs?province=${encodeURIComponent(prov)}`)}
                 style={{
-                  background: 'white',
+                  background: 'var(--bg-card)',
                   border: '1px solid var(--border-color)',
                   padding: '0.25rem 0.65rem',
                   borderRadius: 'var(--radius-full)',
@@ -193,23 +194,23 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* Stats Banner */}
-      <section style={{ background: 'white', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', padding: '2rem 0' }}>
+      <section style={{ background: 'var(--bg-card)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', padding: '2rem 0' }}>
         <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', textAlign: 'center' }}>
           <div>
-            <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--primary)' }}>1.450+</div>
-            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>Việc làm bán thời gian & Freelance</div>
+            <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--primary)' }}>1.470+</div>
+            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>{t('home.statJobs')}</div>
           </div>
           <div>
             <div style={{ fontSize: '2rem', fontWeight: 800, color: '#059669' }}>16</div>
-            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>Nhóm ngành nghề tiêu chuẩn</div>
+            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>{t('home.statCats')}</div>
           </div>
           <div>
             <div style={{ fontSize: '2rem', fontWeight: 800, color: '#d97706' }}>34+</div>
-            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>Tỉnh/Thành phố toàn quốc</div>
+            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>{t('home.statProvs')}</div>
           </div>
           <div>
             <div style={{ fontSize: '2rem', fontWeight: 800, color: '#4f46e5' }}>MySQL & Postgres</div>
-            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>Hỗ trợ đồng bộ 2 CSDL cốt lõi</div>
+            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>{t('home.statDb')}</div>
           </div>
         </div>
       </section>
@@ -218,8 +219,8 @@ export const HomePage: React.FC = () => {
       <section style={{ padding: '3.5rem 0', background: 'var(--bg-main)' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Khám phá theo ngành nghề</h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Chọn lĩnh vực phù hợp với chuyên ngành và sở thích của bạn</p>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>{t('home.catTitle')}</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('home.catDesc')}</p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem' }}>
@@ -228,7 +229,7 @@ export const HomePage: React.FC = () => {
                 key={cat.id}
                 onClick={() => navigate(`/jobs?category=${cat.id}`)}
                 style={{
-                  background: 'white',
+                  background: 'var(--bg-card)',
                   borderRadius: 'var(--radius-md)',
                   border: '1px solid var(--border-color)',
                   padding: '1.25rem 1rem',
@@ -239,8 +240,12 @@ export const HomePage: React.FC = () => {
                 }}
               >
                 <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{cat.icon}</div>
-                <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)' }}>{cat.name}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>Khám phá cơ hội →</div>
+                <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)' }}>
+                  {language === 'vi' ? cat.nameVi : cat.nameEn}
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                  {language === 'vi' ? 'Khám phá cơ hội →' : 'Explore jobs →'}
+                </div>
               </div>
             ))}
           </div>
@@ -248,18 +253,18 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* Featured Jobs */}
-      <section style={{ padding: '4rem 0', background: 'white' }}>
+      <section style={{ padding: '4rem 0', background: 'var(--bg-card)' }}>
         <div className="container">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: 'var(--primary)', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.25rem' }}>
-                <Award size={16} /> Cơ hội việc làm tuyển chọn
+                <Award size={16} /> {language === 'vi' ? 'Cơ hội việc làm tuyển chọn' : 'Curated opportunities'}
               </div>
-              <h2 style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--text-main)' }}>Việc làm nổi bật mới nhất</h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>Các vị trí part-time, dự án freelance và thực tập sinh đang mở tuyển</p>
+              <h2 style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--text-main)' }}>{t('home.featuredTitle')}</h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('home.featuredDesc')}</p>
             </div>
             <button onClick={() => navigate('/jobs')} className="btn btn-primary" style={{ padding: '0.65rem 1.25rem' }}>
-              Xem tất cả 1.450+ việc làm <ArrowRight size={16} />
+              {t('home.viewAll')} <ArrowRight size={16} />
             </button>
           </div>
 
@@ -274,33 +279,33 @@ export const HomePage: React.FC = () => {
       {/* Trust Highlights */}
       <section style={{ background: 'var(--bg-main)', borderTop: '1px solid var(--border-color)', padding: '3.5rem 0' }}>
         <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', background: 'white', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', background: 'var(--bg-card)', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
             <div style={{ background: '#dcfce7', padding: '0.75rem', borderRadius: 'var(--radius-md)', color: '#16a34a', flexShrink: 0 }}>
               <ShieldCheck size={28} />
             </div>
             <div>
-              <h4 style={{ fontWeight: 700, marginBottom: '0.25rem' }}>100% Tin tuyển dụng xác minh</h4>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Bảo vệ sinh viên khỏi các bẫy cọc tiền, tin tuyển dụng ảo và vi phạm luật lao động.</p>
+              <h4 style={{ fontWeight: 700, marginBottom: '0.25rem', color: 'var(--text-main)' }}>{t('home.trust1Title')}</h4>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('home.trust1Desc')}</p>
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', background: 'white', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', background: 'var(--bg-card)', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
             <div style={{ background: '#e0e7ff', padding: '0.75rem', borderRadius: 'var(--radius-md)', color: '#4f46e5', flexShrink: 0 }}>
               <TrendingUp size={28} />
             </div>
             <div>
-              <h4 style={{ fontWeight: 700, marginBottom: '0.25rem' }}>Đánh giá 2 chiều minh bạch</h4>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Xây dựng hồ sơ uy tín thực tế cho cả sinh viên và nhà tuyển dụng sau mỗi công việc.</p>
+              <h4 style={{ fontWeight: 700, marginBottom: '0.25rem', color: 'var(--text-main)' }}>{t('home.trust2Title')}</h4>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('home.trust2Desc')}</p>
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', background: 'white', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', background: 'var(--bg-card)', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
             <div style={{ background: '#fef3c7', padding: '0.75rem', borderRadius: 'var(--radius-md)', color: '#d97706', flexShrink: 0 }}>
               <Database size={28} />
             </div>
             <div>
-              <h4 style={{ fontWeight: 700, marginBottom: '0.25rem' }}>Linh hoạt đa cơ sở dữ liệu</h4>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Hệ thống hỗ trợ đồng bộ hoàn hảo trên cả PostgreSQL 18 và MySQL 8 với 1.450+ việc làm thực tế.</p>
+              <h4 style={{ fontWeight: 700, marginBottom: '0.25rem', color: 'var(--text-main)' }}>{t('home.trust3Title')}</h4>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{t('home.trust3Desc')}</p>
             </div>
           </div>
         </div>

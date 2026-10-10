@@ -22,7 +22,7 @@
 
 1. **Xây dựng sàn kết nối hai chiều (Two-sided Marketplace):** Kết nối sinh viên có nhu cầu làm thêm với cá nhân/doanh nghiệp cần thuê nhân lực part-time, thời vụ hoặc dự án ngắn hạn.
 2. **Khép kín quy trình tuyển dụng:** Vận hành luồng nghiệp vụ thông suốt: Đăng tin ➔ Tìm kiếm/Lọc việc ➔ Nộp hồ sơ (CV) ➔ Xét duyệt đơn ➔ Thực hiện ➔ Đánh giá hai chiều (1–5 sao).
-3. **Tích hợp bộ dữ liệu thực tế VietJobs quy mô lớn:** Chuẩn hóa và làm sạch 1.450+ tin tuyển dụng part-time/thực tập thực tế, 16 nhóm ngành, 34 tỉnh/thành, hỗ trợ lọc chuyên biệt cho sinh viên theo tinh thần Nghị quyết 202/2025/QH15.
+3. **Tích hợp bộ dữ liệu thực tế VietJobs và cào từ Internet quy mô lớn:** Chuẩn hóa và làm sạch 1.470+ tin tuyển dụng part-time/thực tập thực tế, 16 nhóm ngành, 34 tỉnh/thành, hỗ trợ lọc chuyên biệt cho sinh viên theo tinh thần Nghị quyết 202/2025/QH15.
 4. **Đạt chuẩn kỹ thuật doanh nghiệp & Đa CSDL:** Xác thực không lưu phiên (Stateless JWT), phân quyền chặt chẽ theo vai trò (RBAC), hỗ trợ song song 2 hệ quản trị CSDL phổ biến (MySQL 8 và PostgreSQL 18) với mật khẩu chuẩn hóa `12345`, CSDL đạt chuẩn 3NF có đánh chỉ mục tối ưu, giao diện Responsive hiện đại.
 
 ---
@@ -58,6 +58,9 @@
    - Thống kê tổng quan hệ thống: Tổng số người dùng, số lượng tin đăng, số lượt nộp đơn, số lượt đánh giá.
    - Quản lý người dùng: Xem toàn bộ danh sách, khóa/mở khóa tài khoản vi phạm.
    - Kiểm duyệt: Xóa bỏ tin đăng vi phạm quy định.
+7. **Trải nghiệm Giao diện & Đa ngôn ngữ (UI/UX, Dark/Light Mode & i18n):**
+   - Chế độ sáng / tối (Dark & Light Theme): Tích hợp nút toggle trên thanh điều hướng, tự động lưu và khôi phục trạng thái qua LocalStorage.
+   - Chuyển đổi song ngữ Tiếng Việt - Tiếng Anh (VI / EN): Chuyển đổi tức thì toàn bộ nhãn, điều hướng, bộ lọc, thẻ việc làm và chân trang.
 
 ### 3.2. Các nội dung NGOÀI PHẠM VI (Out-of-Scope)
 

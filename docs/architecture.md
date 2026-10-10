@@ -14,9 +14,9 @@ Hệ thống được xây dựng theo mô hình **Kiến trúc phân tầng 3 l
 +-------------------------------------------------------------------------+
 |                        1. CLIENT TIER (Frontend)                       |
 |  - React 18 + TypeScript + Vite (Single Page Application)                |
-|  - Quản lý trạng thái: React Context API (AuthContext)                  |
+|  - Quản lý trạng thái: Context API (AuthContext, ThemeContext, LangCtx) |
+|  - Giao diện: Modern Dark/Light Theme, Song ngữ VI/EN, Responsive       |
 |  - Giao tiếp mạng: Axios Interceptor (Auto-attach Bearer JWT)           |
-|  - Giao diện: Modern Dark Design System, Lucide SVG Icons, Responsive    |
 +------------------------------------+------------------------------------+
                                      |
                                      | HTTPS / REST JSON (Stateless JWT)
@@ -25,17 +25,18 @@ Hệ thống được xây dựng theo mô hình **Kiến trúc phân tầng 3 l
 |                     2. APPLICATION TIER (Backend REST API)              |
 |  - Java 17/21 + Spring Boot 3.2.x | Package: com.nhom8.freelance        |
 |  - Security: Spring Security 6 + JWT Filter (HS256) + BCrypt Encoder    |
+|  - Endpoints: RootController (/api/v1/), H2 Console (/api/v1/h2-console)|
 |  - Phân tầng: Controller ➔ Service ➔ Repository (Clean Architecture)   |
 |  - Xử lý lỗi: GlobalExceptionHandler (@RestControllerAdvice)            |
-|  - Tài liệu hóa: Springdoc OpenAPI 3.0 / Swagger UI                     |
+|  - Tài liệu hóa: Springdoc OpenAPI 3.0 / Swagger UI (/api/v1/swagger-ui)|
 +------------------------------------+------------------------------------+
                                      |
                                      | JDBC Connection Pool (HikariCP)
                                      v
 +-------------------------------------------------------------------------+
-|                    3. DATA TIER (Dual Database Architecture)            |
-|  - Hỗ trợ song song cả PostgreSQL 18 & MySQL 8 (Mật khẩu: 12345)        |
-|  - Tích hợp bộ dataset thực tế chuẩn hóa (1.470+ việc làm thực tế)     |
+|                    3. DATA TIER (Dual/Triple Database Architecture)     |
+|  - Hỗ trợ song song PostgreSQL 16/18, MySQL 8 & H2 In-Memory (Pass 12345)|
+|  - Tích hợp dataset thực tế chuẩn hóa (1.470+ việc làm thực tế)         |
 |  - Đảm bảo toàn vẹn giao dịch ACID, ràng buộc khóa ngoại (FK)           |
 |  - Đánh chỉ mục hiệu năng (13 B-Tree Indexes) trên trường tra cứu       |
 +-------------------------------------------------------------------------+
@@ -47,7 +48,12 @@ Hệ thống được xây dựng theo mô hình **Kiến trúc phân tầng 3 l
 
 ### 2.1. Tầng Trình diễn (Client Tier)
 - **Công nghệ cốt lõi:** React 18, TypeScript, Vite Bundler.
-- **Quản lý phiên & Xác thực:** `AuthContext` lưu giữ trạng thái người dùng đăng nhập (`user`, `token`, `role`) trong `localStorage` và tự động khôi phục khi tải lại trang.
+- **Quản lý trạng thái đa tầng (React Context API):**
+  - `AuthContext`: Quản lý phiên đăng nhập (`user`, `token`, `role`) đồng bộ `localStorage` và tự động đính kèm bearer token.
+  - `ThemeContext`: Điều khiển chế độ Sáng / Tối (Dark / Light Theme), chuyển đổi mượt mà bằng CSS custom property tokens (`--bg-main`, `--bg-card`, `--text-main`, `--border-color`) và lưu cấu hình vào `localStorage`.
+  - `LanguageContext`: Hỗ trợ song ngữ Tiếng Việt & Tiếng Anh (i18n), chuyển đổi nhãn tức thì cho trang chủ, tìm kiếm, chi tiết việc làm, thông báo và hồ sơ.
+- **Quản lý Hồ sơ Đa vai trò (Multi-role Profile):**
+  - Trang hồ sơ (`/profile` & `/student/profile`) tự động nhận diện vai trò người dùng (Sinh viên, Nhà tuyển dụng, Quản trị viên) để hiển thị và cho phép chỉnh sửa thông tin tương ứng mà vẫn đồng nhất màu sắc giao diện.
 - **Bảo vệ định tuyến (Route Guard):** Component `ProtectedRoute` kiểm tra quyền truy cập theo vai trò:
   - Sinh viên truy cập: `/student/*` (`ROLE_STUDENT`)
   - Nhà tuyển dụng truy cập: `/employer/*`, `/post-job` (`ROLE_EMPLOYER`)
@@ -59,13 +65,15 @@ Hệ thống được xây dựng theo mô hình **Kiến trúc phân tầng 3 l
 Mã nguồn backend tổ chức theo cấu trúc phân tầng nghiêm ngặt (`com.nhom8.freelance`):
 1. **Controllers (`com.nhom8.freelance.controllers`):**
    - Tiếp nhận HTTP Request, giải mã tham số, kiểm tra dữ liệu đầu vào (`@Valid`), gọi Service tương ứng và trả về `ResponseEntity<ApiResponse<T>>`.
-   - Bao gồm: `AuthController`, `JobController`, `ApplicationController`, `ReviewController`, `NotificationController`, `UserController`, `CategoryController`, `AdminController`.
+   - Bao gồm: `RootController` (cung cấp trạng thái API tại `/api/v1/`), `AuthController`, `JobController`, `ApplicationController` (bổ sung hủy đơn tại `/cancel`), `ReviewController`, `NotificationController`, `UserController`, `CategoryController`, `AdminController`.
+   - Cung cấp giao diện H2 Database Console (`/api/v1/h2-console`) phục vụ kiểm thử và phát triển nhanh.
 2. **Services (`com.nhom8.freelance.services`):**
-   - Chứa 100% logic nghiệp vụ: Kiểm tra quyền sở hữu bài đăng, kiểm tra trạng thái việc làm, thực hiện chuyển đổi trạng thái đơn, tính toán đánh giá sao và kích hoạt tạo thông báo hệ thống.
+   - Chứa 100% logic nghiệp vụ: Kiểm tra quyền sở hữu bài đăng, kiểm tra trạng thái việc làm, thực hiện chuyển đổi trạng thái đơn (kể cả sinh viên tự hủy đơn `PENDING`), tính toán đánh giá sao và kích hoạt tạo thông báo hệ thống.
 3. **Repositories (`com.nhom8.freelance.repositories`):**
    - Kế thừa `JpaRepository` của Spring Data JPA. Sử dụng câu truy vấn tối ưu, tự động ngăn chặn hoàn toàn tấn công SQL Injection.
 4. **Security & Filter (`com.nhom8.freelance.security`):**
    - `JwtAuthenticationFilter`: Trích xuất token từ header `Authorization`, xác thực chữ ký và thời hạn qua `JwtTokenProvider`, sau đó nạp `UserPrincipal` vào `SecurityContextHolder`.
+   - Cấu hình Spring Security: Bỏ qua kiểm tra CSRF cho H2 Console và thiết lập `frameOptions().sameOrigin()` cho phép nhúng iframe H2 Console an toàn.
 
 ### 2.3. Tầng Dữ liệu (Data Tier - Dual Database & Dataset Scale)
 - **Kiến trúc đa hệ quản trị CSDL:** Hệ thống hỗ trợ tương thích 100% trên cả hai hệ quản trị CSDL phổ biến nhất:

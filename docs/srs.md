@@ -33,8 +33,9 @@ Tài liệu xác định đầy đủ, súc tích các yêu cầu chức năng (
 ### FR-02: Quản lý Hồ sơ cá nhân (User Profiles)
 - **FR-02.1 Xem thông tin hồ sơ:** Xem chi tiết hồ sơ người dùng theo ID (`GET /api/v1/users/{id}`).
 - **FR-02.2 Cập nhật hồ sơ cá nhân:**
-  - *Sinh viên:* Cập nhật tiểu sử (`bio`), kỹ năng chuyên môn (`skills`), trường đại học (`university`), chuyên ngành (`major`), liên kết CV (`cvUrl`).
-  - *Nhà tuyển dụng:* Cập nhật tên đơn vị (`company_name`), địa chỉ trụ sở (`company_address`), mô tả giới thiệu (`bio`).
+  - *Sinh viên:* Cập nhật họ tên, số điện thoại, tiểu sử (`bio`), kỹ năng chuyên môn (`skills`), trường đại học (`university`), chuyên ngành (`major`), liên kết CV (`cvUrl`).
+  - *Nhà tuyển dụng:* Cập nhật họ tên người đại diện, số điện thoại, tên đơn vị (`companyName`), địa chỉ trụ sở (`companyAddress`), mô tả giới thiệu (`bio`).
+  - *Quản trị viên:* Cập nhật họ tên, số điện thoại, thông tin định danh và tiểu sử quản trị hệ thống.
 
 ### FR-03: Quản lý Danh mục ngành nghề (Job Categories)
 - **FR-03.1 Xem danh mục:** Lấy danh sách tất cả ngành nghề việc làm kèm biểu tượng đại diện (`GET /api/v1/categories`).
@@ -42,7 +43,7 @@ Tài liệu xác định đầy đủ, súc tích các yêu cầu chức năng (
 
 ### FR-04: Quản lý Tin tuyển dụng (Job Management)
 - **FR-04.1 Đăng tin việc làm:** Nhà tuyển dụng tạo tin mới gồm: Tiêu đề, mô tả, yêu cầu, danh mục, loại việc (`PART_TIME`, `FREELANCE`, `INTERNSHIP`), hình thức (`ONSITE`, `REMOTE`, `HYBRID`), địa điểm (`location`), tỉnh/thành phố (`province`), loại lương (`HOURLY`, `FIXED_PROJECT`, `MONTHLY`), số tiền lương (`salaryAmount`), thù lao hiển thị (`salaryText`), thời gian làm việc/ca kíp (`workingHours`), quyền lợi (`benefits`), gắn nhãn việc làm phù hợp sinh viên (`studentFriendly`), số lượng cần tuyển, hạn nộp hồ sơ.
-- **FR-04.2 Tìm kiếm & Lọc việc làm đa chiều:** Lọc đa điều kiện theo từ khóa (`keyword`), danh mục (`categoryId`), loại công việc (`jobType`), hình thức làm việc (`workMode`), tỉnh/thành phố (`province`), nhãn phù hợp sinh viên (`studentFriendly`) và trạng thái tin (`status`). Hỗ trợ phân trang hiệu năng cao trên tập dữ liệu lớn (1.470+ việc làm thực tế).
+- **FR-04.2 Tìm kiếm & Lọc việc làm đa chiều:** Lọc đa điều kiện theo từ khóa (`keyword`), danh mục (`categoryId`), loại công việc (`jobType`), hình thức làm việc (`workMode`), tỉnh/thành phố (`province`), nhãn phù hợp sinh viên (`studentFriendly`) và trạng thái tin (`status`). Hỗ trợ phân trang hiệu năng cao trên tập dữ liệu lớn (1.470+ việc làm thực tế: 1.450 việc làm gốc + 20 việc làm mới tại TP.HCM).
 - **FR-04.3 Tra cứu danh sách tỉnh thành:** API `GET /api/v1/jobs/provinces` cung cấp danh sách động các tỉnh/thành phố đang có tin tuyển dụng thực tế trên sàn.
 - **FR-04.4 Xem chi tiết tin:** Xem thông tin công việc, thời gian làm ca kíp, quyền lợi sinh viên, thông tin liên hệ của NTD, số lượng ứng tuyển hiện tại.
 - **FR-04.5 Chuyển đổi trạng thái tin:** NTD sở hữu tin cập nhật vòng đời tin: `OPEN` ➔ `IN_PROGRESS` ➔ `COMPLETED` ➔ `CLOSED`.
@@ -50,9 +51,10 @@ Tài liệu xác định đầy đủ, súc tích các yêu cầu chức năng (
 
 ### FR-05: Quản lý Đơn ứng tuyển (Application Management)
 - **FR-05.1 Nộp hồ sơ ứng tuyển:** Sinh viên nộp đơn cho tin đang mở (`OPEN`), gửi kèm thư giới thiệu (`coverLetter`) và liên kết CV (`cvUrl`). Hệ thống ràng buộc mỗi sinh viên chỉ được nộp 1 đơn/tin.
-- **FR-05.2 Theo dõi đơn của tôi:** Sinh viên xem danh sách các công việc đã nộp kèm trạng thái duyệt thời gian thực (`PENDING`, `REVIEWING`, `ACCEPTED`, `REJECTED`) và lý do từ chối nếu có.
+- **FR-05.2 Theo dõi đơn của tôi:** Sinh viên xem danh sách các công việc đã nộp kèm trạng thái duyệt thời gian thực (`PENDING`, `REVIEWING`, `ACCEPTED`, `REJECTED`, `CANCELLED`) và lý do từ chối nếu có.
 - **FR-05.3 Quản lý ứng viên theo tin:** NTD xem toàn bộ danh sách hồ sơ nộp vào tin của mình, xem link CV và thư giới thiệu.
 - **FR-05.4 Xét duyệt hồ sơ:** NTD cập nhật trạng thái đơn: Chấp thuận (`ACCEPTED`) hoặc Từ chối (`REJECTED`) kèm lý do cụ thể (`rejectionReason`).
+- **FR-05.5 Hủy đơn ứng tuyển:** Cho phép sinh viên tự hủy đơn đã nộp khi đơn còn ở trạng thái `PENDING` (`PATCH /api/v1/applications/{id}/cancel`), trạng thái chuyển thành `CANCELLED`.
 
 ### FR-06: Đánh giá & Xếp hạng hai chiều (Two-Way Reviews)
 - **FR-06.1 Sinh viên đánh giá NTD:** Sinh viên trúng tuyển gửi đánh giá (1–5 sao kèm nhận xét) cho NTD sau khi công việc hoàn thành (`COMPLETED`).
@@ -67,6 +69,10 @@ Tài liệu xác định đầy đủ, súc tích các yêu cầu chức năng (
 - **FR-08.1 Thống kê hệ thống:** Cung cấp chỉ số: Tổng số người dùng, tổng tin đăng, tổng đơn ứng tuyển, tổng lượt đánh giá (`GET /api/v1/admin/stats`).
 - **FR-08.2 Quản lý tài khoản:** Xem danh sách toàn bộ tài khoản, thực hiện thao tác kích hoạt hoặc khóa tài khoản (`PATCH /admin/users/{id}/toggle-status`).
 - **FR-08.3 Kiểm duyệt tin đăng:** Quản trị viên xóa bỏ tin tuyển dụng có nội dung không phù hợp (`DELETE /admin/jobs/{id}`).
+
+### FR-09: Giám sát Trạng thái & Công cụ CSDL (System Health & DB Console)
+- **FR-09.1 Kiểm tra trạng thái máy chủ:** API `GET /api/v1/` trả về thông tin tên hệ thống, phiên bản `1.0.0`, trạng thái `UP`, đường dẫn Swagger UI và H2 Console.
+- **FR-09.2 Giao diện CSDL H2 In-Memory:** Cung cấp web console tại `/api/v1/h2-console` (JDBC URL: `jdbc:h2:mem:freelance_db`) cho phép nhà phát triển kiểm tra cấu trúc bảng và dữ liệu truy vấn trực tiếp.
 
 ---
 

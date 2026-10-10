@@ -76,11 +76,12 @@ Dành cho môi trường đóng gói độc lập:
 
 | Dịch vụ | Địa chỉ truy cập | Ghi chú |
 |---|---|---|
-| **Giao diện Web (Frontend)** | `http://localhost:3000` | Trang giao diện chính thức cho người dùng |
-| **REST API (Backend)** | `http://localhost:8080/api/v1` | Cổng API gốc phục vụ trao đổi dữ liệu |
-| **Tài liệu Swagger UI** | `http://localhost:8080/swagger-ui.html` | Giao diện tra cứu và tương tác API trực quan |
-| **Cơ sở dữ liệu MySQL** | `localhost:3306` | DB: `freelance_db`, User: `root`, Pass: `12345` (1.470 jobs) |
-| **Cơ sở dữ liệu PostgreSQL** | `localhost:5433` (Local) / `5432` (Docker) | DB: `freelance_db`, User: `postgres`, Pass: `12345` (1.470 jobs) |
+| **Giao diện Web (Frontend)** | `http://localhost:3000` | Giao diện React Vite (Dark/Light mode, Song ngữ VI/EN, Hồ sơ đa vai trò) |
+| **REST API Root (Backend)** | `http://localhost:8080/api/v1` | Cổng API gốc: kiểm tra trạng thái máy chủ (`RootController`) |
+| **Tài liệu Swagger UI** | `http://localhost:8080/api/v1/swagger-ui.html` | Giao diện tra cứu và tương tác API trực quan OpenAPI 3.0 |
+| **H2 Database Console** | `http://localhost:8080/api/v1/h2-console` | Bảng điều khiển CSDL H2 In-Memory (JDBC: `jdbc:h2:mem:freelance_db`) |
+| **Cơ sở dữ liệu MySQL** | `localhost:3306` | DB: `freelance_db`, User: `root`, Pass: `12345` (1.470 việc làm) |
+| **Cơ sở dữ liệu PostgreSQL** | `localhost:5433` (Local) / `5432` (Docker) | DB: `freelance_db`, User: `postgres`, Pass: `12345` (1.470 việc làm) |
 
 ---
 
@@ -111,3 +112,18 @@ Dành cho môi trường đóng gói độc lập:
    docker-compose down -v
    docker-compose up -d --build
    ```
+
+---
+
+## 6. BỘ DỮ LIỆU THỰC TẾ & TÍNH NĂNG GIAO DIỆN MỚI
+
+1. **Bộ dữ liệu việc làm thực tế quy mô lớn (1.470 việc làm):**
+   - Bổ sung 20 việc làm mới tại khu vực TP.HCM (Mã: `VJ001451` đến `VJ001470`) được cào và chuẩn hóa từ các nguồn uy tín: **ITviec, TopCV, Shopee Vietnam, VUS, Giao Hàng Tiết Kiệm (GHTK)**.
+   - Cơ cấu: 12 việc làm ngành Công nghệ Thông tin (Frontend, Backend, Tester, Data, AI Intern, Mobile...) và 8 việc làm đa ngành (Marketing, Bán hàng, Kế toán, Logistics, Trợ giảng tiếng Anh, Thiết kế đồ họa, CSKH, Nhân sự part-time).
+   - Nạp đồng bộ vào cả 3 hệ CSDL: MySQL 8, PostgreSQL 16/18, và H2 In-Memory.
+
+2. **Các tính năng giao diện và trải nghiệm người dùng (UX/UI):**
+   - **Chế độ Sáng / Tối (Dark & Light Mode):** Nút chuyển đổi tức thì trên thanh điều hướng, tự động lưu cấu hình người dùng vào LocalStorage.
+   - **Hỗ trợ Song ngữ Việt - Anh (i18n):** Chuyển đổi ngôn ngữ giao diện mượt mà (VI / EN) cho toàn bộ trang chủ, tìm kiếm, chi tiết công việc, hồ sơ và bảng điều khiển.
+   - **Quản lý Hồ sơ Đa vai trò (Multi-role Profile):** Sinh viên, Nhà tuyển dụng và Quản trị viên đều có thể xem và cập nhật hồ sơ cá nhân với giao diện đồng nhất chuẩn Design System.
+

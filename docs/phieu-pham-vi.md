@@ -36,15 +36,17 @@
    - Đăng nhập xác thực bằng JWT, mật khẩu mã hóa BCrypt (Salt >= 10).
    - Phân quyền RBAC cho 3 tác nhân: `ROLE_STUDENT`, `ROLE_EMPLOYER`, `ROLE_ADMIN`.
    - Quản lý hồ sơ cá nhân:
-     - Sinh viên: Giới thiệu (bio), danh sách kỹ năng, trường đại học, chuyên ngành, link CV.
-     - Nhà tuyển dụng: Tên đơn vị/công ty, địa chỉ, mô tả hoạt động.
+      - Sinh viên: Họ tên, số điện thoại, giới thiệu (bio), danh sách kỹ năng, trường đại học, chuyên ngành, link CV.
+      - Nhà tuyển dụng: Tên đơn vị/công ty, địa chỉ trụ sở, mô tả hoạt động, người liên hệ.
+      - Quản trị viên: Thông tin định danh, số điện thoại, tiểu sử quản trị hệ thống.
 2. **Quản lý Tin tuyển dụng & Bộ dữ liệu lớn (Job Management & Dataset):**
    - NTD đăng tin: Tiêu đề, danh mục, hình thức (`ONSITE`/`REMOTE`/`HYBRID`), loại việc (`PART_TIME`/`FREELANCE`/`INTERNSHIP`), địa điểm, tỉnh thành (`province`), mức lương, thù lao chuỗi (`salaryText`), thời gian làm ca kíp (`workingHours`), quyền lợi (`benefits`), gắn nhãn sinh viên (`studentFriendly`), hạn nộp.
    - Tìm kiếm & lọc đa tiêu chí hiệu năng cao: Từ khóa, danh mục ngành nghề (16 nhóm ngành), tỉnh/thành phố, hình thức làm việc, loại công việc, lọc nhanh việc làm phù hợp sinh viên.
    - Cập nhật trạng thái tin theo vòng đời: `OPEN` ➔ `IN_PROGRESS` ➔ `COMPLETED` ➔ `CLOSED`.
 3. **Ứng tuyển & Quản lý Ứng viên (Application Management):**
    - Sinh viên nộp đơn ứng tuyển kèm thư giới thiệu và liên kết CV trực tuyến (ràng buộc 1 đơn/công việc).
-   - Sinh viên theo dõi lịch sử và trạng thái duyệt (`PENDING`, `REVIEWING`, `ACCEPTED`, `REJECTED`).
+   - Sinh viên theo dõi lịch sử và trạng thái duyệt (`PENDING`, `REVIEWING`, `ACCEPTED`, `REJECTED`, `CANCELLED`).
+   - Sinh viên có quyền tự hủy đơn đã nộp khi đơn còn ở trạng thái `PENDING` (`PATCH /api/v1/applications/{id}/cancel`).
    - NTD duyệt danh sách ứng viên: Xem CV, chấp nhận (`ACCEPTED`) hoặc từ chối (`REJECTED`) kèm lý do.
 4. **Đánh giá & Xếp hạng hai chiều (Two-Way Reviews):**
    - Sau khi công việc chuyển sang `COMPLETED`, mở cổng đánh giá:
@@ -61,6 +63,10 @@
 7. **Trải nghiệm Giao diện & Đa ngôn ngữ (UI/UX, Dark/Light Mode & i18n):**
    - Chế độ sáng / tối (Dark & Light Theme): Tích hợp nút toggle trên thanh điều hướng, tự động lưu và khôi phục trạng thái qua LocalStorage.
    - Chuyển đổi song ngữ Tiếng Việt - Tiếng Anh (VI / EN): Chuyển đổi tức thì toàn bộ nhãn, điều hướng, bộ lọc, thẻ việc làm và chân trang.
+   - Trang hồ sơ đa vai trò: Giao diện xem và cập nhật hồ sơ cá nhân đồng nhất cho Sinh viên, NTD và Quản trị viên.
+8. **Giám sát Trạng thái & Công cụ CSDL (Health API & H2 Console):**
+   - API gốc `GET /api/v1/` trả về trạng thái máy chủ, phiên bản, link Swagger UI và H2 Console.
+   - Web Console `GET /api/v1/h2-console` phục vụ tra cứu dữ liệu CSDL nhanh trong môi trường phát triển.
 
 ### 3.2. Các nội dung NGOÀI PHẠM VI (Out-of-Scope)
 

@@ -33,6 +33,8 @@
 
 | Phân hệ | Phương thức | Endpoint URI | Phân quyền truy cập | Mô tả chức năng |
 |---|---|---|---|---|
+| **System** | `GET` | `/` | Public | Kiểm tra trạng thái máy chủ, phiên bản, link Swagger UI & H2 Console |
+| | `GET` | `/h2-console` | Public / Dev | Giao diện điều khiển CSDL H2 In-Memory (JDBC URL: `jdbc:h2:mem:freelance_db`) |
 | **Auth** | `POST` | `/auth/register` | Public | Đăng ký tài khoản mới (Sinh viên / NTD) |
 | | `POST` | `/auth/login` | Public | Đăng nhập hệ thống, nhận JWT Access Token |
 | | `GET` | `/auth/me` | Authenticated | Lấy thông tin tài khoản đang đăng nhập |
@@ -50,11 +52,13 @@
 | | `GET` | `/applications/my-applications` | `ROLE_STUDENT` | Lịch sử nộp đơn của sinh viên hiện tại |
 | | `GET` | `/applications/job/{jobId}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Xem danh sách ứng viên nộp vào tin |
 | | `PATCH`| `/applications/{id}/status` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Duyệt (`ACCEPTED`) hoặc từ chối (`REJECTED`) đơn |
+| | `PATCH`| `/applications/{id}/cancel` | `ROLE_STUDENT` | Sinh viên tự hủy đơn nộp khi còn ở trạng thái `PENDING` |
 | **Reviews** | `POST` | `/reviews` | Authenticated | Gửi đánh giá hai chiều (1–5 sao kèm nhận xét) |
 | | `GET` | `/reviews/job/{jobId}` | Public | Lấy tất cả đánh giá của một công việc |
 | | `GET` | `/reviews/user/{userId}` | Public | Lấy tất cả đánh giá nhận được của một người dùng |
 | **Users** | `GET` | `/users/{id}` | Public | Xem hồ sơ công khai của người dùng theo ID |
-| | `PUT` | `/users/profile` | Authenticated | Cập nhật hồ sơ cá nhân của tài khoản hiện tại |
+| | `PUT` | `/users/profile` | Authenticated | Cập nhật hồ sơ cá nhân đa vai trò (Sinh viên, NTD, Admin) |
+| | `PUT` | `/students/me` | `ROLE_STUDENT` | Cập nhật hồ sơ học vấn, kỹ năng và CV cho sinh viên |
 | **Notifications** | `GET` | `/notifications` | Authenticated | Lấy danh sách thông báo của tài khoản hiện tại |
 | | `PATCH`| `/notifications/{id}/read` | Authenticated | Đánh dấu 1 thông báo đã đọc |
 | | `PATCH`| `/notifications/read-all` | Authenticated | Đánh dấu toàn bộ thông báo đã đọc |
@@ -191,3 +195,63 @@
   }
 }
 ```
+
+### 3.8. Kiểm tra trạng thái máy chủ (`GET /api/v1/`)
+- **Headers:** Không yêu cầu (Public)
+- **Response (200 OK):**
+```json
+{
+  "name": "Freelance Student Marketplace API",
+  "version": "1.0.0",
+  "status": "UP",
+  "docs": "/api/v1/swagger-ui.html",
+  "h2Console": "/api/v1/h2-console",
+  "timestamp": 1728578400000
+}
+```
+
+### 3.9. Hủy đơn ứng tuyển bởi sinh viên (`PATCH /api/v1/applications/{id}/cancel`)
+- **Headers:** `Authorization: Bearer <student_token>`
+- **Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Đã hủy đơn ứng tuyển thành công",
+  "data": {
+    "id": 15,
+    "jobId": 1455,
+    "studentId": 4,
+    "status": "CANCELLED",
+    "appliedAt": "2026-10-10T14:30:00"
+  }
+}
+```
+
+### 3.10. Cập nhật hồ sơ người dùng (`PUT /api/v1/users/profile`)
+- **Headers:** `Authorization: Bearer <token>`
+- **Request Body (Sinh viên / NTD / Admin):**
+```json
+{
+  "fullName": "Nguyễn Bá Anh Khôi",
+  "phone": "0912345678",
+  "bio": "Sinh viên năm cuối ngành CNTT, đam mê React & Spring Boot",
+  "companyName": null,
+  "companyAddress": null
+}
+```
+- **Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Cập nhật hồ sơ cá nhân thành công",
+  "data": {
+    "id": 4,
+    "email": "sinhvien.khoi@vanlanguni.vn",
+    "fullName": "Nguyễn Bá Anh Khôi",
+    "phone": "0912345678",
+    "bio": "Sinh viên năm cuối ngành CNTT, đam mê React & Spring Boot",
+    "role": "ROLE_STUDENT"
+  }
+}
+```
+

@@ -38,10 +38,11 @@
 | | `GET` | `/auth/me` | Authenticated | Lấy thông tin tài khoản đang đăng nhập |
 | **Categories** | `GET` | `/categories` | Public | Lấy danh sách toàn bộ danh mục việc làm |
 | | `GET` | `/categories/{id}` | Public | Lấy thông tin chi tiết một danh mục |
-| **Jobs** | `GET` | `/jobs` | Public | Tìm kiếm, lọc và phân trang việc làm |
+| **Jobs** | `GET` | `/jobs` | Public | Tìm kiếm, lọc và phân trang việc làm (hỗ trợ `keyword`, `categoryId`, `jobType`, `workMode`, `province`, `studentFriendly`, `page`, `size`) |
+| | `GET` | `/jobs/provinces` | Public | Lấy danh sách động các tỉnh/thành phố có tin tuyển dụng |
 | | `GET` | `/jobs/{id}` | Public | Xem thông tin chi tiết một tin tuyển dụng |
 | | `GET` | `/jobs/my-jobs` | `ROLE_EMPLOYER` | Xem danh sách tin do chính NTD đăng |
-| | `POST` | `/jobs` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Đăng tin tuyển dụng mới |
+| | `POST` | `/jobs` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Đăng tin tuyển dụng mới (hỗ trợ `province`, `salaryText`, `workingHours`, `benefits`, `studentFriendly`) |
 | | `PUT` | `/jobs/{id}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Cập nhật thông tin tin tuyển dụng |
 | | `PATCH`| `/jobs/{id}/status` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Đổi trạng thái tin (`OPEN`, `IN_PROGRESS`, `COMPLETED`, `CLOSED`) |
 | | `DELETE`| `/jobs/{id}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Xóa tin tuyển dụng |
@@ -130,8 +131,13 @@
   "jobType": "FREELANCE",
   "workMode": "REMOTE",
   "location": "Toàn quốc",
+  "province": "Hồ Chí Minh",
   "salaryType": "FIXED_PROJECT",
   "salaryAmount": 2500000.00,
+  "salaryText": "2.500.000 đ / dự án",
+  "workingHours": "Linh hoạt 15-20h/tuần",
+  "benefits": "Mentor 1:1, hỗ trợ đóng dấu mộc thực tập đồ án tốt nghiệp",
+  "studentFriendly": true,
   "slotsAvailable": 1,
   "deadline": "2026-11-30T23:59:59"
 }

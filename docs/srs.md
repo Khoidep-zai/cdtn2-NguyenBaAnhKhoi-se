@@ -41,11 +41,12 @@ Tài liệu xác định đầy đủ, súc tích các yêu cầu chức năng (
 - **FR-03.2 Chi tiết danh mục:** Tra cứu thông tin danh mục theo mã định danh (`GET /api/v1/categories/{id}`).
 
 ### FR-04: Quản lý Tin tuyển dụng (Job Management)
-- **FR-04.1 Đăng tin việc làm:** Nhà tuyển dụng tạo tin mới gồm: Tiêu đề, mô tả, yêu cầu, danh mục, loại việc (`PART_TIME`, `FREELANCE`, `INTERNSHIP`), hình thức (`ONSITE`, `REMOTE`, `HYBRID`), địa điểm, loại lương (`HOURLY`, `FIXED_PROJECT`, `MONTHLY`), số tiền lương, số lượng cần tuyển, hạn nộp hồ sơ.
-- **FR-04.2 Tìm kiếm & Lọc việc làm:** Lọc đa điều kiện theo từ khóa (`keyword`), danh mục (`categoryId`), loại công việc (`jobType`), hình thức làm việc (`workMode`) và trạng thái tin (`status`).
-- **FR-04.3 Xem chi tiết tin:** Xem thông tin công việc, thông tin liên hệ của NTD, số lượng ứng tuyển hiện tại.
-- **FR-04.4 Chuyển đổi trạng thái tin:** NTD sở hữu tin cập nhật vòng đời tin: `OPEN` ➔ `IN_PROGRESS` ➔ `COMPLETED` ➔ `CLOSED`.
-- **FR-04.5 Quản lý tin của tôi:** NTD xem danh sách toàn bộ các tin do chính tài khoản mình đăng tải (`GET /api/v1/jobs/my-jobs`).
+- **FR-04.1 Đăng tin việc làm:** Nhà tuyển dụng tạo tin mới gồm: Tiêu đề, mô tả, yêu cầu, danh mục, loại việc (`PART_TIME`, `FREELANCE`, `INTERNSHIP`), hình thức (`ONSITE`, `REMOTE`, `HYBRID`), địa điểm (`location`), tỉnh/thành phố (`province`), loại lương (`HOURLY`, `FIXED_PROJECT`, `MONTHLY`), số tiền lương (`salaryAmount`), thù lao hiển thị (`salaryText`), thời gian làm việc/ca kíp (`workingHours`), quyền lợi (`benefits`), gắn nhãn việc làm phù hợp sinh viên (`studentFriendly`), số lượng cần tuyển, hạn nộp hồ sơ.
+- **FR-04.2 Tìm kiếm & Lọc việc làm đa chiều:** Lọc đa điều kiện theo từ khóa (`keyword`), danh mục (`categoryId`), loại công việc (`jobType`), hình thức làm việc (`workMode`), tỉnh/thành phố (`province`), nhãn phù hợp sinh viên (`studentFriendly`) và trạng thái tin (`status`). Hỗ trợ phân trang hiệu năng cao trên tập dữ liệu lớn (1.450+ việc làm).
+- **FR-04.3 Tra cứu danh sách tỉnh thành:** API `GET /api/v1/jobs/provinces` cung cấp danh sách động các tỉnh/thành phố đang có tin tuyển dụng thực tế trên sàn.
+- **FR-04.4 Xem chi tiết tin:** Xem thông tin công việc, thời gian làm ca kíp, quyền lợi sinh viên, thông tin liên hệ của NTD, số lượng ứng tuyển hiện tại.
+- **FR-04.5 Chuyển đổi trạng thái tin:** NTD sở hữu tin cập nhật vòng đời tin: `OPEN` ➔ `IN_PROGRESS` ➔ `COMPLETED` ➔ `CLOSED`.
+- **FR-04.6 Quản lý tin của tôi:** NTD xem danh sách toàn bộ các tin do chính tài khoản mình đăng tải (`GET /api/v1/jobs/my-jobs`).
 
 ### FR-05: Quản lý Đơn ứng tuyển (Application Management)
 - **FR-05.1 Nộp hồ sơ ứng tuyển:** Sinh viên nộp đơn cho tin đang mở (`OPEN`), gửi kèm thư giới thiệu (`coverLetter`) và liên kết CV (`cvUrl`). Hệ thống ràng buộc mỗi sinh viên chỉ được nộp 1 đơn/tin.
@@ -73,10 +74,10 @@ Tài liệu xác định đầy đủ, súc tích các yêu cầu chức năng (
 
 | Mã NFR | Phân nhóm | Chỉ số cam kết kỹ thuật |
 |---|---|---|
-| **NFR-01** | **Hiệu năng (Performance)** | - Thời gian phản hồi API trung bình < 300ms đối với các tác vụ đọc.<br>- Cơ sở dữ liệu thiết lập đầy đủ 13 Indexes trên các trường lọc/khóa ngoại.<br>- Sử dụng Connection Pool HikariCP với cấu hình tối ưu. |
+| **NFR-01** | **Hiệu năng & Dữ liệu lớn (Performance & Dataset)** | - Thời gian phản hồi API trung bình < 300ms đối với các tác vụ đọc.<br>- Tích hợp bộ dataset thực tế VietJobs với 1.450+ việc làm đã chuẩn hóa, 16 nhóm ngành nghề và 34 tỉnh/thành.<br>- Cơ sở dữ liệu thiết lập đầy đủ 13 Indexes trên các trường lọc/khóa ngoại.<br>- Sử dụng Connection Pool HikariCP với cấu hình tối ưu. |
 | **NFR-02** | **Bảo mật (Security)** | - Xác thực không lưu phiên (Stateless) bằng JWT ký số thuật toán HS256.<br>- Băm mật khẩu bằng BCrypt với hệ số Salt = 10.<br>- Áp dụng phân quyền RBAC phân tầng: Bảo vệ tại URL Pattern và phương thức nghiệp vụ.<br>- Ngăn chặn SQL Injection qua JPA PreparedStatement, chống XSS, kiểm tra hợp lệ dữ liệu đầu vào bằng Jakarta Validation. |
-| **NFR-03** | **Đóng gói & Vận hành (DevOps)** | - Container hóa chuẩn Docker: 3 container độc lập (PostgreSQL, Spring Boot Backend, React Web Frontend).<br>- Khởi động toàn bộ cụm dịch vụ qua 1 lệnh duy nhất: `docker-compose up -d --build`.<br>- Hỗ trợ khởi chạy 1-Click trên Windows qua `run.bat` và IntelliJ IDEA. |
-| **NFR-04** | **Giao diện & Khả năng sử dụng (UI/UX)** | - Giao diện hiện đại (Modern Dark Theme), màu sắc trực quan, độ tương phản văn bản đạt chuẩn WCAG 2.1 AA.<br>- Sử dụng biểu tượng vector Lucide SVG đồng nhất, chuyên nghiệp.<br>- Thiết kế Responsive linh hoạt trên màn hình Desktop (>=1024px), Tablet (>=768px) và Mobile (>=375px). |
+| **NFR-03** | **Đóng gói & Đa cơ sở dữ liệu (DevOps & Dual DB)** | - **Hỗ trợ đồng bộ 2 CSDL cốt lõi:** PostgreSQL 18 và MySQL 8 với mật khẩu chuẩn hóa `12345`. Chuyển đổi bằng Spring Profile (`postgres` / `mysql`).<br>- Container hóa chuẩn Docker: hỗ trợ cả `postgres_db` (5432) và `mysql_db` (3306), Spring Boot Backend, React Web Frontend.<br>- Hỗ trợ khởi chạy 1-Click trên Windows qua `run-mysql.bat`, `run-postgres.bat`, `run.bat` tương tác và IntelliJ IDEA. |
+| **NFR-04** | **Giao diện & Khả năng sử dụng (UI/UX)** | - Giao diện hiện đại (Modern Design System), màu sắc trực quan, độ tương phản văn bản đạt chuẩn WCAG 2.1 AA.<br>- Sử dụng biểu tượng vector Lucide SVG đồng nhất, chuyên nghiệp.<br>- Thiết kế Responsive linh hoạt trên màn hình Desktop (>=1024px), Tablet (>=768px) và Mobile (>=375px).<br>- Tích hợp bộ lọc nhanh theo tỉnh thành, việc làm sinh viên (Nghị quyết 202/2025/QH15). |
 
 ---
 

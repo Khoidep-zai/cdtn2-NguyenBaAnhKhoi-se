@@ -267,6 +267,35 @@ input, select, textarea {
   color: #92400e;
 }
 
+.badge-internship {
+  background: #f3e8ff;
+  color: #6b21a8;
+}
+
+.badge-student {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  color: white;
+  box-shadow: 0 1px 4px rgba(16, 185, 129, 0.25);
+}
+
+.badge-province {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+}
+
+.badge-category {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.badge-workmode {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
 /* Footer */
 .footer {
   background: white;

@@ -51,8 +51,13 @@ CREATE TABLE IF NOT EXISTS jobs (
     job_type VARCHAR(50) NOT NULL, -- PART_TIME, FREELANCE, INTERNSHIP
     work_mode VARCHAR(50) DEFAULT 'ONSITE', -- ONSITE, REMOTE, HYBRID
     location VARCHAR(255),
+    province VARCHAR(100),
     salary_type VARCHAR(50) NOT NULL, -- HOURLY, FIXED_PROJECT, MONTHLY
     salary_amount DECIMAL(12, 2) NOT NULL,
+    salary_text VARCHAR(100),
+    working_hours VARCHAR(255),
+    benefits TEXT,
+    student_friendly BOOLEAN DEFAULT TRUE,
     slots_available INT DEFAULT 1,
     status VARCHAR(50) DEFAULT 'OPEN', -- OPEN, IN_PROGRESS, COMPLETED, CLOSED
     deadline TIMESTAMP WITH TIME ZONE,

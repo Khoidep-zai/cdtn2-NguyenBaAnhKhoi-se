@@ -31,8 +31,13 @@ export interface Job {
   jobType: 'PART_TIME' | 'FREELANCE' | 'INTERNSHIP';
   workMode: 'ONSITE' | 'REMOTE' | 'HYBRID';
   location?: string;
+  province?: string;
   salaryType: 'HOURLY' | 'FIXED_PROJECT' | 'MONTHLY';
   salaryAmount: number;
+  salaryText?: string;
+  workingHours?: string;
+  benefits?: string;
+  studentFriendly?: boolean;
   slotsAvailable: number;
   status: 'OPEN' | 'IN_PROGRESS' | 'COMPLETED' | 'CLOSED';
   deadline?: string;

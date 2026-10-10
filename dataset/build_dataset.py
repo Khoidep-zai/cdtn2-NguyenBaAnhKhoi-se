@@ -39,6 +39,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+
 import pandas as pd
 
 OUT = Path("output")
@@ -77,15 +81,23 @@ def load_vietjobs(local: str | None) -> pd.DataFrame:
 # ---------- provinces (34 đơn vị cấp tỉnh từ 01/07/2025 - NQ 202/2025/QH15) ----------
 # Mỗi tỉnh mới -> các tên (tỉnh cũ) được gộp vào. Dùng để chuẩn hóa cột location.
 PROVINCES = {
-    "Hà Nội": [], "Huế": ["thừa thiên huế"], "Lai Châu": [], "Điện Biên": [], "Sơn La": [],
+    "Hà Nội": [
+        "hà đông", "cầu giấy", "nam từ liêm", "bắc từ liêm", "đống đa", "thanh xuân",
+        "hoàng mai", "đại kim", "ba đình", "hoàn kiếm", "hai bà trưng", "tây hồ", "long biên"
+    ],
+    "Huế": ["thừa thiên huế"], "Lai Châu": [], "Điện Biên": [], "Sơn La": [],
     "Lạng Sơn": [], "Quảng Ninh": [], "Thanh Hóa": [], "Nghệ An": [], "Hà Tĩnh": [], "Cao Bằng": [],
     "Tuyên Quang": ["hà giang"], "Lào Cai": ["yên bái"], "Thái Nguyên": ["bắc kạn"],
     "Phú Thọ": ["vĩnh phúc", "hòa bình"], "Bắc Ninh": ["bắc giang"], "Hưng Yên": ["thái bình"],
-    "Hải Phòng": ["hải dương"], "Ninh Bình": ["hà nam", "nam định"], "Quảng Trị": ["quảng bình"],
+    "Hải Phòng": ["hải dương"], "Ninh Bình": ["hà nam", "nam định", "phủ lý", "tp phủ lý"], "Quảng Trị": ["quảng bình"],
     "Đà Nẵng": ["quảng nam"], "Quảng Ngãi": ["kon tum"], "Gia Lai": ["bình định"],
     "Khánh Hòa": ["ninh thuận"], "Lâm Đồng": ["đắk nông", "bình thuận"], "Đắk Lắk": ["phú yên"],
-    "Hồ Chí Minh": ["bình dương", "bà rịa vũng tàu", "bà rịa - vũng tàu", "vũng tàu", "sài gòn", "hcm", "tphcm", "tp hcm"],
-    "Đồng Nai": ["bình phước"], "Tây Ninh": ["long an"],
+    "Hồ Chí Minh": [
+        "bình dương", "bà rịa vũng tàu", "bà rịa - vũng tàu", "vũng tàu", "sài gòn", "hcm", "tphcm", "tp hcm",
+        "quận 1", "quận 2", "quận 3", "quận 4", "quận 5", "quận 6", "quận 7", "quận 8", "quận 9", "quận 10", "quận 11", "quận 12",
+        "bình thạnh", "thủ đức", "tân phú", "phú nhuận", "gò vấp", "tân bình", "bình tân", "hóc môn", "củ chi", "nhà bè"
+    ],
+    "Đồng Nai": ["bình phước", "biên hoà", "biên hòa"], "Tây Ninh": ["long an"],
     "Cần Thơ": ["sóc trăng", "hậu giang"], "Vĩnh Long": ["bến tre", "trà vinh"],
     "Đồng Tháp": ["tiền giang"], "Cà Mau": ["bạc liêu"], "An Giang": ["kiên giang"],
 }

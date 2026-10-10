@@ -22,7 +22,8 @@
 
 1. **Xây dựng sàn kết nối hai chiều (Two-sided Marketplace):** Kết nối sinh viên có nhu cầu làm thêm với cá nhân/doanh nghiệp cần thuê nhân lực part-time, thời vụ hoặc dự án ngắn hạn.
 2. **Khép kín quy trình tuyển dụng:** Vận hành luồng nghiệp vụ thông suốt: Đăng tin ➔ Tìm kiếm/Lọc việc ➔ Nộp hồ sơ (CV) ➔ Xét duyệt đơn ➔ Thực hiện ➔ Đánh giá hai chiều (1–5 sao).
-3. **Đạt chuẩn kỹ thuật doanh nghiệp:** Xác thực không lưu phiên (Stateless JWT), phân quyền chặt chẽ theo vai trò (RBAC), CSDL đạt chuẩn 3NF có đánh chỉ mục tối ưu, giao diện Responsive hiện đại.
+3. **Tích hợp bộ dữ liệu thực tế VietJobs quy mô lớn:** Chuẩn hóa và làm sạch 1.450+ tin tuyển dụng part-time/thực tập thực tế, 16 nhóm ngành, 34 tỉnh/thành, hỗ trợ lọc chuyên biệt cho sinh viên theo tinh thần Nghị quyết 202/2025/QH15.
+4. **Đạt chuẩn kỹ thuật doanh nghiệp & Đa CSDL:** Xác thực không lưu phiên (Stateless JWT), phân quyền chặt chẽ theo vai trò (RBAC), hỗ trợ song song 2 hệ quản trị CSDL phổ biến (MySQL 8 và PostgreSQL 18) với mật khẩu chuẩn hóa `12345`, CSDL đạt chuẩn 3NF có đánh chỉ mục tối ưu, giao diện Responsive hiện đại.
 
 ---
 
@@ -37,9 +38,9 @@
    - Quản lý hồ sơ cá nhân:
      - Sinh viên: Giới thiệu (bio), danh sách kỹ năng, trường đại học, chuyên ngành, link CV.
      - Nhà tuyển dụng: Tên đơn vị/công ty, địa chỉ, mô tả hoạt động.
-2. **Quản lý Tin tuyển dụng (Job Management):**
-   - NTD đăng tin: Tiêu đề, danh mục, hình thức (`ONSITE`/`REMOTE`/`HYBRID`), loại việc (`PART_TIME`/`FREELANCE`/`INTERNSHIP`), địa điểm, mức lương, hạn nộp.
-   - Tìm kiếm & lọc đa tiêu chí: Từ khóa, danh mục ngành nghề, hình thức làm việc, loại công việc.
+2. **Quản lý Tin tuyển dụng & Bộ dữ liệu lớn (Job Management & Dataset):**
+   - NTD đăng tin: Tiêu đề, danh mục, hình thức (`ONSITE`/`REMOTE`/`HYBRID`), loại việc (`PART_TIME`/`FREELANCE`/`INTERNSHIP`), địa điểm, tỉnh thành (`province`), mức lương, thù lao chuỗi (`salaryText`), thời gian làm ca kíp (`workingHours`), quyền lợi (`benefits`), gắn nhãn sinh viên (`studentFriendly`), hạn nộp.
+   - Tìm kiếm & lọc đa tiêu chí hiệu năng cao: Từ khóa, danh mục ngành nghề (16 nhóm ngành), tỉnh/thành phố, hình thức làm việc, loại công việc, lọc nhanh việc làm phù hợp sinh viên.
    - Cập nhật trạng thái tin theo vòng đời: `OPEN` ➔ `IN_PROGRESS` ➔ `COMPLETED` ➔ `CLOSED`.
 3. **Ứng tuyển & Quản lý Ứng viên (Application Management):**
    - Sinh viên nộp đơn ứng tuyển kèm thư giới thiệu và liên kết CV trực tuyến (ràng buộc 1 đơn/công việc).

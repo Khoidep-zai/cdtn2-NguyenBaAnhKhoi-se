@@ -24,8 +24,14 @@ public class JobService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
-    public Page<Job> searchJobs(String keyword, Long categoryId, String jobType, String workMode, Pageable pageable) {
-        return jobRepository.searchJobs(keyword, categoryId, jobType, workMode, pageable);
+    public Page<Job> searchJobs(String keyword, Long categoryId, String jobType, String workMode, String province, Boolean studentFriendly, Pageable pageable) {
+        String cleanKeyword = (keyword != null && !keyword.trim().isEmpty()) ? keyword.trim() : null;
+        String cleanProvince = (province != null && !province.trim().isEmpty() && !province.equalsIgnoreCase("ALL")) ? province.trim() : null;
+        return jobRepository.searchJobs(cleanKeyword, categoryId, jobType, workMode, cleanProvince, studentFriendly, pageable);
+    }
+
+    public List<String> getProvinces() {
+        return jobRepository.findDistinctProvinces();
     }
 
     public Job getJobById(Long id) {

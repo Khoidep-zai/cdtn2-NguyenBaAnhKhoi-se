@@ -7,14 +7,21 @@ export interface SearchJobsParams {
   jobType?: string;
   workMode?: string;
   status?: string;
+  province?: string;
+  studentFriendly?: boolean;
   page?: number;
   size?: number;
 }
 
 export const jobService = {
-  async getJobs(params?: SearchJobsParams): Promise<{ content: Job[]; totalElements: number }> {
+  async getJobs(params?: SearchJobsParams): Promise<{ content: Job[]; totalElements: number; totalPages: number }> {
     const res = await apiClient.get<ApiResponse<any>>('/jobs', { params });
     return res.data.data;
+  },
+
+  async getProvinces(): Promise<string[]> {
+    const res = await apiClient.get<ApiResponse<string[]>>('/jobs/provinces');
+    return res.data.data || [];
   },
 
   async getJobById(id: number): Promise<Job> {

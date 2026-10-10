@@ -34,12 +34,23 @@ public class DataInitializer implements CommandLineRunner {
         Role employerRole = getOrCreateRole("ROLE_EMPLOYER", "Nhà tuyển dụng / Doanh nghiệp");
         Role studentRole = getOrCreateRole("ROLE_STUDENT", "Sinh viên tìm việc");
 
-        // 2. Categories
+        // 2. Categories (16 Categories from VietJobs)
         Category catDev = getOrCreateCategory("Lập trình & CNTT", "lap-trinh-cntt", "code", "Lập trình web, app, fix bug, IT");
-        Category catDesign = getOrCreateCategory("Thiết kế đồ họa & Media", "thiet-ke-do-hoa", "palette", "Thiết kế banner, logo, video, ảnh");
+        Category catService = getOrCreateCategory("Phục vụ, Nhà hàng & Khách sạn", "phuc-vu-nha-hang", "coffee", "Phục vụ quán cafe, barista, lễ tân, phụ bếp");
         Category catTutor = getOrCreateCategory("Gia sư & Dạy kèm", "gia-su-day-kem", "book-open", "Dạy kèm Toán, Lý, Hóa, Tiếng Anh");
-        Category catService = getOrCreateCategory("Phục vụ & Bán hàng part-time", "phuc-vu-ban-hang", "coffee", "Barista, nhân viên bán hàng");
-        Category catContent = getOrCreateCategory("Dịch thuật & Viết nội dung (Content)", "content-dich-thuat", "feather", "Viết bài SEO, fanpage, dịch thuật");
+        Category catSale = getOrCreateCategory("Bán hàng & Chăm sóc khách hàng", "ban-hang-cskh", "shopping-bag", "Bán hàng shop, trực page, CSKH");
+        Category catTech = getOrCreateCategory("Kỹ thuật, Điện & Viễn thông", "ky-thuat-dien-tu", "cpu", "Lắp đặt, bảo trì kỹ thuật");
+        Category catLogistics = getOrCreateCategory("Logistics, Giao hàng & Kho vận", "logistics-kho-van", "truck", "Nhân viên kho, điều phối, shipper");
+        Category catMarketing = getOrCreateCategory("Marketing, Truyền thông & Content", "marketing-content", "feather", "Viết bài chuẩn SEO, fanpage");
+        Category catTrans = getOrCreateCategory("Dịch thuật & Biên dịch", "dich-thuat", "globe", "Dịch thuật tiếng Anh, Trung, Nhật, Hàn");
+        Category catAdmin = getOrCreateCategory("Hành chính & Nhân sự", "hanh-chinh-nhan-su", "users", "Tuyển dụng, hồ sơ, nhập liệu");
+        Category catOther = getOrCreateCategory("Lao động & Việc làm khác", "viec-lam-khac", "briefcase", "Các công việc part-time khác");
+        Category catEnv = getOrCreateCategory("Môi trường & Năng lượng", "moi-truong-nang-luong", "leaf", "Khảo sát, môi trường");
+        Category catLabor = getOrCreateCategory("Lao động phổ thông & Đóng gói", "lao-dong-pho-thong", "tool", "Đóng gói, phụ kho, thủ công");
+        Category catDesign = getOrCreateCategory("Thiết kế đồ họa & Media", "thiet-ke-do-hoa", "palette", "Thiết kế banner, logo, video, ảnh");
+        Category catFinance = getOrCreateCategory("Tài chính & Kế toán", "tai-chinh-ke-toan", "pie-chart", "Kế toán, chứng từ, thu ngân");
+        Category catArch = getOrCreateCategory("Kiến trúc & Xây dựng", "kien-truc-xay-dung", "home", "AutoCad 2D/3D, phối cảnh");
+        Category catHealth = getOrCreateCategory("Y tế, Dược & Sức khỏe", "y-te-suc-khoe", "activity", "Phòng khám, nhà thuốc, y tá");
 
         // 3. Demo Users (Default password: Password123@)
         String defaultPasswordHash = passwordEncoder.encode("Password123@");

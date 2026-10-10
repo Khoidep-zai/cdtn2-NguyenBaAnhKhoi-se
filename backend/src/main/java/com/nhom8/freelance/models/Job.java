@@ -49,6 +49,21 @@ public class Job {
 
     private String location;
 
+    @Column(length = 100)
+    private String province; // Tỉnh thành (chuẩn hóa 34 tỉnh)
+
+    @Column(length = 100)
+    private String salaryText; // Lương hiển thị chi tiết (VD: 5.0 - 8.0 triệu, 28.000đ/giờ)
+
+    @Column(length = 255)
+    private String workingHours; // Ca làm việc (VD: Ca tối 17h-22h, Linh hoạt)
+
+    @Column(columnDefinition = "TEXT")
+    private String benefits; // Phúc lợi
+
+    @Builder.Default
+    private Boolean studentFriendly = true; // Dành riêng / thân thiện sinh viên
+
     @Column(nullable = false, length = 50)
     private String salaryType; // HOURLY, FIXED_PROJECT, MONTHLY
 

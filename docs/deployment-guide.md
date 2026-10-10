@@ -13,27 +13,26 @@ Tùy theo phương án chạy, máy tính cần đáp ứng một trong các đi
 - **Phương án Cục bộ (Local):**
   - Java JDK >= 17 (khuyến nghị JDK 17 hoặc 21).
   - Node.js >= 18.x và npm.
-  - PostgreSQL >= 15.x (hoặc hệ thống sẽ tự động dùng H2 In-Memory nếu chưa cài PostgreSQL).
+  - Cơ sở dữ liệu: **MySQL >= 8.x** (Port 3306) hoặc **PostgreSQL >= 15.x/18.x** (Port 5433/5432) với mật khẩu chuẩn hóa `12345`.
 
 ---
 
 ## 2. CÁC PHƯƠNG ÁN KHỞI CHẠY HỆ THỐNG
 
-### Phương án 1: Khởi chạy 1-Click bằng `run.bat` (Khuyên dùng cho Windows)
-Đây là cách nhanh nhất và thuận tiện nhất để demo chấm bài trên máy tính Windows:
-1. Mở thư mục gốc của dự án: `cdtn2-NguyenBaAnhKhoi-se`.
-2. **Nhấp đúp chuột vào file `run.bat`** (hoặc mở PowerShell/CMD và gõ `./run.bat`).
-3. Kịch bản sẽ tự động:
-   - Khởi động Backend Spring Boot tại `http://localhost:8080/api/v1`.
-   - Khởi động Frontend React Vite tại `http://localhost:3000`.
-   - **Tự động mở trình duyệt Web** tại trang chủ `http://localhost:3000`.
+### Phương án 1: Khởi chạy 1-Click bằng file Batch (Khuyên dùng cho Windows)
+Hệ thống cung cấp sẵn các kịch bản 1-click chuyên biệt cho từng loại cơ sở dữ liệu:
+1. **Chạy với MySQL:** Nhấp đúp vào `run-mysql.bat`. Hệ thống kết nối MySQL port 3306 (user `root`, pass `12345`), nạp 1.450+ việc làm và tự bật trình duyệt web.
+2. **Chạy với PostgreSQL:** Nhấp đúp vào `run-postgres.bat`. Hệ thống kết nối PostgreSQL port 5433 (user `postgres`, pass `12345`), nạp 1.450+ việc làm và tự bật trình duyệt web.
+3. **Menu lựa chọn tương tác:** Nhấp đúp vào `run.bat` để chọn nhanh chế độ khởi chạy mong muốn.
 
 ### Phương án 2: Khởi chạy 1-Click trên IntelliJ IDEA
 Dự án đã thiết lập sẵn Run Configuration tại `.idea/runConfigurations/`:
 1. Mở thư mục dự án bằng **IntelliJ IDEA**.
-2. Trên thanh công cụ trên cùng, chọn cấu hình: **`🚀 Run Full Project (BE + FE)`**.
-3. Nhấp nút **Run (▶)** (hoặc nhấn `Shift + F10`).
-4. IntelliJ sẽ khởi động đồng thời Backend và Frontend, sau đó tự động bật trình duyệt web. Khi bấm **Stop (■)**, cả hai dịch vụ sẽ tự động tắt an toàn.
+2. Trên thanh công cụ trên cùng, chọn cấu hình mong muốn:
+   - **`🚀 Run Project with MySQL`**: Khởi chạy đồng thời BE (MySQL) + FE.
+   - **`🚀 Run Project with PostgreSQL`**: Khởi chạy đồng thời BE (PostgreSQL) + FE.
+   - **`🚀 Run Full Project (BE + FE)`**: Cấu hình khởi chạy mặc định.
+3. Nhấp nút **Run (▶)** (hoặc nhấn `Shift + F10`). Cả Backend và Frontend sẽ tự động khởi động và mở trình duyệt web.
 
 ### Phương án 3: Khởi chạy trọn gói bằng Docker Compose
 Dành cho môi trường đóng gói độc lập:
@@ -41,7 +40,7 @@ Dành cho môi trường đóng gói độc lập:
    ```bash
    cp .env.example .env
    ```
-2. Khởi chạy toàn bộ cụm 3 container (Database, Backend, Frontend):
+2. Khởi chạy toàn bộ cụm container (hỗ trợ đồng thời cả `mysql_db` port 3306 và `postgres_db` port 5432):
    ```bash
    docker-compose up -d --build
    ```
@@ -52,16 +51,22 @@ Dành cho môi trường đóng gói độc lập:
 
 ### Phương án 4: Khởi chạy thủ công từng dịch vụ (Manual CLI)
 1. **Khởi động Backend:**
-   ```bash
-   cd backend
-   mvn spring-boot:run
-   ```
+   - Với MySQL:
+     ```bash
+     cd backend
+     mvn spring-boot:run -Dspring-boot.run.profiles=mysql
+     ```
+   - Với PostgreSQL:
+     ```bash
+     cd backend
+     mvn spring-boot:run -Dspring-boot.run.profiles=postgres
+     ```
    *Backend chạy tại:* `http://localhost:8080/api/v1`
 2. **Khởi động Frontend:**
    ```bash
    cd frontend
-   npm install
-   npm run dev
+   npm.cmd install
+   npm.cmd run dev
    ```
    *Frontend chạy tại:* `http://localhost:3000`
 
@@ -74,7 +79,8 @@ Dành cho môi trường đóng gói độc lập:
 | **Giao diện Web (Frontend)** | `http://localhost:3000` | Trang giao diện chính thức cho người dùng |
 | **REST API (Backend)** | `http://localhost:8080/api/v1` | Cổng API gốc phục vụ trao đổi dữ liệu |
 | **Tài liệu Swagger UI** | `http://localhost:8080/swagger-ui.html` | Giao diện tra cứu và tương tác API trực quan |
-| **Cơ sở dữ liệu PostgreSQL** | `localhost:5432` | DB: `freelance_db`, User: `freelance_user` |
+| **Cơ sở dữ liệu MySQL** | `localhost:3306` | DB: `freelance_db`, User: `root`, Pass: `12345` (1.450 jobs) |
+| **Cơ sở dữ liệu PostgreSQL** | `localhost:5433` (Local) / `5432` (Docker) | DB: `freelance_db`, User: `postgres`, Pass: `12345` (1.450 jobs) |
 
 ---
 

@@ -210,3 +210,9 @@ Dự án đã được cấu hình sẵn toàn bộ Run Configurations tại `.i
   - `feature/job-management`: Nguyễn Bá Anh Khôi phụ trách
   - `feature/ui-ux-marketplace`: Hoàng Bảo Long phụ trách
 - Mỗi Pull Request phải được ít nhất 1 thành viên review và pass toàn bộ Unit Test trước khi merge.
+
+- tài khoản dùng thử để test demo
+- Mật khẩu chung cho tất cả tài khoản: Password123@
+- Quản trị viên (Admin): admin@freelancehub.vn
+- Nhà tuyển dụng (Employer): recruiter@thecoffee.vn | techlead@innovate.vn
+- Sinh viên (Student): sinhvien.khoi@vanlanguni.vn | sinhvien.tai@vanlanguni.vn

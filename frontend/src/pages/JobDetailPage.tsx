@@ -142,14 +142,47 @@ export const JobDetailPage: React.FC = () => {
       <div style={{ background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', padding: '2.5rem', boxShadow: 'var(--shadow-sm)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
           <div>
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
-              <Badge type={job.jobType} label={job.jobType === 'PART_TIME' ? 'Part-time' : 'Freelance'} />
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', marginBottom: '0.75rem' }}>
+              <Badge type={job.jobType} label={job.jobType === 'PART_TIME' ? 'Part-time' : job.jobType === 'INTERNSHIP' ? 'Thực tập sinh' : 'Freelance'} />
               <Badge type={job.status} label={job.status === 'OPEN' ? 'Đang nhận hồ sơ' : job.status} />
+              {job.studentFriendly && (
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                    padding: '0.25rem 0.65rem',
+                    borderRadius: 'var(--radius-full)',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    color: 'white',
+                  }}
+                >
+                  ✨ Phù hợp sinh viên
+                </span>
+              )}
+              {job.category?.name && (
+                <span
+                  style={{
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    color: '#047857',
+                    background: '#ecfdf5',
+                    padding: '0.25rem 0.6rem',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid #a7f3d0',
+                  }}
+                >
+                  📁 {job.category.name}
+                </span>
+              )}
             </div>
-            <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>{job.title}</h1>
+
+            <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--text-main)', lineHeight: 1.3 }}>{job.title}</h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '1rem' }}>
               <Building size={18} />
-              <span>{job.employer?.companyName || job.employer?.fullName || 'Nhà tuyển dụng'}</span>
+              <span style={{ fontWeight: 600 }}>{job.employer?.companyName || job.employer?.fullName || 'Nhà tuyển dụng xác minh'}</span>
             </div>
           </div>
 
@@ -179,23 +212,32 @@ export const JobDetailPage: React.FC = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', background: 'var(--bg-main)', padding: '1.25rem', borderRadius: 'var(--radius-md)', marginBottom: '2rem' }}>
           <div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Mức lương / Thù lao</div>
-            <div style={{ fontWeight: 700, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem' }}>
-              <DollarSign size={16} /> {formatSalary(job.salaryAmount, job.salaryType)}
+            <div style={{ fontWeight: 700, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem', fontSize: '1.05rem' }}>
+              <DollarSign size={18} /> {job.salaryText || formatSalary(job.salaryAmount, job.salaryType)}
             </div>
           </div>
           <div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Địa điểm làm việc</div>
             <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem' }}>
-              <MapPin size={16} color="var(--primary)" /> {job.location || 'Toàn quốc (Remote)'}
+              <MapPin size={18} color="var(--primary)" /> {job.province ? `${job.province} - ${job.location || 'Tại chỗ'}` : (job.location || 'Toàn quốc (Remote)')}
             </div>
           </div>
           <div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Hạn nộp hồ sơ</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Thời gian làm việc</div>
             <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem' }}>
-              <Calendar size={16} /> {job.deadline || 'Không giới hạn'}
+              <Calendar size={18} /> {job.workingHours || 'Linh hoạt theo lịch học'}
             </div>
           </div>
         </div>
+
+        {job.benefits && (
+          <div style={{ marginBottom: '2rem', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: '#166534', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              🎁 Quyền lợi & Đãi ngộ
+            </h3>
+            <p style={{ lineHeight: 1.7, color: '#14532d', whiteSpace: 'pre-line' }}>{job.benefits}</p>
+          </div>
+        )}
 
         <div style={{ marginBottom: '2rem' }}>
           <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem' }}>Mô tả công việc</h3>
@@ -204,7 +246,7 @@ export const JobDetailPage: React.FC = () => {
 
         <div>
           <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem' }}>Yêu cầu công việc</h3>
-          <p style={{ lineHeight: 1.7, color: 'var(--text-main)', whiteSpace: 'pre-line' }}>{job.requirements || 'Trao đổi chi tiết khi phỏng vấn.'}</p>
+          <p style={{ lineHeight: 1.7, color: 'var(--text-main)', whiteSpace: 'pre-line' }}>{job.requirements || 'Không yêu cầu kinh nghiệm trước, sẽ được hướng dẫn khi nhận việc.'}</p>
         </div>
       </div>
 

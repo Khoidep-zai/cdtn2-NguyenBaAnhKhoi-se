@@ -119,9 +119,9 @@ class JobServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Job> jobPage = new PageImpl<>(List.of(sampleJob));
 
-        when(jobRepository.searchJobs(eq("Web"), eq(1L), eq("FREELANCE"), eq("REMOTE"), eq(pageable))).thenReturn(jobPage);
+        when(jobRepository.searchJobs(eq("Web"), eq(1L), eq("FREELANCE"), eq("REMOTE"), eq("Hồ Chí Minh"), eq(true), eq(pageable))).thenReturn(jobPage);
 
-        Page<Job> result = jobService.searchJobs("Web", 1L, "FREELANCE", "REMOTE", pageable);
+        Page<Job> result = jobService.searchJobs("Web", 1L, "FREELANCE", "REMOTE", "Hồ Chí Minh", true, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());

@@ -21,10 +21,17 @@ public interface JobRepository extends JpaRepository<Job, Long> {
            "LOWER(j.description) LIKE LOWER(CONCAT('%', CAST(:keyword AS string), '%'))) AND " +
            "(:categoryId IS NULL OR j.category.id = :categoryId) AND " +
            "(:jobType IS NULL OR j.jobType = :jobType) AND " +
-           "(:workMode IS NULL OR j.workMode = :workMode)")
+           "(:workMode IS NULL OR j.workMode = :workMode) AND " +
+           "(:province IS NULL OR j.province = :province) AND " +
+           "(:studentFriendly IS NULL OR j.studentFriendly = :studentFriendly)")
     Page<Job> searchJobs(@Param("keyword") String keyword,
                          @Param("categoryId") Long categoryId,
                          @Param("jobType") String jobType,
                          @Param("workMode") String workMode,
+                         @Param("province") String province,
+                         @Param("studentFriendly") Boolean studentFriendly,
                          Pageable pageable);
+
+    @Query("SELECT DISTINCT j.province FROM Job j WHERE j.province IS NOT NULL AND j.status = 'OPEN' ORDER BY j.province ASC")
+    List<String> findDistinctProvinces();
 }

@@ -33,8 +33,9 @@ Hệ thống được xây dựng theo mô hình **Kiến trúc phân tầng 3 l
                                      | JDBC Connection Pool (HikariCP)
                                      v
 +-------------------------------------------------------------------------+
-|                         3. DATA TIER (Database)                         |
-|  - PostgreSQL 16 (Production/Docker) / H2 In-Memory (Dev Fallback)      |
+|                    3. DATA TIER (Dual Database Architecture)            |
+|  - Hỗ trợ song song cả PostgreSQL 18 & MySQL 8 (Mật khẩu: 12345)        |
+|  - Tích hợp bộ dataset thực tế VietJobs (1.450+ việc làm chuẩn hóa)    |
 |  - Đảm bảo toàn vẹn giao dịch ACID, ràng buộc khóa ngoại (FK)           |
 |  - Đánh chỉ mục hiệu năng (13 B-Tree Indexes) trên trường tra cứu       |
 +-------------------------------------------------------------------------+
@@ -66,8 +67,15 @@ Mã nguồn backend tổ chức theo cấu trúc phân tầng nghiêm ngặt (`c
 4. **Security & Filter (`com.nhom8.freelance.security`):**
    - `JwtAuthenticationFilter`: Trích xuất token từ header `Authorization`, xác thực chữ ký và thời hạn qua `JwtTokenProvider`, sau đó nạp `UserPrincipal` vào `SecurityContextHolder`.
 
-### 2.3. Tầng Dữ liệu (Data Tier)
-- **Hệ quản trị CSDL:** PostgreSQL 16.
+### 2.3. Tầng Dữ liệu (Data Tier - Dual Database & Dataset Scale)
+- **Kiến trúc đa hệ quản trị CSDL:** Hệ thống hỗ trợ tương thích 100% trên cả hai hệ quản trị CSDL phổ biến nhất:
+  - **MySQL 8.x:** Port 3306, cấu hình qua `application-mysql.yml` hoặc profile `mysql`.
+  - **PostgreSQL 18.x / 16.x:** Port 5433 (Local) / 5432 (Docker), cấu hình qua `application-postgres.yml` hoặc profile `postgres`.
+  - Cả 2 hệ thống đều dùng chung chuẩn mật khẩu `12345`, cấu hình Hibernate tự động tối ưu hóa phương ngữ (`MySQLDialect` / `PostgreSQLDialect`).
+- **Quy mô tập dữ liệu thực tế (VietJobs Dataset):**
+  - Hệ thống tích hợp sẵn **1.450+ việc làm bán thời gian, dự án freelance và thực tập sinh** đã qua chuẩn hóa và làm sạch.
+  - Phân loại theo **16 danh mục ngành nghề** tiêu chuẩn và bao phủ **34 tỉnh/thành phố**.
+  - Bổ sung các trường dữ liệu thực tế: `province`, `salary_text`, `working_hours`, `benefits`, `student_friendly`.
 - **Bảng dữ liệu chính:** `roles`, `users`, `categories`, `jobs`, `applications`, `reviews`, `notifications`.
 - **Toàn vẹn quan hệ:** Khóa ngoại liên kết chặt chẽ (`ON DELETE CASCADE` cho đơn/đánh giá/thông báo khi xóa công việc; `ON DELETE RESTRICT` cho vai trò/danh mục).
 - **Ràng buộc nghiệp vụ ở cấp độ CSDL:**

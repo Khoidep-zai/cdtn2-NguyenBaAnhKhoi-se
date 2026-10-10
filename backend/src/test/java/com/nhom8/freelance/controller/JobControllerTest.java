@@ -56,9 +56,9 @@ class JobControllerTest {
     @DisplayName("Tìm kiếm tin trả về HTTP 200 và danh sách tin")
     void searchJobs_Success() {
         Page<Job> page = new PageImpl<>(List.of(job));
-        when(jobService.searchJobs(any(), any(), any(), any(), any(Pageable.class))).thenReturn(page);
+        when(jobService.searchJobs(any(), any(), any(), any(), any(), any(), any(Pageable.class))).thenReturn(page);
 
-        ResponseEntity<ApiResponse<Page<Job>>> response = jobController.searchJobs(null, null, null, null, 0, 10);
+        ResponseEntity<ApiResponse<Page<Job>>> response = jobController.searchJobs(null, null, null, null, null, null, 0, 10);
 
         assertNotNull(response);
         assertEquals(200, response.getStatusCode().value());

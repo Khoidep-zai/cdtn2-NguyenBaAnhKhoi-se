@@ -35,12 +35,21 @@ public class JobController {
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String jobType,
             @RequestParam(required = false) String workMode,
+            @RequestParam(required = false) String province,
+            @RequestParam(required = false) Boolean studentFriendly,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Job> jobs = jobService.searchJobs(keyword, categoryId, jobType, workMode, pageable);
+        Page<Job> jobs = jobService.searchJobs(keyword, categoryId, jobType, workMode, province, studentFriendly, pageable);
         return ResponseEntity.ok(ApiResponse.ok("Lấy danh sách việc làm thành công", jobs));
+    }
+
+    @GetMapping("/provinces")
+    @Operation(summary = "Lấy danh sách các tỉnh thành có tin tuyển dụng")
+    public ResponseEntity<ApiResponse<List<String>>> getProvinces() {
+        List<String> provinces = jobService.getProvinces();
+        return ResponseEntity.ok(ApiResponse.ok("Lấy danh sách tỉnh thành thành công", provinces));
     }
 
     @GetMapping("/my-jobs")

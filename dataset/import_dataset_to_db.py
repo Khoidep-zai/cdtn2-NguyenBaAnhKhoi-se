@@ -373,7 +373,7 @@ INSERT INTO notifications (id, user_id, title, message, type, reference_id, is_r
 
     print("Executing MySQL import...")
     res_m = subprocess.run(
-        ["mysql.exe", "-u", "root", "-p12345", "freelance_db", "-e", f"source {mysql_init_path.as_posix()}"],
+        ["mysql.exe", "--default-character-set=utf8mb4", "-u", "root", "-p12345", "freelance_db", "-e", f"source {mysql_init_path.as_posix()}"],
         capture_output=True, text=True
     )
     if res_m.returncode == 0:

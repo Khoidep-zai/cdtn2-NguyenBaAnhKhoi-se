@@ -6,6 +6,7 @@ import { Badge } from '../components/common/Badge';
 import { Building, MapPin, DollarSign, Calendar, CheckCircle2, ArrowLeft, Send, AlertCircle } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import { Job } from '../types';
+import { cleanMojibake, parseBenefits, formatSalaryDisplay, formatLocationDisplay } from '../utils/textUtils';
 
 const FALLBACK_JOBS: Record<number, Job> = {
   1: {
@@ -118,13 +119,6 @@ export const JobDetailPage: React.FC = () => {
     };
   }, [jobId]);
 
-  const formatSalary = (amount: number, type: string) => {
-    const formatted = new Intl.NumberFormat(language === 'vi' ? 'vi-VN' : 'en-US').format(amount) + ' đ';
-    if (type === 'HOURLY') return `${formatted}${language === 'vi' ? '/giờ' : '/hr'}`;
-    if (type === 'FIXED_PROJECT') return `${formatted}${language === 'vi' ? ' (trọn gói)' : ' (fixed)'}`;
-    return `${formatted}${language === 'vi' ? '/tháng' : '/mo'}`;
-  };
-
   const handleApply = async (e: React.FormEvent) => {
     e.preventDefault();
     setApplying(true);
@@ -181,15 +175,19 @@ export const JobDetailPage: React.FC = () => {
                     border: '1px solid rgba(16, 185, 129, 0.25)',
                   }}
                 >
-                  📁 {job.category.name}
+                  📁 {cleanMojibake(job.category.name)}
                 </span>
               )}
             </div>
 
-            <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--text-main)', lineHeight: 1.3 }}>{job.title}</h1>
+            <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--text-main)', lineHeight: 1.3 }}>
+              {cleanMojibake(job.title)}
+            </h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '1rem' }}>
               <Building size={18} />
-              <span style={{ fontWeight: 600 }}>{job.employer?.companyName || job.employer?.fullName || 'Nhà tuyển dụng xác minh'}</span>
+              <span style={{ fontWeight: 600 }}>
+                {cleanMojibake(job.employer?.companyName || job.employer?.fullName || 'Nhà tuyển dụng xác minh')}
+              </span>
             </div>
           </div>
 
@@ -220,40 +218,47 @@ export const JobDetailPage: React.FC = () => {
           <div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('job.salary')}</div>
             <div style={{ fontWeight: 700, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem', fontSize: '1.05rem' }}>
-              <DollarSign size={18} /> {job.salaryText || formatSalary(job.salaryAmount, job.salaryType)}
+              <DollarSign size={18} /> {formatSalaryDisplay(job.salaryText, job.salaryAmount, job.salaryType, language)}
             </div>
           </div>
           <div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('job.location')}</div>
             <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem' }}>
-              <MapPin size={18} color="var(--primary)" /> {job.province ? `${job.province} - ${job.location || 'Tại chỗ'}` : (job.location || 'Toàn quốc (Remote)')}
+              <MapPin size={18} color="var(--primary)" /> {formatLocationDisplay(job.province, job.location, language)}
             </div>
           </div>
           <div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{t('job.workingHours')}</div>
             <div style={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '0.2rem' }}>
-              <Calendar size={18} /> {job.workingHours || 'Linh hoạt theo lịch học'}
+              <Calendar size={18} /> {cleanMojibake(job.workingHours || 'Linh hoạt theo lịch học')}
             </div>
           </div>
         </div>
 
         {job.benefits && (
           <div style={{ marginBottom: '2rem', background: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.25)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.5rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              {t('job.benefits')}
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.75rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              🎁 {t('job.benefits')}
             </h3>
-            <p style={{ lineHeight: 1.7, color: 'var(--text-main)', whiteSpace: 'pre-line' }}>{job.benefits}</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.6rem' }}>
+              {parseBenefits(job.benefits).map((b, idx) => (
+                <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-card)', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                  <span style={{ color: '#10b981', fontWeight: 700, fontSize: '1.1rem' }}>✓</span>
+                  <span style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 500 }}>{b}</span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
         <div style={{ marginBottom: '2rem' }}>
           <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem' }}>{t('job.description')}</h3>
-          <p style={{ lineHeight: 1.7, color: 'var(--text-main)', whiteSpace: 'pre-line' }}>{job.description}</p>
+          <p style={{ lineHeight: 1.7, color: 'var(--text-main)', whiteSpace: 'pre-line' }}>{cleanMojibake(job.description)}</p>
         </div>
 
         <div>
           <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem' }}>{t('job.requirements')}</h3>
-          <p style={{ lineHeight: 1.7, color: 'var(--text-main)', whiteSpace: 'pre-line' }}>{job.requirements || 'Không yêu cầu kinh nghiệm trước, sẽ được hướng dẫn khi nhận việc.'}</p>
+          <p style={{ lineHeight: 1.7, color: 'var(--text-main)', whiteSpace: 'pre-line' }}>{cleanMojibake(job.requirements || 'Không yêu cầu kinh nghiệm trước, sẽ được hướng dẫn khi nhận việc.')}</p>
         </div>
       </div>
 

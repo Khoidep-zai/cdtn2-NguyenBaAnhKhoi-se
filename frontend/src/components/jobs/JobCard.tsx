@@ -4,6 +4,7 @@ import { Job } from '../../types';
 import { Badge } from '../common/Badge';
 import { MapPin, DollarSign, Building, Sparkles, Clock } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
+import { cleanMojibake, formatSalaryDisplay, formatLocationDisplay } from '../../utils/textUtils';
 
 interface JobCardProps {
   job: Job;
@@ -37,18 +38,6 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
         return mode;
     }
   };
-
-  const formatSalary = () => {
-    if (job.salaryText && job.salaryText.trim()) {
-      return job.salaryText;
-    }
-    const formatted = new Intl.NumberFormat('vi-VN').format(job.salaryAmount) + ' đ';
-    if (job.salaryType === 'HOURLY') return language === 'vi' ? `${formatted}/giờ` : `${formatted}/hr`;
-    if (job.salaryType === 'FIXED_PROJECT') return language === 'vi' ? `${formatted} (trọn gói)` : `${formatted} (project)`;
-    return language === 'vi' ? `${formatted}/tháng` : `${formatted}/mo`;
-  };
-
-  const displayLocation = job.province || job.location || (language === 'vi' ? 'Toàn quốc' : 'Nationwide');
 
   return (
     <div className="job-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', background: 'var(--bg-card)' }}>
@@ -85,30 +74,34 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
                 border: '1px solid var(--border-color)',
               }}
             >
-              {job.category.name}
+              {cleanMojibake(job.category.name)}
             </span>
           )}
         </div>
 
         <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)', lineHeight: 1.4 }}>
           <Link to={`/jobs/${job.id}`} style={{ color: 'inherit' }}>
-            {job.title}
+            {cleanMojibake(job.title)}
           </Link>
         </h3>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '0.75rem' }}>
           <Building size={16} />
-          <span style={{ fontWeight: 500 }}>{job.employer?.companyName || job.employer?.fullName || (language === 'vi' ? 'Nhà tuyển dụng xác minh' : 'Verified Employer')}</span>
+          <span style={{ fontWeight: 500 }}>
+            {cleanMojibake(job.employer?.companyName || job.employer?.fullName || (language === 'vi' ? 'Nhà tuyển dụng xác minh' : 'Verified Employer'))}
+          </span>
         </div>
 
         <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '1rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.5 }}>
-          {job.description}
+          {cleanMojibake(job.description)}
         </p>
 
         {job.workingHours && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.75rem', background: 'var(--bg-card-subtle)', padding: '0.35rem 0.6rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}>
             <Clock size={14} color="var(--primary)" />
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{job.workingHours}</span>
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {cleanMojibake(job.workingHours)}
+            </span>
           </div>
         )}
       </div>
@@ -118,7 +111,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--text-muted)' }}>
               <MapPin size={15} color="var(--primary)" />
-              <span style={{ fontWeight: 500 }}>{displayLocation}</span>
+              <span style={{ fontWeight: 500 }}>{formatLocationDisplay(job.province, job.location, language)}</span>
             </div>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', background: 'var(--bg-card-subtle)', padding: '0.15rem 0.45rem', borderRadius: '4px', border: '1px solid var(--border-color)' }}>
               {getWorkModeLabel(job.workMode)}
@@ -127,7 +120,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 700, color: 'var(--success)', fontSize: '0.95rem' }}>
             <DollarSign size={16} />
-            <span>{formatSalary()}</span>
+            <span>{formatSalaryDisplay(job.salaryText, job.salaryAmount, job.salaryType, language)}</span>
           </div>
         </div>
 

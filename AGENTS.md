@@ -26,7 +26,7 @@
 
 Khi người dùng gửi prompt, đối chiếu nhanh bảng dưới đây để mở đúng Skill:
 
-### 2.1 Backend (BE) — Trách nhiệm: Nguyễn Tấn Tài
+### 2.1 Backend (BE) & QA/QC — Trách nhiệm: Hoàng Bảo Long
 | Ý định / Từ khóa trong Prompt | Skill điều hướng chính | File mã nguồn / Tài liệu liên quan |
 |---|---|---|
 | Viết Controller, Service, DTO, validate dữ liệu, xử lý lỗi API | `.agent/BE/spring-boot-best-practices` | `backend/src/main/java/com/nhom8/freelance/...` |
@@ -36,7 +36,7 @@ Khi người dùng gửi prompt, đối chiếu nhanh bảng dưới đây để
 | Tối ưu PostgreSQL / schema / connection | `.agent/BE/supabase-postgres-best-practices` | `application-postgres.yml`, `database/` |
 | Lỗi runtime, kết nối DB thất bại, ngoại lệ chưa bắt | `.agent/BE/debugging-and-error-recovery` | `exceptions/GlobalExceptionHandler.java` |
 
-### 2.2 Frontend (FE) — Trách nhiệm: Nguyễn Bá Anh Khôi
+### 2.2 Frontend (FE) & Tech Lead — Trách nhiệm: Nguyễn Tấn Tài
 | Ý định / Từ khóa trong Prompt | Skill điều hướng chính | File mã nguồn / Tài liệu liên quan |
 |---|---|---|
 | Song ngữ VI/EN, đa ngôn ngữ, dịch văn bản, Theme Sáng/Tối | `.agent/FE/react-i18n-theming` | `frontend/src/context/LanguageContext.tsx`, `ThemeContext.tsx`, `styles/variables.css` |
@@ -46,7 +46,7 @@ Khi người dùng gửi prompt, đối chiếu nhanh bảng dưới đây để
 | Tối ưu render danh sách 1.470 tin việc làm, nén bundle Vite | `.agent/FE/performance-optimization` | `frontend/src/pages/JobList.tsx`, `vite.config.ts` |
 | Viết unit test cho Frontend (React components, hooks) | `.agent/FE/vitest-skill` | `frontend/src/**/*.test.tsx` |
 
-### 2.3 Kiểm thử (TESTER) — Trách nhiệm: Hoàng Bảo Long
+### 2.3 Kiểm thử & QA/QC (TESTER) — Trách nhiệm: Hoàng Bảo Long
 | Ý định / Từ khóa trong Prompt | Skill điều hướng chính | File mã nguồn / Tài liệu liên quan |
 |---|---|---|
 | Viết Unit test & Mockito cho Spring Boot (Service, Controller) | `.agent/TESTER/junit-5-skill` | `backend/src/test/java/...` |
@@ -70,7 +70,7 @@ Khi người dùng gửi prompt, đối chiếu nhanh bảng dưới đây để
 | Review bảo mật theo diff commit/PR | `.agent/QC/differential-review` | Git diff |
 | Mô hình đe dọa, ma trận quyền hạn Client/App/DB | `.agent/QC/security-threat-model` | `.agent/_shared/references/security-checklist.md` |
 
-### 2.6 Phân tích nghiệp vụ & Tài liệu (BA)
+### 2.6 Phân tích nghiệp vụ & DevOps (BA & DevOps) — Trách nhiệm: Nguyễn Bá Anh Khôi
 | Ý định / Từ khóa trong Prompt | Skill điều hướng chính | File tài liệu |
 |---|---|---|
 | Cập nhật SRS, làm rõ nghiệp vụ (luật hủy đơn, đánh giá sao) | `.agent/BA/spec-driven-development` / `interview-me` | `docs/srs.md` |

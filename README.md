@@ -4,9 +4,9 @@
 > **Học phần:** Chuyên đề tốt nghiệp 2 — Khoa Công nghệ Thông tin — Trường Đại học Văn Lang  
 > **Mã lớp học phần:** 261_71ITGR40303_04 | **Nhóm:** Nhóm 8  
 > **Thành viên:** 
-> - **Nguyễn Tấn Tài** (PM & Backend Lead)
-> - **Nguyễn Bá Anh Khôi** (BA & Frontend Lead)
-> - **Hoàng Bảo Long** (QA / Tester & DevOps Lead)  
+> - **Nguyễn Tấn Tài** (Tech Lead & Frontend Lead)
+> - **Nguyễn Bá Anh Khôi** (Business Analyst & DevOps Lead)
+> - **Hoàng Bảo Long** (QA/QC & Backend Lead)  
 > **Giảng viên hướng dẫn:** ThS. Nguyễn Văn Trung  
 
 > **📅 TIẾN ĐỘ DỰ ÁN:**  

@@ -2,7 +2,7 @@
 
 **Dự án:** Nền tảng quản lý freelance & marketplace việc làm part-time cho sinh viên  
 **Học phần:** Chuyên đề tốt nghiệp 2 — Khoa CNTT — Trường ĐH Văn Lang  
-**Người thực hiện kiểm thử:** Hoàng Long (Bảo Long) — QA / Tester & DevOps Lead  
+**Người thực hiện kiểm thử:** Hoàng Bảo Long — QA/QC & Backend Lead  
 **Ngày thực hiện kiểm thử:** 06/10/2026 – 07/10/2026  
 **Phiên bản nghiệm thu:** v1.2.0  
 

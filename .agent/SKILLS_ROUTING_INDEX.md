@@ -58,7 +58,7 @@ Thư mục `.agent/` chứa hơn **2,33 triệu token dữ liệu**. Nếu một
 ---
 
 ### 3.1 BACKEND (BE) — Kiến trúc Spring Boot 3 & Cơ sở dữ liệu
-**Phụ trách:** Nguyễn Tấn Tài | **Tech Stack:** Java 17/21, Spring Boot 3.2.x, Spring Data JPA, PostgreSQL 16 / MySQL 8
+**Phụ trách:** Hoàng Bảo Long (QA/QC & Backend) | **Tech Stack:** Java 17/21, Spring Boot 3.2.x, Spring Data JPA, PostgreSQL 16 / MySQL 8
 
 | Tình huống / Yêu cầu trong Prompt | Skill điều hướng chuẩn | Đường dẫn truy cập trực tiếp | Ghi chú tiết kiệm token |
 |---|---|---|---|
@@ -76,7 +76,7 @@ Thư mục `.agent/` chứa hơn **2,33 triệu token dữ liệu**. Nếu một
 ---
 
 ### 3.2 FRONTEND (FE) — Giao diện React 18, Thẩm mỹ & Trải nghiệm
-**Phụ trách:** Nguyễn Bá Anh Khôi | **Tech Stack:** React 18, TypeScript, Vite, CSS Modules / Design Tokens, Dark/Light Mode
+**Phụ trách:** Nguyễn Tấn Tài (Tech Lead & Frontend) | **Tech Stack:** React 18, TypeScript, Vite, CSS Modules / Design Tokens, Dark/Light Mode
 
 | Tình huống / Yêu cầu trong Prompt | Skill điều hướng chuẩn | Đường dẫn truy cập trực tiếp | Ghi chú tiết kiệm token |
 |---|---|---|---|
@@ -92,7 +92,7 @@ Thư mục `.agent/` chứa hơn **2,33 triệu token dữ liệu**. Nếu một
 ---
 
 ### 3.3 TESTER — Kiểm thử Đơn vị & Tự động hóa Đầu-Cuối
-**Phụ trách:** Hoàng Bảo Long | **Tech Stack:** JUnit 5, Mockito, Playwright, Vitest
+**Phụ trách:** Hoàng Bảo Long (QA/QC & Backend) | **Tech Stack:** JUnit 5, Mockito, Playwright, Vitest
 
 | Tình huống / Yêu cầu trong Prompt | Skill điều hướng chuẩn | Đường dẫn truy cập trực tiếp | Ghi chú tiết kiệm token |
 |---|---|---|---|
@@ -131,7 +131,8 @@ Thư mục `.agent/` chứa hơn **2,33 triệu token dữ liệu**. Nếu một
 
 ---
 
-### 3.6 BA (BUSINESS ANALYST) — Đặc Tả Nghiệp Vụ, Scrum & Tài Liệu Báo Cáo
+### 3.6 BA (BUSINESS ANALYST) & DEVOPS — Đặc Tả Nghiệp Vụ, DevOps & Tài Liệu Báo Cáo
+**Phụ trách:** Nguyễn Bá Anh Khôi (Business Analyst & DevOps) | **Tech Stack:** Docker Compose, Shell/Batch scripts, Agile/Scrum, OpenAPI, Markdown/Word
 | Tình huống / Yêu cầu trong Prompt | Skill điều hướng chuẩn | Đường dẫn truy cập trực tiếp | Ghi chú tiết kiệm token |
 |---|---|---|---|
 | Viết đặc tả PRD, SRS, tài liệu yêu cầu phần mềm chi tiết trước khi code | **spec-driven-development** | [.agent/skills/spec-driven-development/SKILL.md](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/.agent/skills/spec-driven-development/SKILL.md) | Cập nhật bám sát `docs/srs.md` |

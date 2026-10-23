@@ -78,14 +78,20 @@
 
 ## 4. KẾ HOẠCH TRIỂN KHAI THEO SPRINT (10 BUỔI AGILE)
 
-| Sprint | Buổi | Mục tiêu chính | Sản phẩm bàn giao |
-|---|---|---|---|
-| **Sprint 0** | Buổi 1–3 | Khảo sát nhu cầu sinh viên, xác định Actor, viết SRS, lập Product Backlog. | Phiếu phạm vi, SRS v1.0, Product Backlog. |
-| **Sprint 1** | Buổi 4–5 | Thiết kế kiến trúc 3 lớp, thiết kế CSDL (ERD), đặc tả REST API Contract, vẽ Wireframe. | Tài liệu kiến trúc, file ERD DrawIO, API Contract, Wireframes Prototype. |
-| **Sprint 2** | Buổi 6 | Lập trình Backend xác thực JWT, mã hóa BCrypt, module hồ sơ; dựng khung Frontend React. | Module Auth + User Profile hoạt động trên Swagger & Web UI. |
-| **Sprint 3** | Buổi 7 | Lập trình CRUD tin việc làm, bộ lọc tìm kiếm, nộp hồ sơ ứng tuyển kèm CV. | Module Jobs + Applications hoạt động hoàn chỉnh. |
-| **Sprint 4** | Buổi 8 | Lập trình Đánh giá 2 chiều, Thông báo, trang Admin; viết Unit Test JUnit 5 & kịch bản Postman. | Module Reviews + Admin + Test Report 100% Pass. |
-| **Sprint 5** | Buổi 9–10 | Đóng gói Docker Compose, cấu hình One-Click Runner, hoàn thiện báo cáo và bảo vệ đồ án. | Bộ mã nguồn hoàn chỉnh, Docker chạy 1 lệnh, Slide & Báo cáo nghiệm thu. |
+> **📅 Lịch:** Mỗi buổi = 1 tuần | Buổi 1: **25/09/2026** | Buổi 5: **23/10/2026** | Buổi 10: **27/11/2026**
+
+| Sprint | Buổi | Ngày | Mục tiêu chính | Sản phẩm bàn giao |
+|---|---|---|---|---|
+| **Sprint 0** | Buổi 1 | 25/09/2026 | Thành lập nhóm, đăng ký đề tài, phân vai trò kỹ thuật. | Phiếu xác nhận đề tài, danh sách thành viên + vai trò RACI. |
+| **Sprint 0** | Buổi 2 | 02/10/2026 | Phân tích bài toán 5W1H, viết SRS v1.0, lập ma trận FR-NFR. | SRS v1.0, 11 FR + 4 NFR. |
+| **Sprint 0** | Buổi 3 | 09/10/2026 | Xây dựng Product Backlog MoSCoW, 14 User Stories (48 pts), kế hoạch 5 Sprint. | Phiếu phạm vi, Product Backlog. |
+| **Sprint 1** | Buổi 4 | 16/10/2026 | Thiết kế kiến trúc 3 lớp, ERD 7 bảng, 13 indexes, đặc tả API Contract Swagger. | Tài liệu kiến trúc, ERD DrawIO, API Contract OpenAPI 3.0. |
+| **Sprint 1** | **Buổi 5** | **23/10/2026 ⭐ Giữa kỳ** | Thiết kế Wireframe UI, báo cáo nghiệm thu giữa kỳ (Rubric 2). | Wireframes, Slide thuyết trình Buổi 5, Gantt Chart cập nhật. |
+| **Sprint 2** | Buổi 6 | 30/10/2026 | Lập trình Backend Auth JWT HS256, BCrypt, RBAC; dựng khung Frontend React. | Module Auth + User Profile hoạt động trên Swagger & Web UI. |
+| **Sprint 3** | Buổi 7 | 06/11/2026 | CRUD tin việc làm, bộ lọc tìm kiếm, nộp hồ sơ ứng tuyển kèm CV. | Module Jobs + Applications hoàn chỉnh. |
+| **Sprint 4** | Buổi 8 | 13/11/2026 | Đánh giá 2 chiều, Thông báo, Admin Portal; 21 Test Cases + 30 Unit Tests. | Module Reviews + Admin + Test Report 100% Pass. |
+| **Sprint 5** | Buổi 9 | 20/11/2026 | Docker Compose 3 dịch vụ, 1-Click Launcher, video demo. | Docker hoàn chỉnh, run.bat chạy được. |
+| **Sprint 5** | **Buổi 10** | **27/11/2026 🎯 Cuối kỳ** | Hoàn thiện báo cáo tổng kết, Slide bảo vệ, Demo Live trước Hội đồng. | Bộ mã nguồn hoàn chỉnh, Báo cáo nghiệm thu Rubric 3. |
 
 ---
 

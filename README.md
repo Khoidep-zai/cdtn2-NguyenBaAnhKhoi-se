@@ -9,7 +9,13 @@
 > - **Hoàng Bảo Long** (QA / Tester & DevOps Lead)  
 > **Giảng viên hướng dẫn:** ThS. Nguyễn Văn Trung  
 
+> **📅 TIẾN ĐỘ DỰ ÁN:**  
+> `🟢 Buổi 5 — 23/10/2026` | Sprint 1 hoàn thành | Giữa kỳ đạt Rubric 2  
+> **Timeline:** Buổi 1 (25/09) → Buổi 5 (23/10) → **Buổi 10 cuối kỳ (27/11/2026)**  
+> Mỗi buổi học = 1 tuần | Tổng 10 tuần | Đang: Sprint 1 → Sprint 2
+
 ---
+
 
 ## 1. TỔNG QUAN ĐỀ TÀI & PHẠM VI (PROJECT OVERVIEW)
 
@@ -243,3 +249,26 @@ cdtn2-NguyenBaAnhKhoi-se/
   - `feature/job-management`: Nguyễn Bá Anh Khôi phụ trách
   - `feature/ui-ux-marketplace`: Hoàng Bảo Long phụ trách
 - **Quy chuẩn chất lượng:** Mỗi Pull Request bắt buộc phải được review chéo, pass toàn bộ 25+ ca kiểm thử tự động JUnit 5 và không có xung đột mã nguồn trước khi merge.
+
+---
+
+## 10. LỊCH TRÌNH 10 BUỔI HỌC (SPRINT TIMELINE)
+
+> **Quy tắc lịch:** Mỗi buổi học = **1 tuần** | Bắt đầu thứ Sáu | Buổi 1: 25/09/2026
+
+| Buổi | Ngày (Thứ 6) | Sprint | Nội dung chính | Trạng thái |
+|:----:|:------------:|:------:|:---------------|:----------:|
+| 1 | 25/09/2026 | Sprint 0 | Thành lập nhóm, đăng ký đề tài, phân chia vai trò | ✅ Hoàn thành |
+| 2 | 02/10/2026 | Sprint 0 | Phân tích 5W1H, soạn SRS v1.0, ma trận FR-NFR | ✅ Hoàn thành |
+| 3 | 09/10/2026 | Sprint 0 | Product Backlog MoSCoW, 14 User Stories, RACI | ✅ Hoàn thành |
+| 4 | 16/10/2026 | Sprint 1 | Thiết kế ERD 7 bảng, 13 indexes, API Contract Swagger | ✅ Hoàn thành |
+| **5** | **23/10/2026** | **Sprint 1** | **Wireframe UI, Báo cáo giữa kỳ (Rubric 2)** | 🟡 **Hiện tại** |
+| 6 | 30/10/2026 | Sprint 2 | Module Auth JWT HS256, BCrypt, RBAC 3 vai trò | 🔜 Sắp tới |
+| 7 | 06/11/2026 | Sprint 3 | Module Đăng tin, Tìm kiếm, Ứng tuyển, Dataset 1.470 | 🔜 Sắp tới |
+| 8 | 13/11/2026 | Sprint 4 | Duyệt hồ sơ, Đánh giá 2 chiều, 21/21 Test Cases PASS | 🔜 Sắp tới |
+| 9 | 20/11/2026 | Sprint 5 | Docker Compose, 1-Click Launcher, Video Demo | 🔜 Sắp tới |
+| **10** | **27/11/2026** | **Sprint 5** | **Bảo vệ đồ án cuối kỳ (Rubric 3) — Ngày kết thúc** | 🎯 **Mục tiêu** |
+
+> **📊 Tổng kết tiến độ:** Sprint 0 + Sprint 1 (100%) | Sprint 2-5 (Lên kế hoạch)  
+> **📁 Hồ sơ đầy đủ tại:** `Tài liệu Báo cáo buổi cuối/output/` — Project Charter, Gantt, Backlog, Short Report
+

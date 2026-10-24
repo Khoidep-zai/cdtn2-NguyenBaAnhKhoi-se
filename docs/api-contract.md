@@ -49,19 +49,22 @@
 | | `PATCH`| `/jobs/{id}/status` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Đổi trạng thái tin (`OPEN`, `IN_PROGRESS`, `COMPLETED`, `CLOSED`) |
 | | `DELETE`| `/jobs/{id}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Xóa tin tuyển dụng |
 | **Applications** | `POST` | `/applications` | `ROLE_STUDENT` | Nộp hồ sơ ứng tuyển kèm CV |
+| | `POST` | `/applications/jobs/{jobId}/apply` | `ROLE_STUDENT` | Nộp hồ sơ ứng tuyển theo URL param |
 | | `GET` | `/applications/my-applications` | `ROLE_STUDENT` | Lịch sử nộp đơn của sinh viên hiện tại |
 | | `GET` | `/applications/job/{jobId}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Xem danh sách ứng viên nộp vào tin |
 | | `PATCH`| `/applications/{id}/status` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Duyệt (`ACCEPTED`) hoặc từ chối (`REJECTED`) đơn |
 | | `PATCH`| `/applications/{id}/cancel` | `ROLE_STUDENT` | Sinh viên tự hủy đơn nộp khi còn ở trạng thái `PENDING` |
 | **Reviews** | `POST` | `/reviews` | Authenticated | Gửi đánh giá hai chiều (1–5 sao kèm nhận xét) |
 | | `GET` | `/reviews/job/{jobId}` | Public | Lấy tất cả đánh giá của một công việc |
+| | `GET` | `/reviews/job/{jobId}/has-reviewed`| Authenticated | Kiểm tra người dùng đã đánh giá công việc này chưa |
 | | `GET` | `/reviews/user/{userId}` | Public | Lấy tất cả đánh giá nhận được của một người dùng |
+| | `GET` | `/reviews/user/{userId}/rating` | Public | Lấy điểm sao trung bình của một người dùng |
 | **Users** | `GET` | `/users/{id}` | Public | Xem hồ sơ công khai của người dùng theo ID |
 | | `PUT` | `/users/profile` | Authenticated | Cập nhật hồ sơ cá nhân đa vai trò (Sinh viên, NTD, Admin) |
-| | `PUT` | `/students/me` | `ROLE_STUDENT` | Cập nhật hồ sơ học vấn, kỹ năng và CV cho sinh viên |
 | **Notifications** | `GET` | `/notifications` | Authenticated | Lấy danh sách thông báo của tài khoản hiện tại |
 | | `PATCH`| `/notifications/{id}/read` | Authenticated | Đánh dấu 1 thông báo đã đọc |
 | | `PATCH`| `/notifications/read-all` | Authenticated | Đánh dấu toàn bộ thông báo đã đọc |
+| | `GET` | `/notifications/unread-count` | Authenticated | Lấy số lượng thông báo chưa đọc của tài khoản |
 | **Admin** | `GET` | `/admin/stats` | `ROLE_ADMIN` | Thống kê KPI: người dùng, tin đăng, đơn ứng tuyển, đánh giá |
 | | `GET` | `/admin/users` | `ROLE_ADMIN` | Xem danh sách toàn bộ tài khoản trong hệ thống |
 | | `PATCH`| `/admin/users/{id}/toggle-status` | `ROLE_ADMIN` | Khóa hoặc kích hoạt lại tài khoản người dùng |
@@ -201,12 +204,22 @@
 - **Response (200 OK):**
 ```json
 {
-  "name": "Freelance Student Marketplace API",
-  "version": "1.0.0",
   "status": "UP",
-  "docs": "/api/v1/swagger-ui.html",
+  "system": "FreelanceHub - Hệ sinh thái việc làm sinh viên Nhóm 8",
+  "version": "1.0.0",
+  "swaggerDocs": "/api/v1/swagger-ui.html",
+  "apiDocs": "/api/v1/api-docs",
   "h2Console": "/api/v1/h2-console",
-  "timestamp": 1728578400000
+  "availableEndpoints": {
+    "auth": "/api/v1/auth",
+    "jobs": "/api/v1/jobs",
+    "categories": "/api/v1/categories",
+    "applications": "/api/v1/applications",
+    "reviews": "/api/v1/reviews",
+    "users": "/api/v1/users",
+    "notifications": "/api/v1/notifications",
+    "admin": "/api/v1/admin"
+  }
 }
 ```
 

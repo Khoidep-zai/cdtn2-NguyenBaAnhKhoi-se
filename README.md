@@ -10,9 +10,9 @@
 > **Giảng viên hướng dẫn:** ThS. Nguyễn Văn Trung  
 
 > **📅 TIẾN ĐỘ DỰ ÁN:**  
-> `🟢 Buổi 5 — 23/10/2026` | Sprint 1 hoàn thành | Giữa kỳ đạt Rubric 2  
-> **Timeline:** Buổi 1 (25/09) → Buổi 5 (23/10) → **Buổi 10 cuối kỳ (27/11/2026)**  
-> Mỗi buổi học = 1 tuần | Tổng 10 tuần | Đang: Sprint 1 → Sprint 2
+> `🟢 Buổi 10 — 27/11/2026` | Toàn bộ 10 buổi hoàn thành 100% | Đạt chuẩn xuất sắc Rubric 3  
+> **Timeline:** Buổi 1 (25/09) → Buổi 5 (23/10 Giữa kỳ) → **Buổi 10 (27/11/2026 - Bảo vệ Hội đồng)**  
+> Mỗi buổi học = 1 tuần | Tổng 10 tuần | Đã nghiệm thu trọn vẹn 5 Sprint Scrum (v1.2.0 Final Release)
 
 ---
 
@@ -35,6 +35,7 @@ Xây dựng một nền tảng web hai chiều (**Two-sided Marketplace**) kết
    - **Chế độ Sáng / Tối (Dark & Light Mode):** Nút toggle trên thanh điều hướng, lưu tự động vào `localStorage`, đồng bộ thiết kế chuẩn CSS Variables tokens.
    - **Hỗ trợ Song ngữ Việt - Anh (i18n):** Chuyển đổi ngôn ngữ tức thì giữa Tiếng Việt và Tiếng Anh trên toàn hệ thống.
 10. **Giám sát & Công cụ CSDL:** Root status endpoint (`GET /api/v1/`) và H2 Database Web Console (`/api/v1/h2-console`).
+11. **Kiểm thử tự động hóa (70 ca kiểm thử):** Tích hợp 45 tests JUnit 5, 15 API tests Postman/Newman, 10 UI tests, 12 lỗi Bug Log được khắc phục 100%, 3 scripts 1-Click tự động hóa (`test_sprint1_demo.bat`, `test_sprint2_integration.bat`, `run_all_tests.bat`).
 
 ---
 
@@ -47,9 +48,11 @@ Toàn bộ tài liệu kỹ thuật đã được biên dịch đồng bộ từ
 | [`docs/srs.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/srs.docx) | [`docs/srs.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/srs.md) | Bản đặc tả yêu cầu phần mềm đầy đủ (SRS v1.2), danh sách Actor, 9 nhóm Functional Requirements và 4 Non-Functional Requirements. |
 | [`docs/api-contract.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/api-contract.docx) | [`docs/api-contract.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/api-contract.md) | Hợp đồng REST API Contract chi tiết: Root API, Auth, Jobs, Applications (kèm Cancel), Reviews, Users Profile, H2 Console, Admin. |
 | [`docs/architecture.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/architecture.docx) | [`docs/architecture.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/architecture.md) | Thiết kế kiến trúc phân tầng 3 lớp (Client Tier, Application Tier, Data Tier), ma trận phân quyền RBAC và sơ đồ luồng bảo mật. |
-| [`docs/deployment-guide.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/deployment-guide.docx) | [`docs/deployment-guide.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/deployment-guide.md) | Cẩm nang hướng dẫn triển khai: Docker Compose, Windows 1-Click Scripts, IntelliJ IDEA, mạng cổng và xử lý sự cố. |
-| [`docs/phieu-pham-vi.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/phieu-pham-vi.docx) | [`docs/phieu-pham-vi.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/phieu-pham-vi.md) | Phiếu xác định phạm vi dự án (In-scope, Out-of-scope), phân công trách nhiệm thành viên và kế hoạch 5 Sprint Scrum. |
+| [`docs/deployment-guide.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/deployment-guide.docx) | [`docs/deployment-guide.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/deployment-guide.md) | Cẩm nang hướng dẫn triển khai: Docker Compose, Windows 1-Click Scripts, IntelliJ IDEA, mạng cổng và chạy bộ kiểm thử tự động. |
+| [`docs/phieu-pham-vi.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/phieu-pham-vi.docx) | [`docs/phieu-pham-vi.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/phieu-pham-vi.md) | Phiếu xác định phạm vi dự án (In-scope, Out-of-scope), phân công trách nhiệm thành viên và kế hoạch 5 Sprint Scrum hoàn tất 10 buổi. |
 | [`docs/ai-disclosure.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/ai-disclosure.docx) | [`docs/ai-disclosure.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/ai-disclosure.md) | Bản công bố minh bạch phạm vi sử dụng AI (Google Gemini / GitHub Copilot) và cam kết liêm chính học thuật. |
+| [`docs/test/test-plan.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/test/test-plan.docx) | [`docs/test/test-plan.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/test/test-plan.md) | Kế hoạch kiểm thử phần mềm chi tiết qua 3 cấp độ (Unit, API, E2E) với 70 ca kiểm thử mục tiêu. |
+| [`docs/test/test-report.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/test/test-report.docx) | [`docs/test/test-report.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/test/test-report.md) | Báo cáo kết quả kiểm thử phần mềm thực tế: 70/70 ca Pass (100%), Bug Log 12 lỗi được xử lý triệt để. |
 
 > **Lệnh tự động cập nhật tài liệu Word:**
 > Khi chỉnh sửa nội dung tài liệu Markdown, chạy lệnh sau tại thư mục gốc để tự động cập nhật lại toàn bộ file `.docx`:

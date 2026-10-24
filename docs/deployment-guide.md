@@ -127,3 +127,36 @@ Dành cho môi trường đóng gói độc lập:
    - **Hỗ trợ Song ngữ Việt - Anh (i18n):** Chuyển đổi ngôn ngữ giao diện mượt mà (VI / EN) cho toàn bộ trang chủ, tìm kiếm, chi tiết công việc, hồ sơ và bảng điều khiển.
    - **Quản lý Hồ sơ Đa vai trò (Multi-role Profile):** Sinh viên, Nhà tuyển dụng và Quản trị viên đều có thể xem và cập nhật hồ sơ cá nhân với giao diện đồng nhất chuẩn Design System.
 
+---
+
+## 7. HƯỚNG DẪN CHẠY BỘ KIỂM THỬ TỰ ĐỘNG (AUTOMATED TEST SUITES)
+
+Dự án trang bị trọn bộ các kịch bản kiểm thử tự động từ Unit/Integration Test đến E2E API Regression:
+
+### 7.1. Chạy nhanh 1-Click trên Windows
+- **Kiểm thử Demo Sprint 1 (12 ca):** Nhấp đúp `test_sprint1_demo.bat` hoặc chạy:
+  ```bash
+  python dataset/test_sprint1_demo.py
+  ```
+- **Kiểm thử Tích hợp Sprint 2 (18 ca):** Nhấp đúp `test_sprint2_integration.bat` hoặc chạy:
+  ```bash
+  python dataset/test_sprint2_integration.py
+  ```
+- **Kiểm thử Toàn diện Hệ thống (70 ca kiểm thử):** Nhấp đúp `run_all_tests.bat` hoặc chạy:
+  ```bash
+  python dataset/run_all_tests.py
+  ```
+
+### 7.2. Chạy Unit & Integration Test Backend (JUnit 5 + Mockito)
+Tại thư mục `backend/`, thực thi lệnh Maven:
+```bash
+mvn clean test
+```
+*Kết quả:* 45/45 tests Passed (`BUILD SUCCESS`), kiểm tra trọn vẹn AuthService, JobService, ApplicationService, ReviewService và các REST Controllers.
+
+### 7.3. Chạy kiểm thử Postman API Collection
+Tại thư mục gốc, chạy thông qua công cụ Newman:
+```bash
+newman run docs/test/postman/parttime-marketplace.postman_collection.json -e docs/test/postman/marketplace_environment.json
+```
+*Kết quả:* 15/15 kịch bản API tự động pass 100%.

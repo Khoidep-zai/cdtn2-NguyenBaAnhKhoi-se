@@ -117,14 +117,14 @@ Mã nguồn backend tổ chức theo cấu trúc phân tầng nghiêm ngặt (`c
 
 | Chức năng / Endpoint | Public / Guest | Sinh viên (`STUDENT`) | Nhà tuyển dụng (`EMPLOYER`) | Quản trị viên (`ADMIN`) |
 |---|:---:|:---:|:---:|:---:|
-| Đăng ký / Đăng nhập / Xem danh mục việc làm |  |  |  |  |
-| Tìm kiếm, lọc và xem chi tiết tin việc làm |  |  |  |  |
-| Cập nhật hồ sơ sinh viên (Kỹ năng, CV) | ❌ |  | ❌ | ❌ |
-| Nộp đơn ứng tuyển & Xem đơn của tôi | ❌ |  | ❌ | ❌ |
-| Đăng tin tuyển dụng & Đổi trạng thái tin | ❌ | ❌ |  |  |
-| Xem danh sách & Duyệt hồ sơ ứng viên | ❌ | ❌ |  |  |
-| Đánh giá hai chiều sau khi hoàn thành | ❌ |  |  |  |
-| Quản lý tài khoản (Khóa/Mở) & Xem thống kê hệ thống | ❌ | ❌ | ❌ |  |
+| Đăng ký / Đăng nhập / Xem danh mục việc làm | ✅ | ✅ | ✅ | ✅ |
+| Tìm kiếm, lọc và xem chi tiết tin việc làm | ✅ | ✅ | ✅ | ✅ |
+| Cập nhật hồ sơ cá nhân đa vai trò | ❌ | ✅ | ✅ | ✅ |
+| Nộp đơn ứng tuyển, theo dõi & hủy đơn | ❌ | ✅ | ❌ | ❌ |
+| Đăng tin tuyển dụng & Đổi trạng thái tin | ❌ | ❌ | ✅ | ✅ |
+| Xem danh sách & Duyệt hồ sơ ứng viên | ❌ | ❌ | ✅ | ✅ |
+| Đánh giá hai chiều sau khi hoàn thành | ❌ | ✅ | ✅ | ❌ |
+| Quản lý tài khoản (Khóa/Mở) & Xem thống kê hệ thống | ❌ | ❌ | ❌ | ✅ |
 
 ---
 

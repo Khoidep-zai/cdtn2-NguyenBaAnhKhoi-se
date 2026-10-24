@@ -339,6 +339,8 @@ def main():
         ("deployment-guide.md", "deployment-guide.docx"),
         ("phieu-pham-vi.md", "phieu-pham-vi.docx"),
         ("ai-disclosure.md", "ai-disclosure.docx"),
+        ("test/test-plan.md", "test/test-plan.docx"),
+        ("test/test-report.md", "test/test-report.docx"),
     ]
 
     for md_name, docx_name in files_to_sync:

@@ -14,7 +14,7 @@
 |---|---|---|---|---|
 | 1 | **Nguyễn Tấn Tài** | 2174802010839 (Trưởng nhóm) | Tech Lead & Frontend Lead | Quản lý kỹ thuật và tiến độ Sprint, xây dựng toàn bộ giao diện Web React 18 TypeScript Vite, thiết kế UI/UX, hỗ trợ Dark Mode và song ngữ VI/EN. |
 | 2 | **Nguyễn Bá Anh Khôi** | 2174802010842 (Thành viên) | Business Analyst (BA) & DevOps Lead | Thu thập & đặc tả yêu cầu (SRS, 14 User Stories), thiết kế API Contract, đóng gói cụm container Docker Compose, cấu hình tự động hóa script 1-Click launcher (`run.bat`). |
-| 3 | **Hoàng Bảo Long** | 2174802010850 (Thành viên) | QA/QC & Backend Lead | Thiết kế CSDL 7 bảng chuẩn 3NF, lập trình toàn bộ Backend RESTful API Spring Boot 3 & JWT Stateless, lập và thực thi Kế hoạch kiểm thử Test Plan 21/21 Pass. |
+| 3 | **Hoàng Bảo Long** | 2174802010850 (Thành viên) | QA/QC & Backend Lead | Thiết kế CSDL 7 bảng chuẩn 3NF, lập trình toàn bộ Backend RESTful API Spring Boot 3 & JWT Stateless, lập và thực thi Kế hoạch kiểm thử Test Plan toàn diện 70/70 ca Pass (45 Unit/Integration + 15 API + 10 UI), xử lý triệt để 12 lỗi trong Bug Log. |
 
 ---
 
@@ -78,20 +78,20 @@
 
 ## 4. KẾ HOẠCH TRIỂN KHAI THEO SPRINT (10 BUỔI AGILE)
 
-> **📅 Lịch:** Mỗi buổi = 1 tuần | Buổi 1: **25/09/2026** | Buổi 5: **23/10/2026** | Buổi 10: **27/11/2026**
+> **📅 Lịch:** Mỗi buổi = 1 tuần | Buổi 1: **25/09/2026** | Buổi 5: **23/10/2026** (Giữa kỳ) | **Buổi 10: 27/11/2026 (Hoàn thành 100% 10 buổi bảo vệ Hội đồng)**
 
-| Sprint | Buổi | Ngày | Mục tiêu chính | Sản phẩm bàn giao |
-|---|---|---|---|---|
-| **Sprint 0** | Buổi 1 | 25/09/2026 | Thành lập nhóm, đăng ký đề tài, phân vai trò kỹ thuật. | Phiếu xác nhận đề tài, danh sách thành viên + vai trò RACI. |
-| **Sprint 0** | Buổi 2 | 02/10/2026 | Phân tích bài toán 5W1H, viết SRS v1.0, lập ma trận FR-NFR. | SRS v1.0, 11 FR + 4 NFR. |
-| **Sprint 0** | Buổi 3 | 09/10/2026 | Xây dựng Product Backlog MoSCoW, 14 User Stories (48 pts), kế hoạch 5 Sprint. | Phiếu phạm vi, Product Backlog. |
-| **Sprint 1** | Buổi 4 | 16/10/2026 | Thiết kế kiến trúc 3 lớp, ERD 7 bảng, 13 indexes, đặc tả API Contract Swagger. | Tài liệu kiến trúc, ERD DrawIO, API Contract OpenAPI 3.0. |
-| **Sprint 1** | **Buổi 5** | **23/10/2026 ⭐ Giữa kỳ** | Thiết kế Wireframe UI, báo cáo nghiệm thu giữa kỳ (Rubric 2). | Wireframes, Slide thuyết trình Buổi 5, Gantt Chart cập nhật. |
-| **Sprint 2** | Buổi 6 | 30/10/2026 | Lập trình Backend Auth JWT HS256, BCrypt, RBAC; dựng khung Frontend React. | Module Auth + User Profile hoạt động trên Swagger & Web UI. |
-| **Sprint 3** | Buổi 7 | 06/11/2026 | CRUD tin việc làm, bộ lọc tìm kiếm, nộp hồ sơ ứng tuyển kèm CV. | Module Jobs + Applications hoàn chỉnh. |
-| **Sprint 4** | Buổi 8 | 13/11/2026 | Đánh giá 2 chiều, Thông báo, Admin Portal; 21 Test Cases + 30 Unit Tests. | Module Reviews + Admin + Test Report 100% Pass. |
-| **Sprint 5** | Buổi 9 | 20/11/2026 | Docker Compose 3 dịch vụ, 1-Click Launcher, video demo. | Docker hoàn chỉnh, run.bat chạy được. |
-| **Sprint 5** | **Buổi 10** | **27/11/2026 🎯 Cuối kỳ** | Hoàn thiện báo cáo tổng kết, Slide bảo vệ, Demo Live trước Hội đồng. | Bộ mã nguồn hoàn chỉnh, Báo cáo nghiệm thu Rubric 3. |
+| Sprint | Buổi | Ngày | Mục tiêu chính | Sản phẩm bàn giao | Trạng thái |
+|---|---|---|---|---|:---:|
+| **Sprint 0** | Buổi 1 | 25/09/2026 | Thành lập nhóm, đăng ký đề tài, phân vai trò kỹ thuật. | Phiếu xác nhận đề tài, danh sách thành viên + vai trò RACI. | **Hoàn thành** |
+| **Sprint 0** | Buổi 2 | 02/10/2026 | Phân tích bài toán 5W1H, viết SRS v1.0, lập ma trận FR-NFR. | SRS v1.0, 11 FR + 4 NFR. | **Hoàn thành** |
+| **Sprint 0** | Buổi 3 | 09/10/2026 | Xây dựng Product Backlog MoSCoW, 14 User Stories (48 pts), kế hoạch 5 Sprint. | Phiếu phạm vi, Product Backlog. | **Hoàn thành** |
+| **Sprint 1** | Buổi 4 | 16/10/2026 | Thiết kế kiến trúc 3 lớp, ERD 7 bảng, 13 indexes, đặc tả API Contract Swagger. | Tài liệu kiến trúc, ERD DrawIO, API Contract OpenAPI 3.0. | **Hoàn thành** |
+| **Sprint 1** | **Buổi 5** | **23/10/2026** | Thiết kế Wireframe UI, báo cáo nghiệm thu giữa kỳ (Rubric 2). | Wireframes, Slide thuyết trình Buổi 5, Gantt Chart cập nhật. | **Hoàn thành** |
+| **Sprint 2** | Buổi 6 | 30/10/2026 | Lập trình Backend Auth JWT HS256, BCrypt, RBAC; dựng khung Frontend React. | Module Auth + User Profile hoạt động trên Swagger & Web UI. | **Hoàn thành** |
+| **Sprint 3** | Buổi 7 | 06/11/2026 | CRUD tin việc làm, bộ lọc tìm kiếm, nộp hồ sơ ứng tuyển kèm CV. | Module Jobs + Applications hoàn chỉnh, tích hợp bộ 1.470 việc làm. | **Hoàn thành** |
+| **Sprint 4** | Buổi 8 | 13/11/2026 | Đánh giá 2 chiều, Thông báo, Admin Portal; 70 Test Cases + 12 Bug Fixed. | Module Reviews + Admin + Test Report 100% Pass. | **Hoàn thành** |
+| **Sprint 5** | Buổi 9 | 20/11/2026 | Docker Compose 3 dịch vụ, 1-Click Launcher, video demo dự phòng. | Docker hoàn chỉnh, run.bat chạy được, tài liệu triển khai. | **Hoàn thành** |
+| **Sprint 5** | **Buổi 10** | **27/11/2026** | Hoàn thiện báo cáo toàn khóa, Slide bảo vệ, Demo Live trước Hội đồng. | Bộ mã nguồn hoàn chỉnh v1.2, Báo cáo nghiệm thu Rubric 3. | **Hoàn thành** |
 
 ---
 
@@ -99,5 +99,5 @@
 
 - **Chức năng:** Vận hành hoàn chỉnh 100% kịch bản nghiệp vụ: Đăng tin ➔ Ứng tuyển ➔ Duyệt đơn ➔ Hoàn thành ➔ Đánh giá 2 chiều.
 - **Bảo mật:** Không để lộ dữ liệu mật khẩu, chặn truy cập trái phép bằng HTTP 401/403, kiểm soát quyền theo vai trò (RBAC).
-- **Chất lượng kiểm thử:** Tối thiểu 20+ ca kiểm thử tự động trên JUnit 5 & Postman, tỷ lệ đạt 100%, không còn lỗi nghiêm trọng (Blocker Bug).
-- **Triển khai:** Chạy được ngay trên máy giám khảo thông qua Docker Compose hoặc 1-Click Runner (`run.bat` / IntelliJ Run Configuration).
+- **Chất lượng kiểm thử:** Toàn diện 70 ca kiểm thử tự động trên JUnit 5, Postman và UI, tỷ lệ đạt 100%, 12 lỗi trong Bug Log được giải quyết triệt để, không còn lỗi nghiêm trọng (Blocker Bug).
+- **Triển khai:** Chạy được ngay trên máy giám khảo thông qua Docker Compose hoặc 1-Click Runner (`run.bat` / IntelliJ Run Configuration / `run_all_tests.bat`).

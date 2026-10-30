@@ -68,8 +68,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<String>> handleGlobalException(Exception ex) {
-        // Log chi tiết phía server, KHÔNG expose ra client
-        log.error("[INTERNAL ERROR] {} - {}", ex.getClass().getSimpleName(), ex.getMessage(), ex);
+        log.error("[INTERNAL ERROR] {}: {}", ex.getClass().getSimpleName(), ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error("Đã xảy ra lỗi máy chủ. Vui lòng thử lại sau."));
     }

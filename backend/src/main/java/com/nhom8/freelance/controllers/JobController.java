@@ -1,3 +1,4 @@
+
 package com.nhom8.freelance.controllers;
 
 import com.nhom8.freelance.dto.ApiResponse;
@@ -12,10 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +30,6 @@ public class JobController {
 
     private final JobService jobService;
 
-
     @GetMapping
     @Operation(summary = "Tìm kiếm và lọc tin việc làm đa tiêu chí")
     public ResponseEntity<ApiResponse<Page<Job>>> searchJobs(
@@ -42,31 +42,58 @@ public class JobController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Job> jobs = jobService.searchJobs(keyword, categoryId, jobType, workMode, province, studentFriendly, pageable);
-        return ResponseEntity.ok(ApiResponse.ok("Lấy danh sách việc làm thành công", jobs));
+        // Không truyền Sort tại đây.
+        // Repository sẽ sắp xếp theo created_at DESC.
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Job> jobs = jobService.searchJobs(
+                keyword,
+                categoryId,
+                jobType,
+                workMode,
+                province,
+                studentFriendly,
+                pageable
+        );
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Lấy danh sách việc làm thành công", jobs)
+        );
     }
 
     @GetMapping("/provinces")
     @Operation(summary = "Lấy danh sách các tỉnh thành có tin tuyển dụng")
     public ResponseEntity<ApiResponse<List<String>>> getProvinces() {
         List<String> provinces = jobService.getProvinces();
-        return ResponseEntity.ok(ApiResponse.ok("Lấy danh sách tỉnh thành thành công", provinces));
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Lấy danh sách tỉnh thành thành công", provinces)
+        );
     }
 
     @GetMapping("/my-jobs")
     @PreAuthorize("hasAnyRole('EMPLOYER', 'ADMIN')")
     @Operation(summary = "Lấy danh sách tin tuyển dụng do NTD hiện tại đăng")
-    public ResponseEntity<ApiResponse<List<Job>>> getMyJobs(@AuthenticationPrincipal UserPrincipal currentUser) {
+    public ResponseEntity<ApiResponse<List<Job>>> getMyJobs(
+            @AuthenticationPrincipal UserPrincipal currentUser
+    ) {
         List<Job> jobs = jobService.getJobsByEmployer(currentUser.getId());
-        return ResponseEntity.ok(ApiResponse.ok("Lấy danh sách tin của bạn thành công", jobs));
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Lấy danh sách tin của bạn thành công", jobs)
+        );
     }
 
     @GetMapping("/{id:[0-9]+}")
     @Operation(summary = "Xem chi tiết một tin tuyển dụng")
-    public ResponseEntity<ApiResponse<Job>> getJobById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Job>> getJobById(
+            @PathVariable Long id
+    ) {
         Job job = jobService.getJobById(id);
-        return ResponseEntity.ok(ApiResponse.ok("Lấy chi tiết việc làm thành công", job));
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Lấy chi tiết việc làm thành công", job)
+        );
     }
 
     @PostMapping
@@ -77,7 +104,10 @@ public class JobController {
             @Valid @RequestBody JobCreateRequest request
     ) {
         Job job = jobService.createJob(currentUser.getId(), request);
-        return ResponseEntity.ok(ApiResponse.ok("Đăng tin tuyển dụng thành công!", job));
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Đăng tin tuyển dụng thành công!", job)
+        );
     }
 
     @PatchMapping("/{id}/status")
@@ -88,12 +118,24 @@ public class JobController {
             @RequestParam String status,
             @AuthenticationPrincipal UserPrincipal currentUser
     ) {
-        // Validate status value
-        if (!Set.of("OPEN", "IN_PROGRESS", "COMPLETED", "CLOSED").contains(status.toUpperCase())) {
+        if (!Set.of("OPEN", "IN_PROGRESS", "COMPLETED", "CLOSED")
+                .contains(status.toUpperCase())) {
+
             return ResponseEntity.badRequest()
-                    .body(ApiResponse.error("Trạng thái không hợp lệ. Chỉ chấp nhận: OPEN, IN_PROGRESS, COMPLETED, CLOSED"));
+                    .body(ApiResponse.error(
+                            "Trạng thái không hợp lệ. Chỉ chấp nhận: OPEN, IN_PROGRESS, COMPLETED, CLOSED"
+                    ));
         }
-        Job job = jobService.updateJobStatus(id, status.toUpperCase(), currentUser.getId(), currentUser.getAuthorities());
-        return ResponseEntity.ok(ApiResponse.ok("Cập nhật trạng thái công việc thành công", job));
+
+        Job job = jobService.updateJobStatus(
+                id,
+                status.toUpperCase(),
+                currentUser.getId(),
+                currentUser.getAuthorities()
+        );
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Cập nhật trạng thái công việc thành công", job)
+        );
     }
 }

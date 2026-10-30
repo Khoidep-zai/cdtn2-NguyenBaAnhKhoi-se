@@ -81,7 +81,7 @@ export const PostJobPage: React.FC = () => {
         description,
         requirements,
         slotsAvailable: Number(slotsAvailable),
-        deadline: deadline || undefined,
+        deadline: deadline ? `${deadline}T23:59:59` : undefined,
       });
       setSuccess(true);
       setTimeout(() => {

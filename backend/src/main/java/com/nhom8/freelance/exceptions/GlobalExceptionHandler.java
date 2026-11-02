@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -27,6 +29,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiResponse<String>> handleBadRequest(BadRequestException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiResponse<String>> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("Mật khẩu không chính xác"));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse<String>> handleAuthenticationException(AuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error("Xác thực thất bại. Vui lòng kiểm tra lại thông tin đăng nhập!"));
     }
 
     @ExceptionHandler(AccessDeniedException.class)

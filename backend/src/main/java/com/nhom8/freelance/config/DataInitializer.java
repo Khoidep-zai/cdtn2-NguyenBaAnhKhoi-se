@@ -55,6 +55,15 @@ public class DataInitializer implements CommandLineRunner {
         // 3. Demo Users (Default password: Password123@)
         String defaultPasswordHash = passwordEncoder.encode("Password123@");
 
+        // Tu dong sua loi mat khau cho cac tai khoan seed cu co hash loi
+        userRepository.findAll().forEach(user -> {
+            if ("$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2".equals(user.getPasswordHash())) {
+                log.info("Auto-repaired invalid seed password hash for user: {}", user.getEmail());
+                user.setPasswordHash(defaultPasswordHash);
+                userRepository.save(user);
+            }
+        });
+
         User adminUser = getOrCreateUser(
                 "admin@freelancehub.vn",
                 defaultPasswordHash,
@@ -270,7 +279,15 @@ public class DataInitializer implements CommandLineRunner {
     private User getOrCreateUser(String email, String passwordHash, String fullName, String phone,
                                  Role role, String university, String major, String companyName,
                                  String companyAddress, String bio, String skills) {
-        return userRepository.findByEmail(email).orElseGet(() ->
+        return userRepository.findByEmail(email).map(existingUser -> {
+            if (!passwordEncoder.matches("Password123@", existingUser.getPasswordHash())
+                    || "$2a$10$wK1VfM9zH1OlnqA8oN1hKe7GjYj8F1BqN8uV2YyvK1Yd8QxV8uXW2".equals(existingUser.getPasswordHash())) {
+                log.info("Auto-repaired password hash for demo user: {}", email);
+                existingUser.setPasswordHash(passwordHash);
+                return userRepository.save(existingUser);
+            }
+            return existingUser;
+        }).orElseGet(() ->
                 userRepository.save(User.builder()
                         .email(email)
                         .passwordHash(passwordHash)

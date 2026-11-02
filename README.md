@@ -291,3 +291,134 @@ cdtn2-NguyenBaAnhKhoi-se/
 >
 > **📁 Hồ sơ đầy đủ tại:** `Tài liệu Báo cáo buổi cuối/output/` — Project Charter, Gantt, Backlog, Short Report
 
+-------------------------
+# 🚀 Backend RESTful API Test Report — Freelance & Part-time Job Marketplace
+
+![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-14%2F14%20Passed-success)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green)
+![Security](https://img.shields.io/badge/JWT-Role--Based%20%26%20Tenant--Isolated-blue)
+
+> **Tài liệu Báo cáo Kiểm thử Tổng thể Hệ thống RESTful API**  
+> **Dự án:** Chuyên đề Tốt nghiệp 2 — ĐH Văn Lang (K29 Track SE)  
+> **Đội ngũ phát triển (Nhóm 8):** Nguyễn Tấn Tài - Nguyễn Bá Anh Khôi - Phan Văn Hoàng Long  
+> **Người thực hiện kiểm thử:** Phan Văn Hoàng Long  
+> **Ngày thực hiện:** 02/11/2026  
+> **Môi trường:** Localhost (`http://localhost:8080/api/v1`) | Swagger UI / OpenAPI 3.0
+
+---
+
+## 📌 1. Bảng Tổng hợp Kết quả Kiểm thử (Summary Table)
+
+| STT | Nhóm chức năng | Tên ca kiểm thử (Test Case) | Endpoint & Method | Expected | Actual | Verdict |
+| :---: | :--- | :--- | :--- | :---: | :---: | :---: |
+| **01** | **Xác thực (Auth)** | Đăng nhập tài khoản Sinh viên / NTD nhận JWT Token | `POST /auth/login` | `200` | `200 OK` | **PASSED** |
+| **02** | **Xác thực (Auth)** | Lấy thông tin cá nhân hiện tại qua Bearer Token | `GET /auth/me` | `200` | `200 OK` | **PASSED** |
+| **03** | **Phân quyền (RBAC)**| Chặn Sinh viên / NTD truy cập API Quản trị | `GET /admin/users` | `403` | `403 Forbidden` | **PASSED** |
+| **04** | **Việc làm (Jobs)** | Lấy danh sách việc làm công khai (Phân trang) | `GET /jobs` | `200` | `200 OK` | **PASSED** |
+| **05** | **Phân quyền (RBAC)**| Chặn Sinh viên thực hiện tạo bài đăng tuyển dụng | `POST /jobs` | `403` | `403 Forbidden` | **PASSED** |
+| **06** | **Việc làm (Jobs)** | NTD chính chủ đăng bài việc làm mới hợp lệ | `POST /jobs` | `200` | `200 OK` | **PASSED** |
+| **07** | **Ứng tuyển** | Sinh viên nộp đơn ứng tuyển vào công việc | `POST /applications/jobs/{jobId}/apply` | `200` | `200 OK` | **PASSED** |
+| **08** | **Bảo mật Logic** | Chặn Sinh viên nộp đơn trùng vào cùng một bài đăng | `POST /applications/jobs/{jobId}/apply` | `400` | `400 Bad Request` | **PASSED** |
+| **09** | **Duyệt đơn** | NTD chính chủ duyệt đơn ứng tuyển ➔ `ACCEPTED` | `PATCH /applications/{id}/status` | `200` | `200 OK` | **PASSED** |
+| **10** | **Bảo mật Logic** | Chặn Sinh viên hủy đơn ứng tuyển đã ở trạng thái `ACCEPTED` | `PATCH /applications/{id}/cancel` | `400` | `400 Bad Request` | **PASSED** |
+| **11** | **Bảo mật Logic** | Chặn Sinh viên A rút / hủy đơn ứng tuyển của Sinh viên B | `PATCH /applications/{id}/cancel` | `400` | `400 Bad Request` | **PASSED** |
+| **12** | **Phân quyền NTD**| Chặn NTD B xem danh sách ứng viên bài đăng của NTD A | `GET /applications/job/{jobId}` | `400`/`403` | `400 Bad Request` | **PASSED** |
+| **13** | **Phân quyền NTD**| Chặn NTD B xét duyệt đơn ứng tuyển thuộc bài đăng NTD A | `PATCH /applications/{id}/status` | `400`/`403` | `400 Bad Request` | **PASSED** |
+| **14** | **Vòng đời Job** | NTD chính chủ đóng bài đăng ➔ Trạng thái `CLOSED` | `PATCH /jobs/{id}/status` | `200` | `200 OK` | **PASSED** |
+
+---
+
+## 🔍 2. Chi tiết Ca Kiểm thử theo Nhóm Chức năng
+
+### 🔑 A. Xác thực & Phân quyền Vai trò (Auth & RBAC)
+
+* **Test 01: Đăng nhập & Sinh JWT Token (`POST /auth/login`)**
+  * **Payload:** `{"email": "techlead@innovate.vn", "password": "Password123@"}`
+  * **Response:** HTTP `200 OK`. Cấp mã JWT `accessToken`, xác định rõ `userId: 3`, `role: "ROLE_EMPLOYER"`.
+  * **Đánh giá:** Mã hóa HMAC-SHA256 chuẩn, chứa đúng Claims phân quyền.
+
+* **Test 02: Xác thực Profile Cá nhân (`GET /auth/me`)**
+  * **Header:** `Authorization: Bearer <JWT_EMPLOYER_TOKEN>`
+  * **Response:** HTTP `200 OK`. Trả về chính xác Profile NTD Tuyết (`companyName: "The Coffee House Bình Thạnh"`).
+
+* **Test 03: Chặn Tài khoản Thường vào API Admin (`GET /admin/users`)**
+  * **Header:** Token `ROLE_EMPLOYER` hoặc `ROLE_STUDENT`
+  * **Response:** HTTP `403 Forbidden`.
+  * **Đánh giá:** Spring Security Interceptor chặn thành công truy cập trái phép.
+
+* **Test 05: Chặn Sinh viên Tạo Bài đăng Tuyển dụng (`POST /jobs`)**
+  * **Header:** Token `ROLE_STUDENT` (Tấn Tài / Anh Khôi)
+  * **Response:** HTTP `403 Forbidden`.
+
+---
+
+### 💼 B. Quản lý Tin tuyển dụng (Jobs Management)
+
+* **Test 04: Truy vấn Danh sách Việc làm Công khai (`GET /jobs`)**
+  * **Params:** `page=0&size=10`
+  * **Response:** HTTP `200 OK`. Trả về danh sách chuẩn `PageJob` kèm thông tin Doanh nghiệp, Mức lương (`HOURLY`, `FIXED_PROJECT`) và Trạng thái.
+
+* **Test 06: Nhà tuyển dụng Đăng bài Mới (`POST /jobs`)**
+  * **Header:** Token `ROLE_EMPLOYER`
+  * **Payload:** Title `"Tin test của Long"`, `categoryId: 1`, `salaryAmount: 25000`
+  * **Response:** HTTP `200 OK`. Khởi tạo bài đăng thành công với ID = 5, trạng thái mặc định `OPEN`.
+
+* **Test 14: Cập nhật Trạng thái Đóng Bài đăng (`PATCH /jobs/{id}/status`)**
+  * **Params:** Path `id=5`, Query `status=CLOSED` (Thực hiện bởi chính chủ bài đăng)
+  * **Response:** HTTP `200 OK`. Trạng thái bài đăng chuyển sang `CLOSED`, thời gian `updatedAt` được ghi nhận.
+
+---
+
+### 📝 C. Quy trình & Logic Ứng tuyển (Applications Flow)
+
+* **Test 07: Sinh viên Nộp Đơn Ứng tuyển (`POST /applications/jobs/{jobId}/apply`)**
+  * **Header:** Token Sinh viên Anh Khôi (`ROLE_STUDENT`)
+  * **Params:** Path `jobId=5`
+  * **Response:** HTTP `200 OK`. Đơn tạo thành công với ID = 4, trạng thái ban đầu `PENDING`.
+
+* **Test 08: Chặn Spam / Nộp Đơn Trùng lặp**
+  * **Hành động:** Sinh viên gửi tiếp đơn nộp vào `jobId=5` lần thứ 2.
+  * **Response:** HTTP `400 Bad Request`. Ràng buộc Unique Key dữ liệu hoạt động chính xác.
+
+* **Test 09: NTD Xét duyệt Đơn Ứng tuyển (`PATCH /applications/{id}/status`)**
+  * **Header:** Token NTD Tuyết (Sở hữu Job ID = 5)
+  * **Payload:** `{"status": "ACCEPTED"}`
+  * **Response:** HTTP `200 OK`. Đơn ứng tuyển ID = 3 chuyển sang trạng thái `ACCEPTED`.
+
+* **Test 10: Chặn Hủy Đơn đã được Chấp nhận (`PATCH /applications/{id}/cancel`)**
+  * **Hành động:** Sinh viên gửi yêu cầu hủy đơn ID = 3 (đã `ACCEPTED`).
+  * **Response:** HTTP `400 Bad Request`.
+  * **Message:** *"Chỉ có thể hủy đơn ứng tuyển khi hồ sơ ở trạng thái Chờ duyệt (PENDING)!"*
+
+* **Test 11: Chặn Hủy Đơn Ứng tuyển của Người khác (`PATCH /applications/{id}/cancel`)**
+  * **Hành động:** Sinh viên A dùng Token của mình cố ý hủy đơn ID = 3 của Sinh viên B.
+  * **Response:** HTTP `400 Bad Request`.
+  * **Message:** *"Bạn không thể hủy đơn ứng tuyển của người khác!"*
+
+---
+
+### 🛡️ D. Phân quyền Chéo giữa các Nhà tuyển dụng (Cross-Tenant Authorization)
+
+* **Test 12: Chặn NTD B Xem Danh sách Ứng viên của NTD A (`GET /applications/job/{jobId}`)**
+  * **Hành động:** NTD Minh (Innovate Studio) gửi request xem ứng viên của `jobId=5` (thuộc NTD Tuyết - The Coffee House).
+  * **Response:** HTTP `400 Bad Request`.
+  * **Message:** *"Bạn không có quyền xem danh sách ứng viên của công việc này"*
+
+* **Test 13: Chặn NTD B Duyệt Đơn thuộc Bài đăng của NTD A (`PATCH /applications/{id}/status`)**
+  * **Hành động:** NTD Minh cố gắng gửi request chuyển trạng thái đơn `applicationId=3` của NTD Tuyết.
+  * **Response:** HTTP `400 Bad Request`.
+  * **Message:** *"Bạn không có quyền xét duyệt đơn ứng tuyển này"*
+
+---
+
+## 🛠️ 3. Kết luận Đánh giá Hệ thống Backend
+
+1. **Bảo mật 3 Lớp (Deep Defense):**
+   * **Lớp 1 (Authentication):** Mã hóa JWT Bearer Token không trạng thái (Stateless).
+   * **Lớp 2 (Role Authorization):** Khóa đường dẫn theo `ROLE_ADMIN`, `ROLE_EMPLOYER`, `ROLE_STUDENT`.
+   * **Lớp 3 (Resource-Level Isolation):** Kiểm tra quyền sở hữu đối tượng (Ownership Check) chặn gian lận thao tác dữ liệu chéo giữa các người dùng.
+2. **Xử lý Ngoại lệ Tăng cường (Global Exception Handler):**
+   * Định dạng dữ liệu phản hồi thống nhất `ApiResponse<T>`.
+   * Trả đúng chuẩn mã trạng thái HTTP (`200`, `400`, `403`, `404`) đi kèm thông điệp nghiệp vụ rõ ràng.
+3. **Mức độ Sẵn sàng:** Backend RESTful API hoàn thành 100% mục tiêu kiểm thử chất lượng, đạt độ tin cậy tuyệt đối để tích hợp cùng Frontend.

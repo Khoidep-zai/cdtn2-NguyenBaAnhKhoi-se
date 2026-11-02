@@ -8,7 +8,7 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:freelance_db}?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh}
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USER:root}
-    password: ${DB_PASSWORD:12345}
+    password: ${DB_PASSWORD:}
     hikari:
       pool-name: FreelanceHub-MySQL-Pool
       maximum-pool-size: 10

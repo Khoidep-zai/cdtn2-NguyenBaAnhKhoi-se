@@ -223,16 +223,16 @@ export const JobBrowsePage: React.FC = () => {
   };
 
   return (
-    <div className="container" style={{ padding: '2.5rem 1.5rem' }}>
+    <div className="container" style={{ padding: 'clamp(1.75rem, 3vw, 2.75rem) clamp(0.75rem, 2vw, 1.5rem)' }}>
       {/* Header section */}
       <div style={{ marginBottom: '2rem' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(16, 185, 129, 0.12)', color: '#10b981', padding: '0.35rem 0.85rem', borderRadius: 'var(--radius-full)', fontSize: '0.825rem', fontWeight: 700, marginBottom: '0.75rem', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(16, 185, 129, 0.12)', color: '#047857', padding: '0.35rem 0.85rem', borderRadius: 'var(--radius-full)', fontSize: '0.825rem', fontWeight: 700, marginBottom: '0.75rem', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
           <Sparkles size={14} /> {t('browse.headerBadge')}
         </div>
-        <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', marginBottom: '0.5rem' }}>
+        <h1 className="page-heading">
           {t('browse.title')}
         </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: '800px', lineHeight: 1.6 }}>
+        <p className="page-subheading">
           {t('browse.desc')}
         </p>
       </div>

@@ -180,7 +180,7 @@ export const JobDetailPage: React.FC = () => {
               )}
             </div>
 
-            <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--text-main)', lineHeight: 1.3 }}>
+            <h1 style={{ fontSize: 'clamp(1.4rem, 2.5vw + 0.4rem, 2rem)', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--text-main)', lineHeight: 1.3, textWrap: 'balance' }}>
               {cleanMojibake(job.title)}
             </h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', fontSize: '1rem' }}>

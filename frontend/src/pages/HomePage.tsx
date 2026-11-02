@@ -155,7 +155,7 @@ export const HomePage: React.FC = () => {
           </div>
 
           <h1 className="hero-title">
-            {t('home.heroTitle1')} <br />
+            <span className="hero-title-part">{t('home.heroTitle1')} </span>
             <span className="hero-gradient">{t('home.heroTitle2')}</span>
           </h1>
 

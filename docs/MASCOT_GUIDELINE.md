@@ -77,3 +77,4 @@
   - Không kéo giãn méo tỉ lệ khung hình (luôn giữ aspect-ratio 1:1).
   - Không đổi màu vàng thân ong sang màu đỏ hay xanh lá làm mất nhận diện thương hiệu.
   - Không đặt mascot che khuất các nút bấm CTA chính của giao diện.
+

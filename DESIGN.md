@@ -17,27 +17,27 @@ FreelanceHub được xây dựng dành riêng cho đối tượng sinh viên đ
 
 ## 2. Hệ Thống Màu Sắc (Color Tokens)
 
-### 2.1. Bảng màu Cốt lõi (Core Palette)
+### 2.1. Bảng màu Cốt lõi (Core Palette - Chống mỏi mắt / Eye-Care Compliant)
 | Token | Light Mode Hex | Dark Mode Hex | Ý nghĩa sử dụng |
 | :--- | :--- | :--- | :--- |
-| `--primary` | `#4F46E5` (Indigo-600) | `#6366F1` (Indigo-500) | Màu thương hiệu chủ đạo, CTA buttons, active state |
-| `--primary-hover` | `#4338CA` (Indigo-700) | `#4F46E5` (Indigo-600) | Trạng thái hover của các nút chính |
-| `--primary-light` | `#EEF2FF` (Indigo-50) | `#1E1B4B` (Indigo-950) | Nền highlight nhẹ, badge nền phụ |
-| `--secondary` | `#06B6D4` (Cyan-500) | `#22D3EE` (Cyan-400) | Điểm nhấn gradient, nhãn tính năng công nghệ |
-| `--accent` | `#F59E0B` (Amber-500) | `#FBBF24` (Amber-400) | Huy hiệu nổi bật, đánh giá sao, freelancer tip |
-| `--success` | `#10B981` (Emerald-500) | `#34D399` (Emerald-400) | Trạng thái OPEN, đơn ứng tuyển thành công, việc thân thiện sinh viên |
-| `--warning` | `#F59E0B` (Amber-500) | `#FBBF24` (Amber-400) | Hạn chót sắp hết, cảnh báo trạng thái tin |
-| `--danger` | `#EF4444` (Red-500) | `#F87171` (Red-400) | Hủy việc, từ chối đơn, thông báo lỗi validation |
+| `--primary` | `#4338CA` (Indigo-700) | `#6366F1` (Indigo-500) | Màu thương hiệu chủ đạo, CTA buttons, active state (Độ tương phản cao, dịu mắt) |
+| `--primary-hover` | `#3730A3` (Indigo-800) | `#4F46E5` (Indigo-600) | Trạng thái hover của các nút chính |
+| `--primary-light` | `#E0E7FF` (Indigo-100) | `#1E1B4B` (Indigo-950) | Nền highlight nhẹ, badge nền phụ |
+| `--secondary` | `#0284C7` (Sky-700) | `#22D3EE` (Cyan-400) | Điểm nhấn biển sâu êm dịu, thay thế cyan chói lóa trên nền trắng |
+| `--accent` | `#B45309` (Amber-700) | `#FBBF24` (Amber-400) | Huy hiệu nổi bật, đánh giá sao, freelancer tip |
+| `--success` | `#047857` (Emerald-700) | `#34D399` (Emerald-400) | Trạng thái OPEN, đơn ứng tuyển thành công, việc thân thiện sinh viên |
+| `--warning` | `#B45309` (Amber-700) | `#FBBF24` (Amber-400) | Hạn chót sắp hết, cảnh báo trạng thái tin |
+| `--danger` | `#B91C1C` (Red-700) | `#F87171` (Red-400) | Hủy việc, từ chối đơn, thông báo lỗi validation |
 
-### 2.2. Bảng màu Bề mặt & Nền (Surfaces & Backgrounds)
+### 2.2. Bảng màu Bề mặt & Nền (Surfaces & Backgrounds - Êm dịu thị giác)
 | Token | Light Mode | Dark Mode | Vai trò |
 | :--- | :--- | :--- | :--- |
-| `--bg-main` | `#F8FAFC` (Slate-50) | `#0B0F19` (Deep Navy/Black) | Nền toàn trang web |
-| `--bg-card` | `#FFFFFF` | `#111827` (Gray-900) | Nền card việc làm, form đăng ký, panel |
-| `--bg-card-subtle` | `#F1F5F9` (Slate-100) | `#1F2937` (Gray-800) | Nền input, header bảng, hover panel |
-| `--bg-navbar` | `rgba(255, 255, 255, 0.85)` | `rgba(17, 24, 39, 0.88)` | Thanh điều hướng kính mờ (blur backdrop) |
-| `--border-color` | `#E2E8F0` (Slate-200) | `#374151` (Gray-700) | Đường phân cách, viền card |
-| `--border-focus` | `#818CF8` (Indigo-400) | `#6366F1` (Indigo-500) | Trạng thái focus bàn phím & input |
+| `--bg-main` | `#F1F5F9` (Slate-100 dịu mắt) | `#0B0F19` (Deep Navy/Black) | Nền toàn trang web (loại bỏ màu trắng chói gắt) |
+| `--bg-card` | `#FFFFFF` | `#111827` (Gray-900) | Nền card việc làm, form đăng ký, panel tách bạch với nền |
+| `--bg-card-subtle` | `#E2E8F0` (Slate-200) | `#1F2937` (Gray-800) | Nền input, header bảng, hover panel |
+| `--bg-navbar` | `rgba(255, 255, 255, 0.92)` | `rgba(17, 24, 39, 0.88)` | Thanh điều hướng kính mờ (blur backdrop) |
+| `--border-color` | `#CBD5E1` (Slate-300 rõ nét) | `#374151` (Gray-700) | Đường phân cách, viền card sắc sảo, chống nhòe viền |
+| `--border-focus` | `#4338CA` (Indigo-700) | `#6366F1` (Indigo-500) | Trạng thái focus bàn phím & input |
 
 ---
 
@@ -46,13 +46,13 @@ FreelanceHub được xây dựng dành riêng cho đối tượng sinh viên đ
 * **Font chữ chính:** `Plus Jakarta Sans`, sans-serif (Google Fonts).
 * **Font thay thế dự phòng:** `-apple-system`, `BlinkMacSystemFont`, `Segoe UI`, `Roboto`, sans-serif.
 
-| Cấp bậc | Cỡ chữ (Size) | Trọng lượng (Weight) | Chiều cao dòng (Line Height) | Ứng dụng |
+| Cấp bậc | Cỡ chữ (Fluid Clamp) | Trọng lượng (Weight) | Chiều cao dòng | Ứng dụng & Hành vi cân bằng dòng |
 | :--- | :--- | :--- | :--- | :--- |
-| **Display / Hero** | `clamp(2rem, 5vw, 3.25rem)` | 800 (ExtraBold) | 1.15 | Tiêu đề chính trang chủ |
-| **Heading 1** | `1.85rem` (29.6px) | 800 (ExtraBold) | 1.25 | Tiêu đề trang (Dashboard, JobDetail, Login) |
-| **Heading 2** | `1.5rem` (24px) | 700 (Bold) | 1.3 | Tiêu đề phân mục lớn, section title |
-| **Heading 3** | `1.15rem` (18.4px) | 700 (Bold) | 1.4 | Tiêu đề việc làm trong JobCard |
-| **Body (Thường)** | `0.95rem` (15.2px) | 400 (Regular) / 500 (Medium) | 1.5 | Nội dung mô tả việc, văn bản chính |
+| **Display / Hero** | `clamp(1.85rem, 3.5vw + 0.6rem, 3.25rem)` | 800 (ExtraBold) | 1.25 | Tiêu đề chính trang chủ, `text-wrap: balance` tự động chia dòng đều |
+| **Page Heading** | `clamp(1.6rem, 2.8vw + 0.5rem, 2.25rem)` | 800 (ExtraBold) | 1.25 | Tiêu đề trang (JobBrowse, JobDetail, Login), co giãn theo cửa sổ |
+| **Section Heading** | `clamp(1.35rem, 2.2vw + 0.4rem, 1.75rem)` | 700 (Bold) | 1.3 | Tiêu đề phân mục lớn, danh mục ngành nghề |
+| **Card Title (H3)** | `clamp(1.05rem, 1.5vw + 0.3rem, 1.2rem)` | 700 (Bold) | 1.4 | Tiêu đề việc làm trong JobCard |
+| **Body (Thường)** | `clamp(0.9rem, 1.1vw + 0.35rem, 1rem)` | 400 (Regular) / 500 (Medium) | 1.65 | Nội dung mô tả việc, văn bản chính, `text-wrap: pretty` chống chữ mồ côi |
 | **Small / Caption** | `0.8rem` (12.8px) | 600 (SemiBold) | 1.4 | Nhãn badge, metadata, thời gian |
 
 ---

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Sparkles, TrendingUp, ShieldCheck, MapPin, Database, Award, ArrowRight } from 'lucide-react';
+import { Search, Sparkles, TrendingUp, ShieldCheck, MapPin, Database, Award, ArrowRight, Briefcase, Layers } from 'lucide-react';
 import { JobCard } from '../components/jobs/JobCard';
+import { HubbieMascot } from '../components/common/HubbieMascot';
 import { Job } from '../types';
 import { jobService } from '../services/jobService';
 import { useLanguage } from '../context/LanguageContext';
@@ -122,6 +123,18 @@ export const HomePage: React.FC = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="container">
+          {/* Mascot Greeting */}
+          <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'center' }}>
+            <HubbieMascot
+              size={68}
+              message={
+                language === 'vi'
+                  ? 'Chào bạn! Cùng Ong Vàng tìm ngay việc làm thêm chuẩn uy tín nhé 🐝'
+                  : 'Welcome! Let Hubbie help you find verified freelance & part-time jobs 🐝'
+              }
+            />
+          </div>
+
           <div
             style={{
               display: 'inline-flex',
@@ -154,12 +167,13 @@ export const HomePage: React.FC = () => {
             <Search size={22} color="var(--text-light)" style={{ marginLeft: '0.5rem' }} />
             <input
               type="text"
+              aria-label={t('home.searchPlaceholder')}
               placeholder={t('home.searchPlaceholder')}
               className="search-input"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
             />
-            <button type="submit" className="btn btn-primary" style={{ padding: '0.85rem 1.75rem', fontWeight: 700 }}>
+            <button type="submit" className="btn btn-primary search-submit-btn" style={{ padding: '0.85rem 1.75rem', fontWeight: 700 }}>
               {t('home.searchBtn')}
             </button>
           </form>
@@ -171,20 +185,7 @@ export const HomePage: React.FC = () => {
               <button
                 key={prov}
                 onClick={() => navigate(`/jobs?province=${encodeURIComponent(prov)}`)}
-                style={{
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--border-color)',
-                  padding: '0.25rem 0.65rem',
-                  borderRadius: 'var(--radius-full)',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  color: 'var(--text-main)',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.25rem',
-                  cursor: 'pointer',
-                  transition: 'var(--transition)',
-                }}
+                className="quick-province-pill"
               >
                 <MapPin size={12} color="var(--primary)" /> {prov}
               </button>
@@ -195,22 +196,30 @@ export const HomePage: React.FC = () => {
 
       {/* Stats Banner */}
       <section style={{ background: 'var(--bg-card)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', padding: '2rem 0' }}>
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', textAlign: 'center' }}>
-          <div>
-            <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--primary)' }}>1.470+</div>
+        <div className="container stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', textAlign: 'center' }}>
+          <div className="stat-item">
+            <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontSize: '2rem', fontWeight: 800, color: 'var(--primary)' }}>
+              <Briefcase size={24} /> 1.470+
+            </div>
             <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>{t('home.statJobs')}</div>
           </div>
-          <div>
-            <div style={{ fontSize: '2rem', fontWeight: 800, color: '#059669' }}>16</div>
+          <div className="stat-item">
+            <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontSize: '2rem', fontWeight: 800, color: '#059669' }}>
+              <Layers size={24} /> 16
+            </div>
             <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>{t('home.statCats')}</div>
           </div>
-          <div>
-            <div style={{ fontSize: '2rem', fontWeight: 800, color: '#d97706' }}>34+</div>
+          <div className="stat-item">
+            <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontSize: '2rem', fontWeight: 800, color: '#d97706' }}>
+              <MapPin size={24} /> 34+
+            </div>
             <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>{t('home.statProvs')}</div>
           </div>
-          <div>
-            <div style={{ fontSize: '2rem', fontWeight: 800, color: '#4f46e5' }}>MySQL & Postgres</div>
-            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>{t('home.statDb')}</div>
+          <div className="stat-item">
+            <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontSize: '1.85rem', fontWeight: 800, color: 'var(--primary)' }}>
+              <Database size={24} /> Multi-DB
+            </div>
+            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>MySQL & PostgreSQL Core</div>
           </div>
         </div>
       </section>

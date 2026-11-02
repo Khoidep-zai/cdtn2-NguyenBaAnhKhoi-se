@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { LogIn, AlertCircle } from 'lucide-react';
+import { HubbieMascot } from '../components/common/HubbieMascot';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +12,7 @@ export const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const { login } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,8 +38,12 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <div className="auth-header">
-          <h2 className="auth-title">{t('auth.loginTitle')}</h2>
+        <div className="auth-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <HubbieMascot
+            size={68}
+            message={language === 'vi' ? 'Chào bạn! Đăng nhập để khám phá 1.470+ việc làm thêm nhé!' : 'Welcome back! Log in to explore 1,470+ student jobs!'}
+          />
+          <h2 className="auth-title" style={{ marginTop: '1rem' }}>{t('auth.loginTitle')}</h2>
           <p className="auth-subtitle">{t('auth.loginSubtitle')}</p>
         </div>
 

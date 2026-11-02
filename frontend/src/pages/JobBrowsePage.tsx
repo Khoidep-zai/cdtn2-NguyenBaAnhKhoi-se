@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Filter, Sparkles, MapPin, RotateCcw, ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { Search, Sparkles, MapPin, RotateCcw, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { JobCard } from '../components/jobs/JobCard';
+import { HubbieMascot } from '../components/common/HubbieMascot';
 import { Job, Category } from '../types';
 import { jobService } from '../services/jobService';
 import { useLanguage } from '../context/LanguageContext';
@@ -552,9 +553,12 @@ export const JobBrowsePage: React.FC = () => {
           )}
         </>
       ) : (
-        <div style={{ textAlign: 'center', padding: '4rem 1.5rem', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
-          <Filter size={44} color="var(--text-light)" style={{ marginBottom: '1rem' }} />
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>{t('browse.noJobsTitle')}</h3>
+        <div style={{ textAlign: 'center', padding: '3.5rem 1.5rem', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <HubbieMascot
+            size={72}
+            message={language === 'vi' ? 'Chưa tìm thấy việc làm phù hợp với bộ lọc hiện tại! Bạn thử xóa bớt điều kiện lọc xem nhé.' : 'No matching jobs found with current filters! Try resetting some filters.'}
+          />
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginTop: '1.25rem', marginBottom: '0.5rem' }}>{t('browse.noJobsTitle')}</h3>
           <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{t('browse.noJobsDesc')}</p>
           <button onClick={handleResetFilters} className="btn btn-primary">
             <RotateCcw size={16} /> {t('browse.resetAll')}

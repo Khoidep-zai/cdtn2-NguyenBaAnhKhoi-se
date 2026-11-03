@@ -57,19 +57,19 @@ Thư mục `.agent/` chứa hơn **2,33 triệu token dữ liệu**. Nếu một
 
 ---
 
----
+### 3.0 QUY TRÌNH ĐẶC TẢ SPEC-KIT & PHÂN TÍCH CHIỀU SÂU (SPEC-KIT COGNITIVE SUITE)
+> **Dành cho mọi yêu cầu code tính năng mới, refactor hoặc sửa lỗi phức tạp.** Bắt buộc áp dụng tư duy 6 bước trước khi gõ code.
 
-### 3.0 BỘ CÔNG CỤ SPEC-KIT — Phân Tích Chiều Sâu & Lập Trình Hướng Đặc Tả
-**Mục tiêu:** Bắt buộc AI phân tích chiều sâu, hiểu rõ bản chất nghiệp vụ trước khi gõ mã (**No Premature Coding**).
-
-| Tình huống / Yêu cầu trong Prompt | Lệnh Slash Command | Đường dẫn Skill trực tiếp | Nhiệm vụ phân tích chiều sâu |
+| Tình huống / Yêu cầu trong Prompt | Slash Command / Skill | Đường dẫn / Tài liệu | Vai trò & Đầu ra |
 |---|---|---|---|
-| Xem hoặc cập nhật quy chuẩn cốt lõi dự án | **/speckit-constitution** | [.agents/skills/speckit-constitution/SKILL.md](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/.agents/skills/speckit-constitution/SKILL.md) | Thẩm định yêu cầu có vi phạm hiến pháp .specify/memory/constitution.md |
-| Bóc tách góc khuất, làm rõ điểm mơ hồ | **/speckit-clarify** | [.agents/skills/speckit-clarify/SKILL.md](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/.agents/skills/speckit-clarify/SKILL.md) | Hỏi 3-5 câu trắc nghiệm chốt biên dữ liệu, quyền hạn RBAC & IDOR |
-| Lập kế hoạch kiến trúc kỹ thuật | **/speckit-plan** | [.agents/skills/speckit-plan/SKILL.md](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/.agents/skills/speckit-plan/SKILL.md) | Thiết kế DTOs, JPA queries (chống N+1) và đồng bộ docs/api-contract.md |
-| Phân rã checklist tác vụ theo chu trình TDD | **/speckit-tasks** | [.agents/skills/speckit-tasks/SKILL.md](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/.agents/skills/speckit-tasks/SKILL.md) | Phân rã task nguyên tử trong 	asks.md theo Red-Green-Refactor |
-| Rà soát khớp nối 3 file trước khi code | **/speckit-analyze** | [.agents/skills/speckit-analyze/SKILL.md](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/.agents/skills/speckit-analyze/SKILL.md) | Chế độ chỉ đọc: Soi chéo spec.md ↔ plan.md ↔ tasks.md ↔ constitution.md |
-| Thực thi viết code theo từng task | **/speckit-implement** | [.agents/skills/speckit-implement/SKILL.md](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/.agents/skills/speckit-implement/SKILL.md) | Triển khai từng task: Test trước -> Code tối giản -> 100% test pass |
+| Quy chuẩn cốt lõi dự án, nguyên tắc bất biến, tech stack | **/speckit-constitution** | [.specify/memory/constitution.md](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_test/.specify/memory/constitution.md) | So chiếu hoặc cập nhật Hiến pháp kỹ thuật |
+| Làm rõ điểm mơ hồ, phát hiện trường hợp biên, RBAC, input/output | **/speckit-clarify** | `speckit-clarify` | Hỏi 3-5 câu tối quan trọng, lập giả định |
+| Lập kế hoạch kiến trúc kỹ thuật, schema JPA, REST DTO, contracts | **/speckit-plan** | `speckit-plan` | Sinh `plan.md`, `data-model.md`, `contracts/` |
+| Phân rã checklist tác vụ chi tiết, sắp xếp thứ tự phụ thuộc | **/speckit-tasks** | `speckit-tasks` | Sinh `tasks.md` theo User Stories (P1, P2...) |
+| Rà soát khớp nối 3 file trước khi code, triệt tiêu mâu thuẫn | **/speckit-analyze** | `speckit-analyze` | Báo cáo kiểm định chéo (Cross-Artifact Report) |
+| Thực thi viết code tuần tự từng task, kiểm thử và nghiệm thu DoD | **/speckit-implement** | `speckit-implement` | Triển khai code, chạy test, cập nhật `[x]` |
+
+---
 
 ### 3.1 BACKEND (BE) — Kiến trúc Spring Boot 3 & Cơ sở dữ liệu
 **Phụ trách:** Hoàng Bảo Long (QA/QC & Backend) | **Tech Stack:** Java 17/21, Spring Boot 3.2.x, Spring Data JPA, PostgreSQL 16 / MySQL 8

@@ -28,6 +28,7 @@ import { ApplicantsPage } from './pages/employer/ApplicantsPage';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { ManageUsersPage } from './pages/admin/ManageUsersPage';
 import { ManageJobsPage } from './pages/admin/ManageJobsPage';
+import { ManageReportsPage } from './pages/admin/ManageReportsPage';
 
 // Auto redirect based on role
 const DashboardDispatcher: React.FC = () => {
@@ -164,6 +165,14 @@ export const App: React.FC = () => {
                   element={
                     <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
                       <ManageJobsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="admin/reports"
+                  element={
+                    <ProtectedRoute allowedRoles={['ROLE_ADMIN']}>
+                      <ManageReportsPage />
                     </ProtectedRoute>
                   }
                 />

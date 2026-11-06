@@ -43,6 +43,9 @@ class JobServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
 
+    @Mock
+    private com.nhom8.freelance.services.NotificationService notificationService;
+
     @InjectMocks
     private JobService jobService;
 
@@ -119,13 +122,43 @@ class JobServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Job> jobPage = new PageImpl<>(List.of(sampleJob));
 
-        when(jobRepository.searchJobs(eq("Web"), eq(1L), eq("FREELANCE"), eq("REMOTE"), eq("Hồ Chí Minh"), eq(true), eq(pageable))).thenReturn(jobPage);
+        when(jobRepository.searchJobs(any(), any(), any(), any(), any(), any(), any(), eq(pageable))).thenReturn(jobPage);
 
         Page<Job> result = jobService.searchJobs("Web", 1L, "FREELANCE", "REMOTE", "Hồ Chí Minh", true, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         assertEquals("Lập trình Web", result.getContent().get(0).getTitle());
+    }
+
+    @Test
+    @DisplayName("Admin phê duyệt tin tuyển dụng thành công")
+    void reviewJob_Approve_Success() {
+        sampleJob.setStatus("PENDING_REVIEW");
+        when(jobRepository.findById(10L)).thenReturn(Optional.of(sampleJob));
+        when(jobRepository.save(any(Job.class))).thenReturn(sampleJob);
+
+        Job reviewed = jobService.reviewJob(10L, "APPROVE", null, 1L);
+
+        assertNotNull(reviewed);
+        assertEquals("OPEN", reviewed.getStatus());
+        assertNull(reviewed.getRejectionReason());
+        verify(notificationService, times(1)).createNotification(eq(1L), anyString(), anyString(), eq("JOB_APPROVED"), eq(10L));
+    }
+
+    @Test
+    @DisplayName("Admin từ chối tin tuyển dụng có lý do rõ ràng")
+    void reviewJob_Reject_Success() {
+        sampleJob.setStatus("PENDING_REVIEW");
+        when(jobRepository.findById(10L)).thenReturn(Optional.of(sampleJob));
+        when(jobRepository.save(any(Job.class))).thenReturn(sampleJob);
+
+        Job reviewed = jobService.reviewJob(10L, "REJECT", "Thiếu địa chỉ rõ ràng", 1L);
+
+        assertNotNull(reviewed);
+        assertEquals("REJECTED", reviewed.getStatus());
+        assertEquals("Thiếu địa chỉ rõ ràng", reviewed.getRejectionReason());
+        verify(notificationService, times(1)).createNotification(eq(1L), anyString(), anyString(), eq("JOB_REJECTED"), eq(10L));
     }
 
     @Test

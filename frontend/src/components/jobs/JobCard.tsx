@@ -39,11 +39,65 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
     }
   };
 
+  const getShiftBadge = (shift?: string) => {
+    if (!shift) return null;
+    let label = '';
+    let bg = '';
+    let color = '';
+    switch (shift) {
+      case 'MORNING':
+        label = language === 'vi' ? 'Ca sáng' : 'Morning';
+        bg = 'rgba(245, 158, 11, 0.12)';
+        color = '#d97706';
+        break;
+      case 'AFTERNOON':
+        label = language === 'vi' ? 'Ca chiều' : 'Afternoon';
+        bg = 'rgba(59, 130, 246, 0.12)';
+        color = '#2563eb';
+        break;
+      case 'EVENING':
+        label = language === 'vi' ? 'Ca tối' : 'Evening';
+        bg = 'rgba(139, 92, 246, 0.12)';
+        color = '#7c3aed';
+        break;
+      case 'WEEKEND':
+        label = language === 'vi' ? 'Cuối tuần' : 'Weekend';
+        bg = 'rgba(236, 72, 153, 0.12)';
+        color = '#db2777';
+        break;
+      case 'FLEXIBLE':
+        label = language === 'vi' ? 'Linh hoạt' : 'Flexible';
+        bg = 'rgba(16, 185, 129, 0.12)';
+        color = '#059669';
+        break;
+      default:
+        label = shift;
+        bg = 'var(--bg-card-subtle)';
+        color = 'var(--text-muted)';
+    }
+    return (
+      <span
+        style={{
+          fontSize: '0.72rem',
+          fontWeight: 600,
+          color,
+          backgroundColor: bg,
+          padding: '0.2rem 0.5rem',
+          borderRadius: 'var(--radius-sm)',
+          border: `1px solid ${color}33`,
+        }}
+      >
+        {label}
+      </span>
+    );
+  };
+
   return (
     <div className="job-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', background: 'var(--bg-card)' }}>
       <div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', alignItems: 'center', marginBottom: '0.75rem' }}>
           <Badge type={job.jobType} label={getJobTypeLabel(job.jobType)} />
+          {job.shiftType && getShiftBadge(job.shiftType)}
           {job.studentFriendly && (
             <span
               style={{

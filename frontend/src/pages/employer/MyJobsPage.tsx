@@ -80,10 +80,12 @@ export const MyJobsPage: React.FC = () => {
       }}>
         {[
           { key: 'ALL', label: 'Tất cả', count: jobs.length },
+          { key: 'PENDING_REVIEW', label: 'Chờ duyệt', count: jobs.filter(j => j.status === 'PENDING_REVIEW').length },
           { key: 'OPEN', label: 'Đang mở (OPEN)', count: jobs.filter(j => j.status === 'OPEN').length },
           { key: 'IN_PROGRESS', label: 'Đang tiến hành', count: jobs.filter(j => j.status === 'IN_PROGRESS').length },
           { key: 'COMPLETED', label: 'Đã hoàn thành', count: jobs.filter(j => j.status === 'COMPLETED').length },
           { key: 'CLOSED', label: 'Đã đóng', count: jobs.filter(j => j.status === 'CLOSED').length },
+          { key: 'REJECTED', label: 'Bị từ chối', count: jobs.filter(j => j.status === 'REJECTED').length },
         ].map(tab => (
           <button
             key={tab.key}
@@ -168,12 +170,29 @@ export const MyJobsPage: React.FC = () => {
                     </Link>
                     <span className={`badge ${
                       job.status === 'OPEN' ? 'badge-open' :
+                      job.status === 'PENDING_REVIEW' ? 'badge-freelance' :
+                      job.status === 'REJECTED' ? 'badge-closed' :
                       job.status === 'IN_PROGRESS' ? 'badge-featured' :
                       job.status === 'COMPLETED' ? 'badge-parttime' : 'badge-freelance'
                     }`}>
-                      {job.status}
+                      {job.status === 'PENDING_REVIEW' ? '⏳ Chờ Admin duyệt' :
+                       job.status === 'REJECTED' ? '❌ Bị từ chối' : job.status}
                     </span>
                   </div>
+
+                  {job.status === 'REJECTED' && job.rejectionReason && (
+                    <div style={{
+                      marginTop: '0.5rem',
+                      padding: '0.5rem 0.75rem',
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      border: '1px solid #fca5a5',
+                      borderRadius: 'var(--radius-md)',
+                      color: '#b91c1c',
+                      fontSize: '0.82rem'
+                    }}>
+                      <strong>Lý do từ chối:</strong> {job.rejectionReason}
+                    </div>
+                  )}
 
                   <div style={{ display: 'flex', gap: '1.25rem', marginTop: '0.5rem', color: 'var(--text-muted)', fontSize: '0.85rem', flexWrap: 'wrap' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>

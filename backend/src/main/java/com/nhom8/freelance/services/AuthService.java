@@ -1,11 +1,15 @@
 package com.nhom8.freelance.services;
 
+import com.nhom8.freelance.dto.request.ForgotPasswordRequest;
 import com.nhom8.freelance.dto.request.LoginRequest;
 import com.nhom8.freelance.dto.request.RegisterRequest;
+import com.nhom8.freelance.dto.request.ResetPasswordRequest;
 import com.nhom8.freelance.dto.response.JwtAuthResponse;
 import com.nhom8.freelance.exceptions.BadRequestException;
+import com.nhom8.freelance.models.PasswordResetToken;
 import com.nhom8.freelance.models.Role;
 import com.nhom8.freelance.models.User;
+import com.nhom8.freelance.repositories.PasswordResetTokenRepository;
 import com.nhom8.freelance.repositories.RoleRepository;
 import com.nhom8.freelance.repositories.UserRepository;
 import com.nhom8.freelance.security.JwtTokenProvider;
@@ -18,6 +22,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -27,6 +37,7 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Transactional
     public JwtAuthResponse register(RegisterRequest request) {
@@ -98,5 +109,55 @@ public class AuthService {
     public User getCurrentUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new BadRequestException("Người dùng không tồn tại"));
+    }
+
+    @Transactional
+    public Map<String, Object> createPasswordResetToken(ForgotPasswordRequest request) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("email", request.getEmail());
+
+        Optional<User> userOpt = userRepository.findByEmail(request.getEmail().trim());
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            // Delete old tokens for clean state
+            passwordResetTokenRepository.deleteByUserId(user.getId());
+
+            String token = UUID.randomUUID().toString();
+            PasswordResetToken resetToken = PasswordResetToken.builder()
+                    .token(token)
+                    .user(user)
+                    .expiryDate(LocalDateTime.now().plusMinutes(15))
+                    .used(false)
+                    .build();
+            passwordResetTokenRepository.save(resetToken);
+
+            result.put("resetTokenPreview", token);
+        } else {
+            // Do not reveal email absence for anti-enumeration security
+            result.put("resetTokenPreview", null);
+        }
+
+        return result;
+    }
+
+    @Transactional
+    public void resetPassword(ResetPasswordRequest request) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(request.getToken().trim())
+                .orElseThrow(() -> new BadRequestException("Mã token đặt lại mật khẩu không hợp lệ hoặc không tồn tại"));
+
+        if (Boolean.TRUE.equals(resetToken.getUsed())) {
+            throw new BadRequestException("Mã token đặt lại mật khẩu đã được sử dụng trước đó");
+        }
+
+        if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new BadRequestException("Mã token đặt lại mật khẩu đã hết hạn (chỉ có hiệu lực trong 15 phút)");
+        }
+
+        User user = resetToken.getUser();
+        user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        resetToken.setUsed(true);
+        passwordResetTokenRepository.save(resetToken);
     }
 }

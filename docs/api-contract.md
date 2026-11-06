@@ -38,16 +38,19 @@
 | **Auth** | `POST` | `/auth/register` | Public | Đăng ký tài khoản mới (Sinh viên / NTD) |
 | | `POST` | `/auth/login` | Public | Đăng nhập hệ thống, nhận JWT Access Token |
 | | `GET` | `/auth/me` | Authenticated | Lấy thông tin tài khoản đang đăng nhập |
+| | `POST` | `/auth/forgot-password` | Public | Yêu cầu mã token đặt lại mật khẩu qua email |
+| | `POST` | `/auth/reset-password` | Public | Đặt lại mật khẩu mới với token bảo mật |
 | **Categories** | `GET` | `/categories` | Public | Lấy danh sách toàn bộ danh mục việc làm |
 | | `GET` | `/categories/{id}` | Public | Lấy thông tin chi tiết một danh mục |
-| **Jobs** | `GET` | `/jobs` | Public | Tìm kiếm, lọc và phân trang việc làm (hỗ trợ `keyword`, `categoryId`, `jobType`, `workMode`, `province`, `studentFriendly`, `page`, `size`) |
+| **Jobs** | `GET` | `/jobs` | Public | Tìm kiếm, lọc và phân trang việc làm (hỗ trợ `keyword`, `categoryId`, `jobType`, `workMode`, `province`, `studentFriendly`, `shiftType`, `page`, `size`) |
 | | `GET` | `/jobs/provinces` | Public | Lấy danh sách động các tỉnh/thành phố có tin tuyển dụng |
 | | `GET` | `/jobs/{id}` | Public | Xem thông tin chi tiết một tin tuyển dụng |
 | | `GET` | `/jobs/my-jobs` | `ROLE_EMPLOYER` | Xem danh sách tin do chính NTD đăng |
-| | `POST` | `/jobs` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Đăng tin tuyển dụng mới (hỗ trợ `province`, `salaryText`, `workingHours`, `benefits`, `studentFriendly`) |
+| | `POST` | `/jobs` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Đăng tin tuyển dụng mới (hỗ trợ `shiftType`, `province`, `salaryText`, `workingHours`, `benefits`, `studentFriendly`) |
 | | `PUT` | `/jobs/{id}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Cập nhật thông tin tin tuyển dụng |
 | | `PATCH`| `/jobs/{id}/status` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Đổi trạng thái tin (`OPEN`, `IN_PROGRESS`, `COMPLETED`, `CLOSED`) |
 | | `DELETE`| `/jobs/{id}` | `ROLE_EMPLOYER`, `ROLE_ADMIN` | Xóa tin tuyển dụng |
+| **Reports** | `POST` | `/reports` | Authenticated | Gửi phản ánh tin lừa đảo/sai phạm (`SCAM_DEPOSIT`, `FALSE_INFO`, `INAPPROPRIATE`, `OTHER`) |
 | **Applications** | `POST` | `/applications` | `ROLE_STUDENT` | Nộp hồ sơ ứng tuyển kèm CV |
 | | `POST` | `/applications/jobs/{jobId}/apply` | `ROLE_STUDENT` | Nộp hồ sơ ứng tuyển theo URL param |
 | | `GET` | `/applications/my-applications` | `ROLE_STUDENT` | Lịch sử nộp đơn của sinh viên hiện tại |
@@ -68,6 +71,10 @@
 | **Admin** | `GET` | `/admin/stats` | `ROLE_ADMIN` | Thống kê KPI: người dùng, tin đăng, đơn ứng tuyển, đánh giá |
 | | `GET` | `/admin/users` | `ROLE_ADMIN` | Xem danh sách toàn bộ tài khoản trong hệ thống |
 | | `PATCH`| `/admin/users/{id}/toggle-status` | `ROLE_ADMIN` | Khóa hoặc kích hoạt lại tài khoản người dùng |
+| | `GET` | `/admin/jobs/pending` | `ROLE_ADMIN` | Xem hàng đợi các tin tuyển dụng đang chờ duyệt |
+| | `PATCH`| `/admin/jobs/{id}/review` | `ROLE_ADMIN` | Phê duyệt (`APPROVE`) hoặc từ chối (`REJECT`) tin tuyển dụng |
+| | `GET` | `/admin/reports` | `ROLE_ADMIN` | Xem danh sách báo cáo vi phạm, lừa đảo |
+| | `PATCH`| `/admin/reports/{id}/resolve` | `ROLE_ADMIN` | Xử lý báo cáo (`RESOLVE_BAN_JOB`, `RESOLVE_BAN_EMPLOYER`, `DISMISS`) |
 | | `DELETE`| `/admin/jobs/{id}` | `ROLE_ADMIN` | Xóa/gỡ bỏ tin tuyển dụng vi phạm |
 
 ---
@@ -267,4 +274,60 @@
   }
 }
 ```
+
+### 3.11. Quên và đặt lại mật khẩu (`POST /api/v1/auth/forgot-password` & `POST /api/v1/auth/reset-password`)
+- **Yêu cầu token quên mật khẩu:**
+  - `POST /api/v1/auth/forgot-password`
+  - Body: `{"email": "student@vanlanguni.vn"}`
+  - Response (200 OK):
+  ```json
+  {
+    "success": true,
+    "message": "Nếu email tồn tại trong hệ thống, hướng dẫn đặt lại mật khẩu đã được gửi đến hộp thư của bạn.",
+    "data": {
+      "email": "student@vanlanguni.vn",
+      "resetTokenPreview": "3f8b4c2a-7d1e-4b3f-8a2c-5e6f7a8b9c0d"
+    }
+  }
+  ```
+- **Đặt lại mật khẩu với token:**
+  - `POST /api/v1/auth/reset-password`
+  - Body: `{"token": "3f8b4c2a-...", "newPassword": "newSecurePassword123"}`
+  - Response (200 OK):
+  ```json
+  {
+    "success": true,
+    "message": "Đặt lại mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới.",
+    "data": true
+  }
+  ```
+
+### 3.12. Hàng đợi kiểm duyệt tin tuyển dụng (`GET /api/v1/admin/jobs/pending` & `PATCH /api/v1/admin/jobs/{id}/review`)
+- **Headers:** `Authorization: Bearer <admin_token>`
+- **Duyệt hoặc từ chối tin:**
+  - `PATCH /api/v1/admin/jobs/{id}/review`
+  - Body: `{"action": "APPROVE"}` hoặc `{"action": "REJECT", "rejectionReason": "Lương không rõ ràng"}`
+  - Response (200 OK): Trả về đối tượng `Job` với trạng thái `OPEN` hoặc `REJECTED`.
+
+### 3.13. Báo cáo vi phạm & Cảnh báo an toàn (`POST /api/v1/reports` & `GET /api/v1/admin/reports`)
+- **Gửi phản ánh:**
+  - `POST /api/v1/reports`
+  - Body: `{"jobId": 1471, "reason": "SCAM_DEPOSIT", "description": "Yêu cầu đặt cọc 200k"}`
+  - Response (200 OK):
+  ```json
+  {
+    "success": true,
+    "message": "Gửi báo cáo vi phạm thành công. Ban quản trị sẽ xác minh trong vòng 24h.",
+    "data": {
+      "id": 1,
+      "reason": "SCAM_DEPOSIT",
+      "status": "PENDING"
+    }
+  }
+  ```
+- **Admin xử lý báo cáo:**
+  - `PATCH /api/v1/admin/reports/{id}/resolve`
+  - Body: `{"action": "RESOLVE_BAN_JOB", "resolutionNotes": "Xác minh tin lừa đảo nộp cọc"}`
+  - Response (200 OK): Trả về đối tượng `Report` với trạng thái `RESOLVED` và đóng tin vi phạm.
+
 

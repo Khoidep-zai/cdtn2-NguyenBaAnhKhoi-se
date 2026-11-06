@@ -1,8 +1,10 @@
 package com.nhom8.freelance.controllers;
 
 import com.nhom8.freelance.dto.ApiResponse;
+import com.nhom8.freelance.dto.request.ForgotPasswordRequest;
 import com.nhom8.freelance.dto.request.LoginRequest;
 import com.nhom8.freelance.dto.request.RegisterRequest;
+import com.nhom8.freelance.dto.request.ResetPasswordRequest;
 import com.nhom8.freelance.dto.response.JwtAuthResponse;
 import com.nhom8.freelance.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +13,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -41,5 +45,19 @@ public class AuthController {
     ) {
         com.nhom8.freelance.models.User user = authService.getCurrentUser(currentUser.getId());
         return ResponseEntity.ok(ApiResponse.ok("Lấy thông tin thành công", user));
+    }
+
+    @PostMapping("/forgot-password")
+    @Operation(summary = "Yêu cầu đặt lại mật khẩu qua email")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        Map<String, Object> result = authService.createPasswordResetToken(request);
+        return ResponseEntity.ok(ApiResponse.ok("Nếu email tồn tại trong hệ thống, hướng dẫn đặt lại mật khẩu đã được gửi đến hộp thư của bạn.", result));
+    }
+
+    @PostMapping("/reset-password")
+    @Operation(summary = "Đặt lại mật khẩu với token")
+    public ResponseEntity<ApiResponse<Boolean>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request);
+        return ResponseEntity.ok(ApiResponse.ok("Đặt lại mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới.", true));
     }
 }

@@ -25,6 +25,16 @@ export const authService = {
     return res.data.data;
   },
 
+  async forgotPassword(email: string): Promise<{ email: string; resetTokenPreview?: string }> {
+    const res = await apiClient.post<ApiResponse<{ email: string; resetTokenPreview?: string }>>('/auth/forgot-password', { email });
+    return res.data.data;
+  },
+
+  async resetPassword(token: string, newPassword: string): Promise<boolean> {
+    const res = await apiClient.post<ApiResponse<boolean>>('/auth/reset-password', { token, newPassword });
+    return res.data.data;
+  },
+
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

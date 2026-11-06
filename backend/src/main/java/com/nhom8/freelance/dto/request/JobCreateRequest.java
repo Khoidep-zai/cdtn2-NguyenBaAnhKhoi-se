@@ -28,7 +28,8 @@ public class JobCreateRequest {
     private String location;
     private String province; // Tỉnh thành
     private String salaryText; // Hiển thị chi tiết lương
-    private String workingHours; // Ca làm việc
+    private String workingHours; // Ca làm việc chi tiết
+    private String shiftType = "FLEXIBLE"; // MORNING, AFTERNOON, EVENING, WEEKEND, FLEXIBLE
     private String benefits; // Phúc lợi
     private Boolean studentFriendly = true; // Phù hợp sinh viên
 

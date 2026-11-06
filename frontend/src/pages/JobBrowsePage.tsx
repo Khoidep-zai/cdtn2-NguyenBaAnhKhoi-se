@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, Sparkles, MapPin, RotateCcw, ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { Search, Sparkles, MapPin, RotateCcw, ChevronLeft, ChevronRight, Check, Clock } from 'lucide-react';
 import { JobCard } from '../components/jobs/JobCard';
 import { HubbieMascot } from '../components/common/HubbieMascot';
 import { Job, Category } from '../types';
@@ -120,6 +120,7 @@ export const JobBrowsePage: React.FC = () => {
   const [selectedMode, setSelectedMode] = useState('ALL');
   const [selectedProvince, setSelectedProvince] = useState(initialProvince);
   const [selectedCategory, setSelectedCategory] = useState<number | 'ALL'>(initialCategory === 'ALL' ? 'ALL' : Number(initialCategory));
+  const [selectedShift, setSelectedShift] = useState<string>('ALL');
   const [studentOnly, setStudentOnly] = useState(false);
 
   const [categories, setCategories] = useState<Category[]>(DEFAULT_CATEGORIES);
@@ -172,6 +173,7 @@ export const JobBrowsePage: React.FC = () => {
         province: selectedProvince !== 'ALL' ? selectedProvince : undefined,
         categoryId: selectedCategory !== 'ALL' ? Number(selectedCategory) : undefined,
         studentFriendly: studentOnly ? true : undefined,
+        shiftType: selectedShift !== 'ALL' ? selectedShift : undefined,
         page,
         size: pageSize,
       });
@@ -189,8 +191,9 @@ export const JobBrowsePage: React.FC = () => {
         const matchT = selectedType === 'ALL' || job.jobType === selectedType;
         const matchM = selectedMode === 'ALL' || job.workMode === selectedMode;
         const matchP = selectedProvince === 'ALL' || job.province === selectedProvince;
+        const matchShift = selectedShift === 'ALL' || job.shiftType === selectedShift;
         const matchS = !studentOnly || job.studentFriendly;
-        return matchK && matchT && matchM && matchP && matchS;
+        return matchK && matchT && matchM && matchP && matchShift && matchS;
       });
       setJobs(filtered);
       setTotalElements(filtered.length);
@@ -198,7 +201,7 @@ export const JobBrowsePage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [keyword, selectedType, selectedMode, selectedProvince, selectedCategory, studentOnly, pageSize]);
+  }, [keyword, selectedType, selectedMode, selectedProvince, selectedCategory, studentOnly, selectedShift, pageSize]);
 
   useEffect(() => {
     fetchJobs(0);
@@ -210,6 +213,7 @@ export const JobBrowsePage: React.FC = () => {
     setSelectedMode('ALL');
     setSelectedProvince('ALL');
     setSelectedCategory('ALL');
+    setSelectedShift('ALL');
     setStudentOnly(false);
     setSearchParams({});
   };
@@ -287,7 +291,7 @@ export const JobBrowsePage: React.FC = () => {
             <Search size={16} /> {t('browse.searchBtn')}
           </button>
 
-          {(keyword || selectedType !== 'ALL' || selectedMode !== 'ALL' || selectedProvince !== 'ALL' || selectedCategory !== 'ALL' || studentOnly) && (
+          {(keyword || selectedType !== 'ALL' || selectedMode !== 'ALL' || selectedProvince !== 'ALL' || selectedCategory !== 'ALL' || selectedShift !== 'ALL' || studentOnly) && (
             <button
               onClick={handleResetFilters}
               className="btn btn-secondary"
@@ -469,6 +473,46 @@ export const JobBrowsePage: React.FC = () => {
             );
           })}
         </div>
+
+        {/* Quick Shift Chips Row */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', alignItems: 'center', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px dashed var(--border-color)' }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginRight: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <Clock size={13} /> {language === 'vi' ? 'Ca làm việc:' : 'Shift:'}
+          </span>
+          {[
+            { value: 'ALL', labelVi: 'Tất cả ca', labelEn: 'All Shifts' },
+            { value: 'MORNING', labelVi: 'Ca sáng', labelEn: 'Morning' },
+            { value: 'AFTERNOON', labelVi: 'Ca chiều', labelEn: 'Afternoon' },
+            { value: 'EVENING', labelVi: 'Ca tối', labelEn: 'Evening' },
+            { value: 'WEEKEND', labelVi: 'Cuối tuần', labelEn: 'Weekend' },
+            { value: 'FLEXIBLE', labelVi: 'Linh hoạt', labelEn: 'Flexible' },
+          ].map((shift) => {
+            const isSelected = selectedShift === shift.value;
+            return (
+              <button
+                key={shift.value}
+                onClick={() => setSelectedShift(isSelected && shift.value !== 'ALL' ? 'ALL' : shift.value)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  padding: '0.35rem 0.75rem',
+                  borderRadius: 'var(--radius-full)',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'var(--transition)',
+                  background: isSelected ? 'var(--primary)' : 'var(--bg-card-subtle)',
+                  color: isSelected ? 'white' : 'var(--text-main)',
+                  border: isSelected ? '1px solid var(--primary)' : '1px solid var(--border-color)',
+                }}
+              >
+                {isSelected && shift.value !== 'ALL' && <Check size={12} />}
+                {language === 'vi' ? shift.labelVi : shift.labelEn}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Results Bar */}
@@ -476,6 +520,7 @@ export const JobBrowsePage: React.FC = () => {
         <div style={{ fontWeight: 600, color: 'var(--text-muted)', fontSize: '0.95rem' }}>
           {t('browse.found')} <strong style={{ color: 'var(--text-main)', fontSize: '1.1rem' }}>{totalElements > 0 ? totalElements.toLocaleString(language === 'vi' ? 'vi-VN' : 'en-US') : jobs.length}</strong> {t('browse.matchingJobs')}
           {selectedProvince !== 'ALL' && <span> {t('browse.in')} <strong>{selectedProvince}</strong></span>}
+          {selectedShift !== 'ALL' && <span> • <strong>{selectedShift}</strong></span>}
           {studentOnly && <span style={{ color: '#059669' }}> {t('browse.forStudents')}</span>}
         </div>
 

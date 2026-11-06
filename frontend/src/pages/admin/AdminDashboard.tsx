@@ -11,7 +11,8 @@ import {
   UserCheck, 
   AlertTriangle,
   Activity,
-  User as UserIcon
+  User as UserIcon,
+  Flag
 } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
@@ -236,6 +237,31 @@ export const AdminDashboard: React.FC = () => {
           </p>
           <Link to="/admin/jobs" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
             Truy cập quản lý việc làm <ArrowRight size={16} />
+          </Link>
+        </div>
+
+        <div style={{
+          background: 'var(--bg-card)',
+          color: 'var(--text-main)',
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid var(--border-color)',
+          padding: '2rem',
+          boxShadow: 'var(--shadow-sm)'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+            <div style={{ padding: '0.65rem', background: '#fef3c7', borderRadius: 'var(--radius-md)', color: '#d97706' }}>
+              <Flag size={24} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>Báo cáo vi phạm</h3>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', margin: 0 }}>Xử lý phản ánh tin xấu & lừa đảo</p>
+            </div>
+          </div>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+            Tiếp nhận báo cáo từ sinh viên về các tin tuyển dụng thu tiền cọc trái phép, thông tin gian dối hoặc quấy rối để xử lý gỡ tin hoặc khóa nhà tuyển dụng.
+          </p>
+          <Link to="/admin/reports" className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
+            Xem phản ánh vi phạm <ArrowRight size={16} />
           </Link>
         </div>
       </div>

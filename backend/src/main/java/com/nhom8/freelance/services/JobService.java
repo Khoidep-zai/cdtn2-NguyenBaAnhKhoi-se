@@ -25,11 +25,50 @@ public class JobService {
     private final UserRepository userRepository;
     private final com.nhom8.freelance.repositories.ApplicationRepository applicationRepository;
     private final com.nhom8.freelance.repositories.ReviewRepository reviewRepository;
+    private final NotificationService notificationService;
 
     public Page<Job> searchJobs(String keyword, Long categoryId, String jobType, String workMode, String province, Boolean studentFriendly, Pageable pageable) {
+        return searchJobs(keyword, categoryId, jobType, workMode, province, studentFriendly, null, pageable);
+    }
+
+    public Page<Job> searchJobs(String keyword, Long categoryId, String jobType, String workMode, String province, Boolean studentFriendly, String shiftType, Pageable pageable) {
         String cleanKeyword = (keyword != null && !keyword.trim().isEmpty()) ? keyword.trim() : null;
         String cleanProvince = (province != null && !province.trim().isEmpty() && !province.equalsIgnoreCase("ALL")) ? province.trim() : null;
-        return jobRepository.searchJobs(cleanKeyword, categoryId, jobType, workMode, cleanProvince, studentFriendly, pageable);
+        String cleanShiftType = (shiftType != null && !shiftType.trim().isEmpty() && !shiftType.equalsIgnoreCase("ALL")) ? shiftType.trim() : null;
+        return jobRepository.searchJobs(cleanKeyword, categoryId, jobType, workMode, cleanProvince, studentFriendly, cleanShiftType, pageable);
+    }
+
+    public Page<Job> getPendingJobs(Pageable pageable) {
+        return jobRepository.findByStatusOrderByCreatedAtDesc("PENDING_REVIEW", pageable);
+    }
+
+    @Transactional
+    public Job reviewJob(Long jobId, String action, String rejectionReason, Long adminId) {
+        Job job = getJobById(jobId);
+        if ("APPROVE".equalsIgnoreCase(action)) {
+            job.setStatus("OPEN");
+            job.setRejectionReason(null);
+            notificationService.createNotification(
+                    job.getEmployer().getId(),
+                    "Tin tuyển dụng đã được duyệt",
+                    "Tin tuyển dụng '" + job.getTitle() + "' đã được Ban quản trị phê duyệt và đăng công khai trên sàn.",
+                    "JOB_APPROVED",
+                    job.getId()
+            );
+        } else if ("REJECT".equalsIgnoreCase(action)) {
+            job.setStatus("REJECTED");
+            job.setRejectionReason(rejectionReason != null ? rejectionReason.trim() : "Không đạt tiêu chuẩn kiểm duyệt");
+            notificationService.createNotification(
+                    job.getEmployer().getId(),
+                    "Tin tuyển dụng bị từ chối",
+                    "Tin tuyển dụng '" + job.getTitle() + "' bị từ chối duyệt. Lý do: " + job.getRejectionReason(),
+                    "JOB_REJECTED",
+                    job.getId()
+            );
+        } else {
+            throw new com.nhom8.freelance.exceptions.BadRequestException("Hành động duyệt không hợp lệ. Chỉ chấp nhận APPROVE hoặc REJECT");
+        }
+        return jobRepository.save(job);
     }
 
     public List<String> getProvinces() {
@@ -65,12 +104,13 @@ public class JobService {
                 .province(request.getProvince())
                 .salaryText(request.getSalaryText())
                 .workingHours(request.getWorkingHours())
+                .shiftType(request.getShiftType() != null && !request.getShiftType().trim().isEmpty() ? request.getShiftType() : "FLEXIBLE")
                 .benefits(request.getBenefits())
                 .studentFriendly(request.getStudentFriendly() != null ? request.getStudentFriendly() : true)
                 .salaryType(request.getSalaryType())
                 .salaryAmount(request.getSalaryAmount())
                 .slotsAvailable(request.getSlotsAvailable() != null ? request.getSlotsAvailable() : 1)
-                .status("OPEN")
+                .status("PENDING_REVIEW")
                 .deadline(request.getDeadline())
                 .build();
 

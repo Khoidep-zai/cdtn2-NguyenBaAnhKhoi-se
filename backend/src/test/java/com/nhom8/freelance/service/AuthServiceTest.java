@@ -1,10 +1,14 @@
 package com.nhom8.freelance.service;
 
+import com.nhom8.freelance.dto.request.ForgotPasswordRequest;
 import com.nhom8.freelance.dto.request.LoginRequest;
+import com.nhom8.freelance.dto.request.ResetPasswordRequest;
 import com.nhom8.freelance.dto.response.JwtAuthResponse;
 import com.nhom8.freelance.exceptions.BadRequestException;
+import com.nhom8.freelance.models.PasswordResetToken;
 import com.nhom8.freelance.models.Role;
 import com.nhom8.freelance.models.User;
+import com.nhom8.freelance.repositories.PasswordResetTokenRepository;
 import com.nhom8.freelance.repositories.RoleRepository;
 import com.nhom8.freelance.repositories.UserRepository;
 import com.nhom8.freelance.security.JwtTokenProvider;
@@ -48,6 +52,9 @@ class AuthServiceTest {
 
     @Mock
     private JwtTokenProvider tokenProvider;
+
+    @Mock
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
     @InjectMocks
     private AuthService authService;
@@ -140,5 +147,105 @@ class AuthServiceTest {
         assertEquals("Bearer", resp.getTokenType());
         assertEquals("admin@freelancehub.vn", resp.getEmail());
         assertEquals("ROLE_ADMIN", resp.getRole());
+    }
+
+    @Test
+    @DisplayName("Yêu cầu quên mật khẩu thành công khi email tồn tại")
+    void createPasswordResetToken_Success_WhenUserExists() {
+        ForgotPasswordRequest req = new ForgotPasswordRequest("student@vanlanguni.vn");
+        User user = User.builder().id(5L).email("student@vanlanguni.vn").fullName("SV Test").build();
+
+        when(userRepository.findByEmail("student@vanlanguni.vn")).thenReturn(Optional.of(user));
+
+        var result = authService.createPasswordResetToken(req);
+
+        assertNotNull(result);
+        assertEquals("student@vanlanguni.vn", result.get("email"));
+        assertNotNull(result.get("resetTokenPreview"));
+        verify(passwordResetTokenRepository, times(1)).deleteByUserId(5L);
+        verify(passwordResetTokenRepository, times(1)).save(any(PasswordResetToken.class));
+    }
+
+    @Test
+    @DisplayName("Yêu cầu quên mật khẩu an toàn khi email không tồn tại (chống lộ email)")
+    void createPasswordResetToken_Safe_WhenUserNotFound() {
+        ForgotPasswordRequest req = new ForgotPasswordRequest("unknown@vanlanguni.vn");
+
+        when(userRepository.findByEmail("unknown@vanlanguni.vn")).thenReturn(Optional.empty());
+
+        var result = authService.createPasswordResetToken(req);
+
+        assertNotNull(result);
+        assertEquals("unknown@vanlanguni.vn", result.get("email"));
+        assertNull(result.get("resetTokenPreview"));
+        verify(passwordResetTokenRepository, never()).save(any(PasswordResetToken.class));
+    }
+
+    @Test
+    @DisplayName("Đặt lại mật khẩu thành công khi token hợp lệ")
+    void resetPassword_Success() {
+        ResetPasswordRequest req = new ResetPasswordRequest("valid-token-123", "newPassword456@");
+        User user = User.builder().id(5L).email("student@vanlanguni.vn").passwordHash("oldHash").build();
+
+        PasswordResetToken token = PasswordResetToken.builder()
+                .id(1L)
+                .token("valid-token-123")
+                .user(user)
+                .used(false)
+                .expiryDate(java.time.LocalDateTime.now().plusMinutes(10))
+                .build();
+
+        when(passwordResetTokenRepository.findByToken("valid-token-123")).thenReturn(Optional.of(token));
+        when(passwordEncoder.encode("newPassword456@")).thenReturn("newHashedPassword");
+
+        authService.resetPassword(req);
+
+        assertEquals("newHashedPassword", user.getPasswordHash());
+        assertTrue(token.getUsed());
+        verify(userRepository, times(1)).save(user);
+        verify(passwordResetTokenRepository, times(1)).save(token);
+    }
+
+    @Test
+    @DisplayName("Đặt lại mật khẩu thất bại khi token không tồn tại")
+    void resetPassword_ThrowsBadRequest_WhenTokenNotFound() {
+        ResetPasswordRequest req = new ResetPasswordRequest("invalid-token", "newPassword456@");
+
+        when(passwordResetTokenRepository.findByToken("invalid-token")).thenReturn(Optional.empty());
+
+        BadRequestException ex = assertThrows(BadRequestException.class, () -> authService.resetPassword(req));
+        assertTrue(ex.getMessage().contains("không hợp lệ hoặc không tồn tại"));
+    }
+
+    @Test
+    @DisplayName("Đặt lại mật khẩu thất bại khi token đã dùng")
+    void resetPassword_ThrowsBadRequest_WhenTokenAlreadyUsed() {
+        ResetPasswordRequest req = new ResetPasswordRequest("used-token", "newPassword456@");
+        PasswordResetToken token = PasswordResetToken.builder()
+                .token("used-token")
+                .used(true)
+                .expiryDate(java.time.LocalDateTime.now().plusMinutes(10))
+                .build();
+
+        when(passwordResetTokenRepository.findByToken("used-token")).thenReturn(Optional.of(token));
+
+        BadRequestException ex = assertThrows(BadRequestException.class, () -> authService.resetPassword(req));
+        assertTrue(ex.getMessage().contains("đã được sử dụng"));
+    }
+
+    @Test
+    @DisplayName("Đặt lại mật khẩu thất bại khi token đã hết hạn")
+    void resetPassword_ThrowsBadRequest_WhenTokenExpired() {
+        ResetPasswordRequest req = new ResetPasswordRequest("expired-token", "newPassword456@");
+        PasswordResetToken token = PasswordResetToken.builder()
+                .token("expired-token")
+                .used(false)
+                .expiryDate(java.time.LocalDateTime.now().minusMinutes(1))
+                .build();
+
+        when(passwordResetTokenRepository.findByToken("expired-token")).thenReturn(Optional.of(token));
+
+        BadRequestException ex = assertThrows(BadRequestException.class, () -> authService.resetPassword(req));
+        assertTrue(ex.getMessage().contains("hết hạn"));
     }
 }

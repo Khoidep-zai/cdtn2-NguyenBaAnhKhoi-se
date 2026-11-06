@@ -37,10 +37,12 @@ export interface Job {
   salaryAmount: number;
   salaryText?: string;
   workingHours?: string;
+  shiftType?: 'MORNING' | 'AFTERNOON' | 'EVENING' | 'WEEKEND' | 'FLEXIBLE';
   benefits?: string;
   studentFriendly?: boolean;
   slotsAvailable: number;
-  status: 'OPEN' | 'IN_PROGRESS' | 'COMPLETED' | 'CLOSED';
+  status: 'PENDING_REVIEW' | 'OPEN' | 'IN_PROGRESS' | 'COMPLETED' | 'CLOSED' | 'REJECTED';
+  rejectionReason?: string;
   deadline?: string;
   createdAt: string;
   category: Category;
@@ -63,6 +65,19 @@ export interface Application {
   appliedAt: string;
   job?: Job;
   student?: User;
+}
+
+export interface Report {
+  id: number;
+  job: Job;
+  reporter: User;
+  reason: string;
+  description?: string;
+  status: 'PENDING' | 'RESOLVED' | 'DISMISSED';
+  resolvedBy?: User;
+  resolutionNotes?: string;
+  createdAt: string;
+  resolvedAt?: string;
 }
 
 export interface AuthResponse {

@@ -30,15 +30,17 @@
 > **AI TUYỆT ĐỐI KHÔNG nhảy vào sinh code ngay lập tức!**  
 > Việc code vội vàng dẫn đến: lệch kiến trúc, sót trường hợp biên (edge cases), vi phạm quyền hạn (IDOR), sinh lỗi N+1 truy vấn CSDL, hoặc phá vỡ hệ thống Design Tokens & song ngữ VI/EN.
 
-### Quy Trình Tư Duy 6 Bước (Spec-Kit Cognitive Loop):
+### Quy Trình Tư Duy 7 Bước (Spec-Kit Cognitive Loop):
 
 ```
-[1. Constitution Check] ──→ [2. Clarify / Edge Cases] ──→ [3. Architecture Plan]
-           │                                                        │
-           ▼                                                        ▼
-[6. Strict Implement]   ←── [5. Cross-Artifact Audit]   ←── [4. Atomic Tasks]
+[0. Feature Specify]   ──→ [1. Constitution Check] ──→ [2. Clarify / Edge Cases]
+                                                                  │
+                                                                  ▼
+[6. Strict Implement]  ←── [5. Cross-Artifact Audit]  ←── [4. Atomic Tasks]  ←── [3. Architecture Plan]
 ```
 
+0. **Bước 0 — Khởi tạo & Chuẩn hóa Đặc tả (`/speckit-specify`)**:
+   - Chuyển đổi mô tả tự nhiên của người dùng thành tài liệu đặc tả tính năng chuẩn mực (`spec.md`) với User Stories, Acceptance Criteria (Given-When-Then) và ranh giới nghiệp vụ rõ ràng.
 1. **Bước 1 — Đối chiếu Hiến pháp (`/speckit-constitution`)**:
    - Đối chiếu yêu cầu với 6 nguyên tắc cốt lõi trong [.specify/memory/constitution.md](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_test/.specify/memory/constitution.md).
    - Xác định: Tầng nào cần sửa (Controller, Service, Repository, DTO, Component)? Có vi phạm DTO Pattern không? Có nguy cơ IDOR không? Có cần `@Transactional(readOnly=true)` không?
@@ -71,6 +73,7 @@ Khi người dùng gửi prompt, đối chiếu nhanh bảng dưới đây để
 ### 3.1 Quy trình Phát triển Định hướng Đặc tả & Phân tích Chiều sâu (Spec-Kit Workflow)
 | Ý định / Từ khóa trong Prompt | Slash Command / Skill điều hướng | File mã nguồn / Đầu ra liên quan |
 |---|---|---|
+| Khởi tạo đặc tả tính năng từ yêu cầu ngôn ngữ tự nhiên | `/speckit-specify` | `specs/.../spec.md`, User Stories |
 | Kiểm tra / Cập nhật quy chuẩn cốt lõi dự án, nguyên tắc bất biến | `/speckit-constitution` | `.specify/memory/constitution.md` |
 | Làm rõ điểm mơ hồ, phát hiện thiếu sót nghiệp vụ, câu hỏi phản biện | `/speckit-clarify` | Quét độ rõ ràng, hỏi 3-5 câu cốt lõi |
 | Lập kế hoạch kiến trúc kỹ thuật, schema, DTO, hợp đồng API | `/speckit-plan` | Sinh `plan.md`, `data-model.md`, `contracts/` |

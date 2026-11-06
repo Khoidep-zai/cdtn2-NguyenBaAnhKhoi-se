@@ -18,32 +18,36 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     Page<Job> findByStatus(String status, Pageable pageable);
 
+    Page<Job> findByStatusOrderByCreatedAtDesc(String status, Pageable pageable);
+
+    List<Job> findByStatusOrderByCreatedAtDesc(String status);
+
+    long countByStatus(String status);
+
     @Query(
         value = "SELECT j.* FROM jobs j WHERE j.status = 'OPEN' AND " +
                 "(:keyword IS NULL OR :keyword = '' OR " +
-                "(LOWER(j.title) COLLATE utf8mb4_unicode_ci LIKE " +
-                "(CONCAT('%', LOWER(CONVERT(:keyword USING utf8mb4)), '%') COLLATE utf8mb4_unicode_ci)) OR " +
-                "(LOWER(j.description) COLLATE utf8mb4_unicode_ci LIKE " +
-                "(CONCAT('%', LOWER(CONVERT(:keyword USING utf8mb4)), '%') COLLATE utf8mb4_unicode_ci))) AND " +
+                "(LOWER(j.title) LIKE CONCAT('%', LOWER(:keyword), '%')) OR " +
+                "(LOWER(j.description) LIKE CONCAT('%', LOWER(:keyword), '%'))) AND " +
                 "(:categoryId IS NULL OR j.category_id = :categoryId) AND " +
                 "(:jobType IS NULL OR j.job_type = :jobType) AND " +
                 "(:workMode IS NULL OR j.work_mode = :workMode) AND " +
                 "(:province IS NULL OR j.province = :province) AND " +
-                "(:studentFriendly IS NULL OR j.student_friendly = :studentFriendly) " +
+                "(:studentFriendly IS NULL OR j.student_friendly = :studentFriendly) AND " +
+                "(:shiftType IS NULL OR j.shift_type = :shiftType) " +
                 "ORDER BY j.created_at DESC",
 
         countQuery =
         "SELECT COUNT(*) FROM jobs j WHERE j.status = 'OPEN' AND " +
                 "(:keyword IS NULL OR :keyword = '' OR " +
-                "(LOWER(j.title) COLLATE utf8mb4_unicode_ci LIKE " +
-                "(CONCAT('%', LOWER(CONVERT(:keyword USING utf8mb4)), '%') COLLATE utf8mb4_unicode_ci)) OR " +
-                "(LOWER(j.description) COLLATE utf8mb4_unicode_ci LIKE " +
-                "(CONCAT('%', LOWER(CONVERT(:keyword USING utf8mb4)), '%') COLLATE utf8mb4_unicode_ci))) AND " +
+                "(LOWER(j.title) LIKE CONCAT('%', LOWER(:keyword), '%')) OR " +
+                "(LOWER(j.description) LIKE CONCAT('%', LOWER(:keyword), '%'))) AND " +
                 "(:categoryId IS NULL OR j.category_id = :categoryId) AND " +
                 "(:jobType IS NULL OR j.job_type = :jobType) AND " +
                 "(:workMode IS NULL OR j.work_mode = :workMode) AND " +
                 "(:province IS NULL OR j.province = :province) AND " +
-                "(:studentFriendly IS NULL OR j.student_friendly = :studentFriendly)",
+                "(:studentFriendly IS NULL OR j.student_friendly = :studentFriendly) AND " +
+                "(:shiftType IS NULL OR j.shift_type = :shiftType)",
 
         nativeQuery = true
     )
@@ -54,6 +58,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
             @Param("workMode") String workMode,
             @Param("province") String province,
             @Param("studentFriendly") Boolean studentFriendly,
+            @Param("shiftType") String shiftType,
             Pageable pageable
     );
 

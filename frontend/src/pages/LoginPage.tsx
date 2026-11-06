@@ -4,12 +4,15 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { LogIn, AlertCircle } from 'lucide-react';
 import { HubbieMascot } from '../components/common/HubbieMascot';
+import { ForgotPasswordModal } from '../components/common/ForgotPasswordModal';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   const { login } = useAuth();
   const { t, language } = useLanguage();
@@ -54,6 +57,24 @@ export const LoginPage: React.FC = () => {
           </div>
         )}
 
+        {successMsg && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              padding: '0.75rem',
+              borderRadius: 'var(--radius-md)',
+              background: 'rgba(16, 185, 129, 0.1)',
+              color: '#059669',
+              fontSize: '0.875rem',
+              marginBottom: '1rem',
+            }}
+          >
+            <span>{successMsg}</span>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div>
             <label className="auth-label">{t('auth.email')}</label>
@@ -68,7 +89,24 @@ export const LoginPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="auth-label">{t('auth.password')}</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+              <label className="auth-label" style={{ margin: 0 }}>{t('auth.password')}</label>
+              <button
+                type="button"
+                onClick={() => setShowForgotPassword(true)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--primary)',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
+              >
+                {language === 'vi' ? 'Quên mật khẩu?' : 'Forgot password?'}
+              </button>
+            </div>
             <input
               type="password"
               required
@@ -94,6 +132,18 @@ export const LoginPage: React.FC = () => {
           <Link to="/register">{t('auth.registerNow')}</Link>
         </div>
       </div>
+
+      <ForgotPasswordModal
+        isOpen={showForgotPassword}
+        onClose={() => setShowForgotPassword(false)}
+        onSuccess={() => {
+          setSuccessMsg(
+            language === 'vi'
+              ? 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới.'
+              : 'Password reset successful! You can now log in with your new password.'
+          );
+        }}
+      />
     </div>
   );
 };

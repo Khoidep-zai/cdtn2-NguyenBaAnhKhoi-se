@@ -38,6 +38,7 @@ public class JobController {
             @RequestParam(required = false) String workMode,
             @RequestParam(required = false) String province,
             @RequestParam(required = false) Boolean studentFriendly,
+            @RequestParam(required = false) String shiftType,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -52,6 +53,7 @@ public class JobController {
                 workMode,
                 province,
                 studentFriendly,
+                shiftType,
                 pageable
         );
 

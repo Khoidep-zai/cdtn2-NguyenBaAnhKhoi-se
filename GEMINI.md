@@ -6,7 +6,8 @@ Xem chi tiết quy tắc điều hướng toàn diện, giao thức phân tích 
 
 ## 1. NGUYÊN TẮC TỐI CAO: PHÂN TÍCH CHIỀU SÂU TRƯỚC KHI CODE (SPEC-KIT DEEP ANALYSIS)
 
-Khi nhận prompt lập trình (tính năng mới, sửa lỗi, refactor), **AI TUYỆT ĐỐI KHÔNG code ngay**. Hãy tư duy theo 6 bước:
+Khi nhận prompt lập trình (tính năng mới, sửa lỗi, refactor), **AI TUYỆT ĐỐI KHÔNG code ngay**. Hãy tư duy theo 7 bước Spec-Kit:
+0. `/speckit-specify`: Khởi tạo đặc tả chuẩn mực (`spec.md`) từ yêu cầu tự nhiên, xác định rõ User Stories & Acceptance Criteria.
 1. `/speckit-constitution`: So chiếu nguyên tắc cốt lõi dự án tại [.specify/memory/constitution.md](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_test/.specify/memory/constitution.md) (Clean Architecture, Spring Security 6, JWT, DTO pattern, Dual DB, React 18, Dark/Light theme, Song ngữ VI/EN).
 2. `/speckit-clarify`: (Tùy chọn) Bắt lỗi mơ hồ, giả định logic, kiểm tra quyền hạn (IDOR), các trường hợp biên (edge cases).
 3. `/speckit-plan`: Lập kế hoạch kiến trúc kỹ thuật: REST API Contract (`/api/v1/...`), Entity JPA, DTOs, State & UI Tokens.
@@ -20,7 +21,7 @@ Khi nhận prompt lập trình (tính năng mới, sửa lỗi, refactor), **AI 
 
 1. **Tiết kiệm token**: Chỉ đọc `SKILL.md` của tối đa 1-2 skill có liên quan trực tiếp đến prompt hiện tại. Không nạp hàng loạt.
 2. **Đúng vai trò**:
-   - `Spec-Kit / Deep Analysis`: `/speckit-constitution`, `/speckit-clarify`, `/speckit-plan`, `/speckit-tasks`, `/speckit-analyze`, `/speckit-implement`
+   - `Spec-Kit / Deep Analysis`: `/speckit-specify`, `/speckit-constitution`, `/speckit-clarify`, `/speckit-plan`, `/speckit-tasks`, `/speckit-analyze`, `/speckit-implement`
    - `BA`: `.agent/BA/` (`spec-driven-development`, `docx`, `interview-me`)
    - `FE`: `.agent/FE/` (`frontend-ui-engineering`, `react-i18n-theming`, `ui-ux-pro-max`, `vitest-skill`)
    - `BE`: `.agent/BE/` (`spring-boot-best-practices`, `spring-data-jpa-patterns`, `spring-security-jwt-guide`, `api-and-interface-design`)

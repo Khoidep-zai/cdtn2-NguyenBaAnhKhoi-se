@@ -9,6 +9,7 @@ export interface SearchJobsParams {
   status?: string;
   province?: string;
   studentFriendly?: boolean;
+  shiftType?: string;
   page?: number;
   size?: number;
 }

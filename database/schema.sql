@@ -56,10 +56,12 @@ CREATE TABLE IF NOT EXISTS jobs (
     salary_amount DECIMAL(12, 2) NOT NULL,
     salary_text VARCHAR(100),
     working_hours VARCHAR(255),
+    shift_type VARCHAR(50) DEFAULT 'FLEXIBLE', -- MORNING, AFTERNOON, EVENING, WEEKEND, FLEXIBLE
     benefits TEXT,
     student_friendly BOOLEAN DEFAULT TRUE,
     slots_available INT DEFAULT 1,
-    status VARCHAR(50) DEFAULT 'OPEN', -- OPEN, IN_PROGRESS, COMPLETED, CLOSED
+    status VARCHAR(50) DEFAULT 'PENDING_REVIEW', -- PENDING_REVIEW, OPEN, IN_PROGRESS, COMPLETED, CLOSED, REJECTED
+    rejection_reason VARCHAR(255),
     deadline TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -103,6 +105,30 @@ CREATE TABLE IF NOT EXISTS notifications (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 8. Reports Table (Scam & Inappropriate content reporting)
+CREATE TABLE IF NOT EXISTS reports (
+    id SERIAL PRIMARY KEY,
+    reporter_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    job_id INT NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
+    reason VARCHAR(100) NOT NULL,
+    description TEXT,
+    status VARCHAR(50) DEFAULT 'PENDING', -- PENDING, RESOLVED, DISMISSED
+    resolved_by INT REFERENCES users(id) ON DELETE SET NULL,
+    resolution_notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP WITH TIME ZONE
+);
+
+-- 9. Password Reset Tokens Table
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(100) UNIQUE NOT NULL,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    expiry_date TIMESTAMP WITH TIME ZONE NOT NULL,
+    used BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Indexes for performance optimization
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role_id ON users(role_id);
@@ -111,6 +137,7 @@ CREATE INDEX IF NOT EXISTS idx_jobs_employer_id ON jobs(employer_id);
 CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status);
 CREATE INDEX IF NOT EXISTS idx_jobs_job_type ON jobs(job_type);
 CREATE INDEX IF NOT EXISTS idx_jobs_work_mode ON jobs(work_mode);
+CREATE INDEX IF NOT EXISTS idx_jobs_shift_type ON jobs(shift_type);
 CREATE INDEX IF NOT EXISTS idx_jobs_created_at ON jobs(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_applications_job_id ON applications(job_id);
 CREATE INDEX IF NOT EXISTS idx_applications_student_id ON applications(student_id);
@@ -119,3 +146,8 @@ CREATE INDEX IF NOT EXISTS idx_reviews_reviewee_id ON reviews(reviewee_id);
 CREATE INDEX IF NOT EXISTS idx_reviews_job_id ON reviews(job_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications(user_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_is_read ON notifications(is_read);
+CREATE INDEX IF NOT EXISTS idx_reports_job_id ON reports(job_id);
+CREATE INDEX IF NOT EXISTS idx_reports_status ON reports(status);
+CREATE INDEX IF NOT EXISTS idx_reports_reporter_id ON reports(reporter_id);
+CREATE INDEX IF NOT EXISTS idx_reset_tokens_token ON password_reset_tokens(token);
+CREATE INDEX IF NOT EXISTS idx_reset_tokens_user_id ON password_reset_tokens(user_id);

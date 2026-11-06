@@ -18,6 +18,7 @@ export const PostJobPage: React.FC = () => {
   const [salaryAmount, setSalaryAmount] = useState('');
   const [salaryText, setSalaryText] = useState('');
   const [workingHours, setWorkingHours] = useState('');
+  const [shiftType, setShiftType] = useState('FLEXIBLE');
   const [benefits, setBenefits] = useState('');
   const [studentFriendly, setStudentFriendly] = useState(true);
   const [description, setDescription] = useState('');
@@ -76,6 +77,7 @@ export const PostJobPage: React.FC = () => {
         salaryAmount: Number(salaryAmount),
         salaryText: salaryText || undefined,
         workingHours: workingHours || undefined,
+        shiftType,
         benefits: benefits || undefined,
         studentFriendly,
         description,
@@ -252,12 +254,26 @@ export const PostJobPage: React.FC = () => {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
             <div>
-              <label style={{ display: 'block', fontWeight: 600, fontSize: '0.875rem', marginBottom: '0.4rem' }}>Ca làm việc / Thời gian</label>
+              <label style={{ display: 'block', fontWeight: 600, fontSize: '0.875rem', marginBottom: '0.4rem' }}>Nhóm ca làm việc</label>
+              <select
+                value={shiftType}
+                onChange={(e) => setShiftType(e.target.value)}
+                style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', background: 'var(--bg-card-subtle)', color: 'var(--text-main)' }}
+              >
+                <option value="FLEXIBLE">Linh hoạt theo lịch học</option>
+                <option value="MORNING">Ca sáng (Sáng)</option>
+                <option value="AFTERNOON">Ca chiều (Chiều)</option>
+                <option value="EVENING">Ca tối (Tối)</option>
+                <option value="WEEKEND">Cuối tuần (Thứ 7 & CN)</option>
+              </select>
+            </div>
+            <div>
+              <label style={{ display: 'block', fontWeight: 600, fontSize: '0.875rem', marginBottom: '0.4rem' }}>Chi tiết giờ làm</label>
               <input
                 type="text"
-                placeholder="VD: Ca tối 18h-22h, Cuối tuần, Linh hoạt theo lịch học"
+                placeholder="VD: 18h-22h, 4 tiếng/ngày"
                 value={workingHours}
                 onChange={(e) => setWorkingHours(e.target.value)}
                 style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}
@@ -267,7 +283,7 @@ export const PostJobPage: React.FC = () => {
               <label style={{ display: 'block', fontWeight: 600, fontSize: '0.875rem', marginBottom: '0.4rem' }}>Quyền lợi & Phúc lợi</label>
               <input
                 type="text"
-                placeholder="VD: Bao ăn giữa ca, Thưởng chuyên cần, Đào tạo từ đầu"
+                placeholder="VD: Bao ăn giữa ca, Thưởng chuyên cần"
                 value={benefits}
                 onChange={(e) => setBenefits(e.target.value)}
                 style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}

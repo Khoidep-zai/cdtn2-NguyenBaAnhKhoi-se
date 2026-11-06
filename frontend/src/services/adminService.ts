@@ -6,6 +6,7 @@ export interface AdminStats {
   totalJobs: number;
   totalApplications: number;
   totalReviews: number;
+  pendingJobs?: number;
 }
 
 export const adminService = {
@@ -26,5 +27,18 @@ export const adminService = {
 
   async deleteJob(id: number): Promise<void> {
     await apiClient.delete<ApiResponse<void>>(`/admin/jobs/${id}`);
+  },
+
+  async getPendingJobs(page: number = 0, size: number = 10): Promise<{ content: any[]; totalPages: number; totalElements: number }> {
+    const res = await apiClient.get<ApiResponse<any>>(`/admin/jobs/pending?page=${page}&size=${size}`);
+    return res.data.data;
+  },
+
+  async reviewJob(id: number, action: 'APPROVE' | 'REJECT', rejectionReason?: string): Promise<any> {
+    const res = await apiClient.patch<ApiResponse<any>>(`/admin/jobs/${id}/review`, {
+      action,
+      rejectionReason
+    });
+    return res.data.data;
   }
 };

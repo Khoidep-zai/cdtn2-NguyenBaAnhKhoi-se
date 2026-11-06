@@ -56,7 +56,11 @@ public class Job {
     private String salaryText; // Lương hiển thị chi tiết (VD: 5.0 - 8.0 triệu, 28.000đ/giờ)
 
     @Column(length = 255)
-    private String workingHours; // Ca làm việc (VD: Ca tối 17h-22h, Linh hoạt)
+    private String workingHours; // Ca làm việc chi tiết (VD: Ca tối 17h-22h, Linh hoạt)
+
+    @Column(length = 50)
+    @Builder.Default
+    private String shiftType = "FLEXIBLE"; // MORNING, AFTERNOON, EVENING, WEEKEND, FLEXIBLE
 
     @Column(columnDefinition = "TEXT")
     private String benefits; // Phúc lợi
@@ -75,7 +79,10 @@ public class Job {
 
     @Column(length = 50)
     @Builder.Default
-    private String status = "OPEN"; // OPEN, IN_PROGRESS, COMPLETED, CLOSED
+    private String status = "PENDING_REVIEW"; // PENDING_REVIEW, OPEN, IN_PROGRESS, COMPLETED, CLOSED, REJECTED
+
+    @Column(length = 255)
+    private String rejectionReason;
 
     private LocalDateTime deadline;
 

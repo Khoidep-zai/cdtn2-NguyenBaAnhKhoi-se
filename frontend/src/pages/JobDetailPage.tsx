@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { Badge } from '../components/common/Badge';
+import { ScamWarningBanner } from '../components/jobs/ScamWarningBanner';
+import { ReportJobModal } from '../components/jobs/ReportJobModal';
 import { Building, MapPin, DollarSign, Calendar, CheckCircle2, ArrowLeft, Send, AlertCircle } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import { Job } from '../types';
@@ -90,6 +92,7 @@ export const JobDetailPage: React.FC = () => {
   const [coverLetter, setCoverLetter] = useState('');
   const [cvUrl, setCvUrl] = useState(user?.cvUrl || '');
   const [showModal, setShowModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
   const [applying, setApplying] = useState(false);
   const [applyError, setApplyError] = useState('');
 
@@ -251,6 +254,9 @@ export const JobDetailPage: React.FC = () => {
           </div>
         )}
 
+        {/* Cảnh báo an toàn việc làm sinh viên */}
+        <ScamWarningBanner onReportClick={() => setShowReportModal(true)} />
+
         <div style={{ marginBottom: '2rem' }}>
           <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem' }}>{t('job.description')}</h3>
           <p style={{ lineHeight: 1.7, color: 'var(--text-main)', whiteSpace: 'pre-line' }}>{cleanMojibake(job.description)}</p>
@@ -315,6 +321,13 @@ export const JobDetailPage: React.FC = () => {
           </div>
         </div>
       )}
+      {/* Report Modal */}
+      <ReportJobModal
+        jobId={job.id}
+        jobTitle={cleanMojibake(job.title)}
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+      />
     </div>
   );
 };

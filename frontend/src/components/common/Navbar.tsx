@@ -5,6 +5,8 @@ import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { Briefcase, User as UserIcon, LogOut, PlusCircle, Shield, FileText, Sun, Moon, Globe, Menu, X } from 'lucide-react';
 import { NotificationBell } from '../notification/NotificationBell';
+import { AnchorTooltip } from './AnchorTooltip';
+import { PrefetchLink } from './PrefetchLink';
 
 export const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -40,51 +42,51 @@ export const Navbar: React.FC = () => {
           <span className="brand-badge">Nhóm 8</span>
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation with PrefetchLink */}
         <nav className="nav-menu desktop-nav">
-          <Link to="/" className="nav-link">{t('nav.home')}</Link>
-          <Link to="/jobs" className="nav-link">{t('nav.jobs')}</Link>
+          <PrefetchLink to="/" className="nav-link">{t('nav.home')}</PrefetchLink>
+          <PrefetchLink to="/jobs" className="nav-link">{t('nav.jobs')}</PrefetchLink>
 
           {isAuthenticated ? (
             <>
               {user?.role === 'ROLE_STUDENT' && (
                 <>
-                  <Link to="/student/applications" className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                  <PrefetchLink to="/student/applications" className="nav-link" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                     <FileText size={16} /> {t('nav.applications')}
-                  </Link>
-                  <Link to="/student/profile" className="nav-link">{t('nav.profile')}</Link>
+                  </PrefetchLink>
+                  <PrefetchLink to="/student/profile" className="nav-link">{t('nav.profile')}</PrefetchLink>
                 </>
               )}
 
               {user?.role === 'ROLE_EMPLOYER' && (
                 <>
-                  <Link to="/employer/my-jobs" className="nav-link">{t('nav.myJobs')}</Link>
-                  <Link to="/employer/profile" className="nav-link">{t('nav.profile')}</Link>
-                  <Link to="/employer/post-job" className="btn btn-primary" style={{ padding: '0.45rem 1rem' }}>
+                  <PrefetchLink to="/employer/my-jobs" className="nav-link">{t('nav.myJobs')}</PrefetchLink>
+                  <PrefetchLink to="/employer/profile" className="nav-link">{t('nav.profile')}</PrefetchLink>
+                  <PrefetchLink to="/employer/post-job" className="btn btn-primary" style={{ padding: '0.45rem 1rem' }}>
                     <PlusCircle size={18} /> {t('nav.postJob')}
-                  </Link>
+                  </PrefetchLink>
                 </>
               )}
 
               {user?.role === 'ROLE_ADMIN' && (
                 <>
-                  <Link to="/admin/profile" className="nav-link">{t('nav.profile')}</Link>
-                  <Link to="/admin/dashboard" className="btn-admin-badge" title="Khu vực Quản trị hệ thống">
+                  <PrefetchLink to="/admin/profile" className="nav-link">{t('nav.profile')}</PrefetchLink>
+                  <PrefetchLink to="/admin/dashboard" className="btn-admin-badge" title="Khu vực Quản trị hệ thống">
                     <Shield size={15} /> {t('nav.admin')}
-                  </Link>
+                  </PrefetchLink>
                 </>
               )}
 
               <NotificationBell />
 
-              <Link
+              <PrefetchLink
                 to={getDashboardPath()}
                 className="nav-link"
                 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
               >
                 <UserIcon size={18} />
                 <span>{user?.fullName}</span>
-              </Link>
+              </PrefetchLink>
 
               <button onClick={handleLogout} className="btn btn-secondary" style={{ padding: '0.45rem 0.85rem' }}>
                 <LogOut size={16} /> {t('nav.logout')}
@@ -92,38 +94,40 @@ export const Navbar: React.FC = () => {
             </>
           ) : (
             <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
-              <Link to="/login" className="nav-btn-secondary">{t('nav.login')}</Link>
-              <Link to="/register" className="nav-btn-primary">{t('nav.register')}</Link>
+              <PrefetchLink to="/login" className="nav-btn-secondary">{t('nav.login')}</PrefetchLink>
+              <PrefetchLink to="/register" className="nav-btn-primary">{t('nav.register')}</PrefetchLink>
             </div>
           )}
 
-          {/* Quick controls: Language Switcher & Dark/Light Mode Switcher */}
+          {/* Quick controls: Language Switcher & Dark/Light Mode Switcher with AnchorTooltip */}
           <div className="nav-controls">
-            <button
-              onClick={toggleLanguage}
-              className="control-btn"
-              title={language === 'vi' ? t('lang.toEnglish') : t('lang.toVietnamese')}
-              aria-label="Toggle language"
-            >
-              <Globe size={15} color="var(--primary)" />
-              <span style={{ fontSize: '0.8rem', fontWeight: 800 }}>
-                {language.toUpperCase()}
-              </span>
-            </button>
+            <AnchorTooltip content={language === 'vi' ? t('lang.toEnglish') : t('lang.toVietnamese')}>
+              <button
+                onClick={toggleLanguage}
+                className="control-btn"
+                aria-label="Toggle language"
+              >
+                <Globe size={15} color="var(--primary)" />
+                <span style={{ fontSize: '0.8rem', fontWeight: 800 }}>
+                  {language.toUpperCase()}
+                </span>
+              </button>
+            </AnchorTooltip>
 
-            <button
-              onClick={toggleTheme}
-              className="control-btn"
-              title={theme === 'light' ? t('theme.toDark') : t('theme.toLight')}
-              aria-label="Toggle dark mode"
-              style={{ width: '36px', height: '36px', padding: 0 }}
-            >
-              {theme === 'dark' ? (
-                <Sun size={17} color="#fbbf24" style={{ transition: 'transform 0.3s ease' }} />
-              ) : (
-                <Moon size={17} color="#4f46e5" style={{ transition: 'transform 0.3s ease' }} />
-              )}
-            </button>
+            <AnchorTooltip content={theme === 'light' ? t('theme.toDark') : t('theme.toLight')}>
+              <button
+                onClick={toggleTheme}
+                className="control-btn"
+                aria-label="Toggle dark mode"
+                style={{ width: '36px', height: '36px', padding: 0 }}
+              >
+                {theme === 'dark' ? (
+                  <Sun size={17} color="#fbbf24" style={{ transition: 'transform 0.3s ease' }} />
+                ) : (
+                  <Moon size={17} color="#4f46e5" style={{ transition: 'transform 0.3s ease' }} />
+                )}
+              </button>
+            </AnchorTooltip>
           </div>
         </nav>
 

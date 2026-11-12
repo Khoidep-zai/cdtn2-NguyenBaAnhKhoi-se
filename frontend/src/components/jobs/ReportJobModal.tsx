@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Flag, X, AlertCircle, CheckCircle } from 'lucide-react';
 import { reportService } from '../../services/reportService';
+import '../common/ModernDialog.css';
 
 interface ReportJobModalProps {
   jobId: number;
@@ -24,13 +25,27 @@ export const ReportJobModal: React.FC<ReportJobModalProps> = ({
   onClose,
   onSuccess
 }) => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [reason, setReason] = useState('SCAM_DEPOSIT');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (isOpen) {
+      if (!dialog.open) {
+        dialog.showModal();
+      }
+    } else {
+      if (dialog.open) {
+        dialog.close();
+      }
+    }
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,159 +72,152 @@ export const ReportJobModal: React.FC<ReportJobModalProps> = ({
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0, left: 0, right: 0, bottom: 0,
-        background: 'rgba(0,0,0,0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1000,
-        padding: '1rem'
+    <dialog
+      ref={dialogRef}
+      className="modern-dialog"
+      onCancel={(e) => {
+        e.preventDefault();
+        onClose();
+      }}
+      onClick={(e) => {
+        if (e.target === dialogRef.current) {
+          onClose();
+        }
       }}
     >
-      <div
-        style={{
-          background: 'var(--bg-card)',
-          color: 'var(--text-main)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '2rem',
-          maxWidth: '520px',
-          width: '100%',
-          boxShadow: 'var(--shadow-lg)',
-          border: '1px solid var(--border-color)',
-          position: 'relative'
-        }}
+      <button
+        type="button"
+        className="modern-dialog-close-btn"
+        onClick={onClose}
+        aria-label="Đóng"
       >
-        <button
-          onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: '1.25rem',
-            right: '1.25rem',
-            background: 'transparent',
-            border: 'none',
-            color: 'var(--text-muted)',
-            cursor: 'pointer'
-          }}
-        >
-          <X size={20} />
-        </button>
+        <X size={20} />
+      </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem', color: '#dc2626' }}>
-          <Flag size={22} />
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 800 }}>Báo cáo tin việc làm vi phạm</h3>
-        </div>
-
-        <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
-          Bạn đang báo cáo: <strong>{jobTitle}</strong>
-        </p>
-
-        {success ? (
-          <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
-            <CheckCircle size={44} color="#16a34a" style={{ margin: '0 auto 1rem', display: 'block' }} />
-            <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#16a34a', marginBottom: '0.5rem' }}>
-              Gửi báo cáo thành công!
-            </h4>
-            <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>
-              Cảm ơn bạn đã chung tay bảo vệ cộng đồng sinh viên. Ban quản trị sẽ rà soát và xử lý trong vòng 24 giờ.
-            </p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            {error && (
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                background: 'rgba(239, 68, 68, 0.1)',
-                border: '1px solid #fca5a5',
-                color: '#b91c1c',
-                padding: '0.75rem',
-                borderRadius: 'var(--radius-md)',
-                fontSize: '0.85rem',
-                marginBottom: '1rem'
-              }}>
-                <AlertCircle size={16} />
-                <span>{error}</span>
-              </div>
-            )}
-
-            <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 600, marginBottom: '0.5rem' }}>
-                Lý do báo cáo:
-              </label>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                {REASONS.map(r => (
-                  <label
-                    key={r.value}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      fontSize: '0.85rem',
-                      cursor: 'pointer',
-                      color: 'var(--text-main)'
-                    }}
-                  >
-                    <input
-                      type="radio"
-                      name="reportReason"
-                      value={r.value}
-                      checked={reason === r.value}
-                      onChange={() => setReason(r.value)}
-                    />
-                    <span>{r.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 600, marginBottom: '0.4rem' }}>
-                Mô tả chi tiết bằng chứng (tùy chọn):
-              </label>
-              <textarea
-                rows={3}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="VD: Người liên hệ yêu cầu chuyển 200.000đ tiền cọc hồ sơ qua Zalo..."
-                style={{
-                  width: '100%',
-                  padding: '0.65rem',
-                  borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--border-color)',
-                  outline: 'none',
-                  fontSize: '0.85rem',
-                  background: 'var(--bg-card-subtle)',
-                  color: 'var(--text-main)'
-                }}
-              />
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-              <button
-                type="button"
-                onClick={onClose}
-                className="btn btn-secondary"
-                disabled={loading}
-              >
-                Hủy bỏ
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn btn-primary"
-                style={{ background: '#dc2626', borderColor: '#dc2626' }}
-              >
-                {loading ? 'Đang gửi...' : 'Gửi báo cáo'}
-              </button>
-            </div>
-          </form>
-        )}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem', color: '#dc2626' }}>
+        <Flag size={22} />
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 800 }}>Báo cáo tin việc làm vi phạm</h3>
       </div>
-    </div>
+
+      <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1.25rem' }}>
+        Bạn đang báo cáo: <strong>{jobTitle}</strong>
+      </p>
+
+      {success ? (
+        <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+          <CheckCircle size={44} color="#16a34a" style={{ margin: '0 auto 1rem', display: 'block' }} />
+          <h4 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#16a34a', marginBottom: '0.5rem' }}>
+            Gửi báo cáo thành công!
+          </h4>
+          <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>
+            Cảm ơn bạn đã chung tay bảo vệ cộng đồng sinh viên. Ban quản trị sẽ rà soát và xử lý trong vòng 24 giờ.
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          {error && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              background: 'rgba(239, 68, 68, 0.1)',
+              border: '1px solid #fca5a5',
+              color: '#b91c1c',
+              padding: '0.75rem',
+              borderRadius: 'var(--radius-md)',
+              fontSize: '0.85rem',
+              marginBottom: '1rem'
+            }}>
+              <AlertCircle size={16} />
+              <span>{error}</span>
+            </div>
+          )}
+
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+              Lý do báo cáo vi phạm <span style={{ color: '#ef4444' }}>*</span>
+            </label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {REASONS.map(r => (
+                <label
+                  key={r.value}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '0.6rem',
+                    fontSize: '0.88rem',
+                    cursor: 'pointer',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: 'var(--radius-sm)',
+                    border: reason === r.value ? '1px solid var(--primary)' : '1px solid var(--border-color)',
+                    background: reason === r.value ? 'var(--primary-light)' : 'transparent',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  <input
+                    type="radio"
+                    name="reportReason"
+                    value={r.value}
+                    checked={reason === r.value}
+                    onChange={(e) => setReason(e.target.value)}
+                    style={{ marginTop: '0.2rem' }}
+                  />
+                  <span>{r.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ marginBottom: '1.25rem' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.4rem' }}>
+              Mô tả chi tiết bằng chứng <span style={{ color: '#ef4444' }}>*</span>
+            </label>
+            <textarea
+              required
+              rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Vui lòng cung cấp chi tiết (tin nhắn yêu cầu chuyển khoản, địa điểm không chính xác...)"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: '1px solid var(--border-color)',
+                borderRadius: 'var(--radius-md)',
+                fontSize: '0.88rem',
+                outline: 'none',
+                background: 'var(--bg-main)',
+                color: 'var(--text-main)',
+                resize: 'vertical',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={onClose}
+              disabled={loading}
+            >
+              Hủy
+            </button>
+            <button
+              type="submit"
+              className="btn"
+              disabled={loading || !description.trim()}
+              style={{
+                background: '#dc2626',
+                color: '#ffffff',
+                border: 'none',
+                opacity: loading || !description.trim() ? 0.6 : 1
+              }}
+            >
+              {loading ? 'Đang gửi...' : 'Gửi báo cáo'}
+            </button>
+          </div>
+        </form>
+      )}
+    </dialog>
   );
 };
-

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { jobService } from '../../services/jobService';
@@ -13,13 +13,18 @@ import {
   Building2,
   Calendar,
   DollarSign,
-  User as UserIcon
+  User as UserIcon,
+  BarChart2
 } from 'lucide-react';
+import { StatsAccordion } from '../../components/common/StatsAccordion';
+import { ContainerDashboardCard } from '../../components/common/ContainerDashboardCard';
+import { AnchorTabBar, TabOption } from '../../components/common/AnchorTabBar';
 
 export const EmployerDashboard: React.FC = () => {
   const { user } = useAuth();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedFilter, setSelectedFilter] = useState('ALL');
 
   useEffect(() => {
     const fetchEmployerData = async () => {
@@ -39,6 +44,18 @@ export const EmployerDashboard: React.FC = () => {
   const openJobs = jobs.filter(j => j.status === 'OPEN').length;
   const inProgressJobs = jobs.filter(j => j.status === 'IN_PROGRESS').length;
   const completedJobs = jobs.filter(j => j.status === 'COMPLETED').length;
+
+  const tabOptions: TabOption[] = useMemo(() => [
+    { id: 'ALL', label: 'Tất cả tin đăng', badge: totalJobs },
+    { id: 'OPEN', label: 'Đang mở tuyển', badge: openJobs },
+    { id: 'IN_PROGRESS', label: 'Đang thực hiện', badge: inProgressJobs },
+    { id: 'COMPLETED', label: 'Đã hoàn thành', badge: completedJobs },
+  ], [totalJobs, openJobs, inProgressJobs, completedJobs]);
+
+  const filteredJobs = useMemo(() => {
+    if (selectedFilter === 'ALL') return jobs;
+    return jobs.filter(j => j.status === selectedFilter);
+  }, [jobs, selectedFilter]);
 
   return (
     <div className="container" style={{ padding: '3rem 1.5rem' }}>
@@ -103,83 +120,58 @@ export const EmployerDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats Cards Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-        gap: '1.25rem',
-        marginBottom: '2.5rem'
-      }}>
+      {/* Task 1 & 3: Accordion-Style Animated Stats with Container-Query Dashboard Cards */}
+      <StatsAccordion
+        title="Thống kê hoạt động tuyển dụng"
+        badge={`${totalJobs} việc làm`}
+        icon={<BarChart2 size={20} style={{ color: 'var(--primary)' }} />}
+        defaultOpen={true}
+      >
         <div style={{
-          background: 'var(--bg-card)',
-          color: 'var(--text-main)',
-          padding: '1.5rem',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-color)',
-          boxShadow: 'var(--shadow-sm)'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '1.25rem',
+          paddingTop: '0.75rem'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 600 }}>Tổng tin đăng</span>
-            <div style={{ padding: '0.5rem', background: 'var(--primary-light)', borderRadius: 'var(--radius-md)', color: 'var(--primary)' }}>
-              <Briefcase size={20} />
-            </div>
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-main)' }}>{totalJobs}</div>
+          <ContainerDashboardCard
+            title="Tổng tin đã đăng"
+            value={totalJobs}
+            icon={<Briefcase size={20} />}
+            iconBg="var(--primary-light)"
+            iconColor="var(--primary)"
+            subtitle="Toàn bộ chiến dịch"
+          />
+          <ContainerDashboardCard
+            title="Đang mở tuyển (OPEN)"
+            value={openJobs}
+            icon={<CheckCircle2 size={20} />}
+            iconBg="#dcfce7"
+            iconColor="#166534"
+            valueColor="#16a34a"
+            subtitle="Sẵn sàng nhận hồ sơ"
+          />
+          <ContainerDashboardCard
+            title="Đang thực hiện"
+            value={inProgressJobs}
+            icon={<Clock size={20} />}
+            iconBg="#e0f2fe"
+            iconColor="#0369a1"
+            valueColor="#0284c7"
+            subtitle="Ứng viên đang làm việc"
+          />
+          <ContainerDashboardCard
+            title="Đã hoàn thành"
+            value={completedJobs}
+            icon={<CheckCircle2 size={20} />}
+            iconBg="#f3e8ff"
+            iconColor="#7e22ce"
+            valueColor="#9333ea"
+            subtitle="Đã bàn giao & kết thúc"
+          />
         </div>
+      </StatsAccordion>
 
-        <div style={{
-          background: 'var(--bg-card)',
-          color: 'var(--text-main)',
-          padding: '1.5rem',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-color)',
-          boxShadow: 'var(--shadow-sm)'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 600 }}>Đang mở tuyển (OPEN)</span>
-            <div style={{ padding: '0.5rem', background: '#dcfce7', borderRadius: 'var(--radius-md)', color: '#166534' }}>
-              <CheckCircle2 size={20} />
-            </div>
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#16a34a' }}>{openJobs}</div>
-        </div>
-
-        <div style={{
-          background: 'var(--bg-card)',
-          color: 'var(--text-main)',
-          padding: '1.5rem',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-color)',
-          boxShadow: 'var(--shadow-sm)'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 600 }}>Đang thực hiện</span>
-            <div style={{ padding: '0.5rem', background: '#e0f2fe', borderRadius: 'var(--radius-md)', color: '#0369a1' }}>
-              <Clock size={20} />
-            </div>
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#0284c7' }}>{inProgressJobs}</div>
-        </div>
-
-        <div style={{
-          background: 'var(--bg-card)',
-          color: 'var(--text-main)',
-          padding: '1.5rem',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-color)',
-          boxShadow: 'var(--shadow-sm)'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 600 }}>Đã hoàn thành</span>
-            <div style={{ padding: '0.5rem', background: '#f3e8ff', borderRadius: 'var(--radius-md)', color: '#7e22ce' }}>
-              <CheckCircle2 size={20} />
-            </div>
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#9333ea' }}>{completedJobs}</div>
-        </div>
-      </div>
-
-      {/* Recent Posted Jobs Section */}
+      {/* Recent Posted Jobs Section with Task 2: Anchor Positioning Tab Bar */}
       <div style={{
         background: 'var(--bg-card)',
         color: 'var(--text-main)',
@@ -188,7 +180,7 @@ export const EmployerDashboard: React.FC = () => {
         padding: '2rem',
         boxShadow: 'var(--shadow-sm)'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Danh sách tin tuyển dụng gần đây</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>Theo dõi các công việc và lượng hồ sơ sinh viên nộp vào</p>
@@ -198,19 +190,32 @@ export const EmployerDashboard: React.FC = () => {
           </Link>
         </div>
 
+        {/* Anchor Positioned Tab Bar */}
+        <div style={{ marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.25rem' }}>
+          <AnchorTabBar
+            tabs={tabOptions}
+            activeTab={selectedFilter}
+            onChange={setSelectedFilter}
+          />
+        </div>
+
         {loading ? (
           <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '2rem 0' }}>Đang tải tin tuyển dụng...</p>
-        ) : jobs.length === 0 ? (
+        ) : filteredJobs.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
             <Briefcase size={40} style={{ color: 'var(--text-muted)', opacity: 0.4, margin: '0 auto 0.75rem' }} />
-            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>Bạn chưa đăng tin tuyển dụng nào.</p>
-            <Link to="/employer/post-job" className="btn btn-primary">
-              <PlusCircle size={16} /> Đăng tin đầu tiên
-            </Link>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '1rem' }}>
+              {selectedFilter === 'ALL' ? 'Bạn chưa đăng tin tuyển dụng nào.' : 'Không có tin nào thuộc trạng thái này.'}
+            </p>
+            {selectedFilter === 'ALL' && (
+              <Link to="/employer/post-job" className="btn btn-primary">
+                <PlusCircle size={16} /> Đăng tin đầu tiên
+              </Link>
+            )}
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {jobs.slice(0, 5).map(job => (
+            {filteredJobs.slice(0, 5).map(job => (
               <div
                 key={job.id}
                 style={{

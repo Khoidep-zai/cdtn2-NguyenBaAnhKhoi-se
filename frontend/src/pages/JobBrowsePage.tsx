@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useTransition } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, Sparkles, MapPin, RotateCcw, ChevronLeft, ChevronRight, Check, Clock } from 'lucide-react';
 import { JobCard } from '../components/jobs/JobCard';
@@ -6,6 +6,7 @@ import { HubbieMascot } from '../components/common/HubbieMascot';
 import { Job, Category } from '../types';
 import { jobService } from '../services/jobService';
 import { useLanguage } from '../context/LanguageContext';
+import { yieldToMain } from '../utils/performance';
 
 const DEFAULT_CATEGORIES: Category[] = [
   { id: 1, name: 'Lập trình & CNTT', slug: 'lap-trinh-cntt' },
@@ -111,6 +112,7 @@ const INITIAL_FALLBACK_JOBS: Job[] = [
 export const JobBrowsePage: React.FC = () => {
   const { t, language } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [, startTransition] = useTransition();
   const initialKeyword = searchParams.get('keyword') || '';
   const initialProvince = searchParams.get('province') || 'ALL';
   const initialCategory = searchParams.get('category') || 'ALL';
@@ -178,13 +180,19 @@ export const JobBrowsePage: React.FC = () => {
         size: pageSize,
       });
 
+      // Yield to main thread to keep INP < 50ms before heavy state update and DOM reconciliation
+      await yieldToMain();
+
       if (res && res.content) {
-        setJobs(res.content);
-        setTotalElements(res.totalElements || res.content.length);
-        setTotalPages(res.totalPages || Math.ceil((res.totalElements || res.content.length) / pageSize) || 1);
-        setCurrentPage(page);
+        startTransition(() => {
+          setJobs(res.content);
+          setTotalElements(res.totalElements || res.content.length);
+          setTotalPages(res.totalPages || Math.ceil((res.totalElements || res.content.length) / pageSize) || 1);
+          setCurrentPage(page);
+        });
       }
     } catch {
+      await yieldToMain();
       // Local fallback filter
       const filtered = INITIAL_FALLBACK_JOBS.filter((job) => {
         const matchK = !keyword || job.title.toLowerCase().includes(keyword.toLowerCase()) || job.description.toLowerCase().includes(keyword.toLowerCase());

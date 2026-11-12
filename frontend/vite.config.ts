@@ -7,5 +7,15 @@ export default defineConfig({
     port: 3000,
     host: true,
     open: true
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          icons: ['lucide-react'],
+        }
+      }
+    }
   }
 });

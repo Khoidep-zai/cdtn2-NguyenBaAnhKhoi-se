@@ -1,12 +1,12 @@
 <!--
 Sync Impact Report:
-- Version change: Initial Draft -> 2.0.0
+- Version change: 2.0.0 -> 2.1.0
 - Ratification Date: 2026-10-15
-- Last Amended: 2026-11-04
+- Last Amended: 2026-11-13
 - Project: Chuyen de Tot nghiep 2 (CDTN2) - Freelance Marketplace (FreelanceHub)
 - Team: Nhom 8 (Nguyen Ba Anh Khoi - BA/DevOps, Nguyen Tan Tai - Tech Lead/FE, Hoang Bao Long - QA/QC/BE)
 - Added sections:
-  1. Core Principles (I. Layered Architecture, II. Business Invariants BR-01..BR-06, III. TDD & Multi-Tier Testing, IV. API Contract & ApiResponse, V. RBAC & IDOR Prevention, VI. Frontend Design Tokens, i18n & Dark/Light Mode, VII. Zero-Waste Token & CodeGraph)
+  1. Core Principles (I. Layered Architecture, II. Business Invariants BR-01..BR-06, III. TDD & Multi-Tier Testing, IV. API Contract & ApiResponse, V. RBAC & IDOR Prevention, VI. Frontend Design Tokens, i18n & Dark/Light Mode, VII. Zero-Waste Token & CodeGraph, VIII. Modern Web APIs, WebAuthn Passkeys, CSP & Core Web Vitals)
   2. Technology Stack & Execution Invariants
   3. Spec-Kit 6-Stage Deep Reasoning & Engineering Pipeline
   4. Governance & Amendment Procedures
@@ -68,6 +68,22 @@ Mọi dòng code phát sinh MUST tôn trọng đầy đủ các quy tắc nghi�
 ### VII. Giao Thức Tiết Kiệm Token & Bộ Nhớ Dài Hạn CodeGraph
 - AI Agent MUST sử dụng `codegraph` (`codegraph_explore` hoặc lệnh `codegraph`) để đọc symbol, interface và call graph 2 chiều, **KHÔNG dùng lệnh đọc hàng loạt** (`NO BULK READING`) gây tràn ngữ cảnh.
 - Tuân thủ nguyên tắc **Tiết lộ Tăng dần (Progressive Disclosure)**: Nạp đúng file `SKILL.md` và tài liệu cần thiết cho tác vụ hiện tại.
+
+### VIII. Chuẩn Web Hiện Đại, Bảo Mật CSP/WebAuthn & Tối Ưu Hiệu Năng Core Web Vitals (Modern Web APIs, Security & Web Vitals Standards)
+- **Modern Web APIs:**
+  - Modal windows MUST sử dụng thẻ chuẩn HTML5 `<dialog>` với `showModal()` / `close()` và hiệu ứng chuyển cảnh mượt mà thay thế hoàn toàn overlay div cũ.
+  - Tooltips MUST khai thác Popover API (`popover`) kết hợp CSS Anchor Positioning (`anchor-name`, `position-anchor`) với giải pháp fallback tương thích ngược.
+  - Tabs & Highlights MUST tận dụng CSS Anchor Positioning để tạo highlight trượt theo tab tích cực mà không cần tính toán tọa độ DOM thủ công phức tạp bằng JavaScript.
+  - Dashboard & Stats Cards MUST sử dụng CSS Container Queries (`container-type: inline-size`, `@container`) để thích ứng hiển thị theo kích thước container cục bộ thay vì chỉ phụ thuộc vào viewport toàn trang.
+  - Stats Accordion MUST hỗ trợ đóng mở có animation mượt mà (smooth height/grid transition).
+- **Bảo Mật Tiên Tiến:**
+  - Hỗ trợ luồng đăng nhập không mật khẩu bằng WebAuthn / Passkey (FIDO2) an toàn cao cấp bên cạnh xác thực JWT truyền thống.
+  - Triển khai Content Security Policy (CSP) chặt chẽ, ngăn ngừa XSS/clickjacking mà không làm gián đoạn tài nguyên hợp lệ của ứng dụng.
+  - Định kỳ và liên tục đánh giá kiểm toán bảo mật (Security Audit) trên toàn bộ hệ thống.
+- **Tối Ưu Hiệu Năng (Core Web Vitals):**
+  - **Link Prefetching:** Preload bundle/dữ liệu trang khi người dùng hover/focus vào các liên kết điều hướng quan trọng.
+  - **INP (Interaction to Next Paint):** Cắt nhỏ các long task, giải phóng main thread bằng `scheduler.yield()` / `requestIdleCallback` hoặc `React.startTransition`.
+  - **LCP (Largest Contentful Paint):** Tối ưu hóa render hero element, lazy loading route với React Suspense, đặt `fetchpriority="high"` cho tài nguyên quan trọng để thời gian hiển thị LCP < 2.5s.
 
 ---
 

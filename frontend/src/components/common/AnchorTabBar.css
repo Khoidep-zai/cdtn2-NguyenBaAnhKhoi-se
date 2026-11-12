@@ -1,0 +1,89 @@
+/* AnchorTabBar.css - Modern sliding tab bar using CSS Anchor Positioning */
+.anchor-tab-bar-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-hover, #f1f5f9);
+  padding: 0.35rem;
+  border-radius: var(--radius-lg, 0.75rem);
+  border: 1px solid var(--border-color, #e2e8f0);
+  gap: 0.25rem;
+  anchor-scope: --active-tab;
+}
+
+.anchor-tab-item {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md, 0.5rem);
+  cursor: pointer;
+  transition: color 0.25s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.anchor-tab-item:hover {
+  color: var(--text-main, #0f172a);
+}
+
+.anchor-tab-item.active {
+  color: var(--primary, #2563eb);
+  anchor-name: --active-tab;
+}
+
+.anchor-tab-badge {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.06);
+  font-weight: 700;
+}
+
+.anchor-tab-item.active .anchor-tab-badge {
+  background: var(--primary-light, #dbeafe);
+  color: var(--primary, #2563eb);
+}
+
+/* Highlight Indicator using CSS Anchor Positioning */
+@supports (position-anchor: --active-tab) {
+  .anchor-tab-indicator {
+    position: absolute;
+    position-anchor: --active-tab;
+    top: anchor(top);
+    left: anchor(left);
+    right: anchor(right);
+    bottom: anchor(bottom);
+    background: var(--bg-card, #ffffff);
+    border-radius: var(--radius-md, 0.5rem);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    z-index: 1;
+    pointer-events: none;
+    transition: inset 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.2s ease;
+  }
+}
+
+/* Fallback for browsers without native anchor positioning */
+@supports not (position-anchor: --active-tab) {
+  .anchor-tab-indicator {
+    position: absolute;
+    top: 0.35rem;
+    bottom: 0.35rem;
+    background: var(--bg-card, #ffffff);
+    border-radius: var(--radius-md, 0.5rem);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    z-index: 1;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+

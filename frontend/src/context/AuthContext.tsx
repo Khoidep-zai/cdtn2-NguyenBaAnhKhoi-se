@@ -7,6 +7,7 @@ interface AuthContextType {
   token: string | null;
   loading: boolean;
   login: (data: { email: string; password: string }) => Promise<void>;
+  loginWithAuthResponse: (res: AuthResponse) => void;
   register: (data: any) => Promise<void>;
   updateUser: (data: Partial<User>) => void;
   logout: () => void;
@@ -81,6 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         token,
         loading,
         login,
+        loginWithAuthResponse: handleAuthSuccess,
         register,
         updateUser,
         logout,

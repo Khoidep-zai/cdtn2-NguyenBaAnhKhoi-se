@@ -1,0 +1,83 @@
+/* StatsAccordion.css - Smooth collapsible stats widget */
+.stats-accordion-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stats-accordion-container:hover {
+  border-color: var(--primary-light);
+  box-shadow: var(--shadow-md);
+}
+
+.stats-accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  user-select: none;
+  background: transparent;
+  width: 100%;
+  border: none;
+  color: var(--text-main);
+  text-align: left;
+  font-family: inherit;
+  transition: background-color 0.2s ease;
+}
+
+.stats-accordion-header:hover {
+  background-color: var(--bg-hover, rgba(0, 0, 0, 0.02));
+}
+
+.stats-accordion-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.stats-accordion-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.stats-accordion-chevron {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--text-muted);
+}
+
+.stats-accordion-container.open .stats-accordion-chevron {
+  transform: rotate(180deg);
+  color: var(--primary);
+}
+
+/* Smooth Grid Row Height Transition Technique */
+.stats-accordion-content-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stats-accordion-container.open .stats-accordion-content-wrapper {
+  grid-template-rows: 1fr;
+}
+
+.stats-accordion-content {
+  overflow: hidden;
+}
+
+.stats-accordion-body {
+  padding: 0.5rem 1.25rem 1.25rem;
+  border-top: 1px dashed var(--border-color);
+}
+

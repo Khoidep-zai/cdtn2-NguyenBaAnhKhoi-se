@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { LogIn, AlertCircle } from 'lucide-react';
+import { LogIn, AlertCircle, Fingerprint } from 'lucide-react';
 import { HubbieMascot } from '../components/common/HubbieMascot';
 import { ForgotPasswordModal } from '../components/common/ForgotPasswordModal';
+import { passkeyService } from '../services/passkeyService';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -14,9 +15,28 @@ export const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
-  const { login } = useAuth();
+  const { login, loginWithAuthResponse } = useAuth();
   const { t, language } = useLanguage();
   const navigate = useNavigate();
+
+  const handlePasskeyLogin = async () => {
+    if (!email.trim()) {
+      setError(language === 'vi' ? 'Vui lòng nhập Email để đăng nhập bằng Passkey' : 'Please enter your email to login with Passkey');
+      return;
+    }
+
+    setError('');
+    setLoading(true);
+    try {
+      const authRes = await passkeyService.loginWithPasskey(email.trim());
+      loginWithAuthResponse(authRes);
+      navigate('/dashboard');
+    } catch (err: any) {
+      setError(err?.response?.data?.message || err?.message || 'Đăng nhập bằng Passkey không thành công');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,6 +144,33 @@ export const LoginPage: React.FC = () => {
             style={{ width: '100%', padding: '0.85rem', fontWeight: 700, marginTop: '0.5rem' }}
           >
             <LogIn size={18} /> {loading ? t('auth.loggingIn') : t('auth.loginBtn')}
+          </button>
+
+          {/* Passkey / WebAuthn passwordless login button */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '0.25rem 0' }}>
+            <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }} />
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{language === 'vi' ? 'HOẶC' : 'OR'}</span>
+            <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }} />
+          </div>
+
+          <button
+            type="button"
+            disabled={loading}
+            onClick={handlePasskeyLogin}
+            className="btn btn-secondary"
+            style={{
+              width: '100%',
+              padding: '0.8rem',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              border: '1px solid var(--border-color)'
+            }}
+          >
+            <Fingerprint size={18} color="var(--primary)" />
+            <span>{language === 'vi' ? 'Đăng nhập bằng Passkey (Face ID / Vân tay)' : 'Sign in with Passkey'}</span>
           </button>
         </form>
 

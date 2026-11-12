@@ -9,7 +9,8 @@
 > **Dự án:** Chuyên đề Tốt nghiệp 2 — ĐH Văn Lang (K29 Track SE)  
 > **Đội ngũ phát triển (Nhóm 8):** Nguyễn Tấn Tài - Nguyễn Bá Anh Khôi - Phan Văn Hoàng Long  
 > **Người thực hiện kiểm thử:** Phan Văn Hoàng Long  
-> **Ngày thực hiện:** 02/11/2026  
+> **Mã Commit:** `f019e1723f5b706c4b2b2b1a9e88dc8cb0be5552`  
+> **Ngày thực hiện:** 02/11/2026 17:00:06 +0700  
 > **Môi trường:** Localhost (`http://localhost:8080/api/v1`) | Swagger UI / OpenAPI 3.0
 
 ---
@@ -59,7 +60,7 @@
 
 ---
 
-### 💼 B. Quản lý Tin tuyển dụng (Jobs Management)
+## 💼 B. Quản lý Tin tuyển dụng (Jobs Management)
 
 * **Test 04: Truy vấn Danh sách Việc làm Công khai (`GET /jobs`)**
   * **Params:** `page=0&size=10`
@@ -76,7 +77,7 @@
 
 ---
 
-### 📝 C. Quy trình & Logic Ứng tuyển (Applications Flow)
+## 📝 C. Quy trình & Logic Ứng tuyển (Applications Flow)
 
 * **Test 07: Sinh viên Nộp Đơn Ứng tuyển (`POST /applications/jobs/{jobId}/apply`)**
   * **Header:** Token Sinh viên Anh Khôi (`ROLE_STUDENT`)
@@ -104,7 +105,7 @@
 
 ---
 
-### 🛡️ D. Phân quyền Chéo giữa các Nhà tuyển dụng (Cross-Tenant Authorization)
+## 🛡️ D. Phân quyền Chéo giữa các Nhà tuyển dụng (Cross-Tenant Authorization)
 
 * **Test 12: Chặn NTD B Xem Danh sách Ứng viên của NTD A (`GET /applications/job/{jobId}`)**
   * **Hành động:** NTD Minh (Innovate Studio) gửi request xem ứng viên của `jobId=5` (thuộc NTD Tuyết - The Coffee House).

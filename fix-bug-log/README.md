@@ -28,7 +28,8 @@ fix-bug-log/
     ├── resolve login failure for demo accounts and handle BadCredentialsException.md (Commit 7ed44ed - Fix đăng nhập & mã 401)
     ├── design system overhaul and mascot integration.md             (Commit d2a304c - Design Tokens & Ong Vàng)
     ├── eye-care light theme palette and fluid responsive typography.md (Commit 092f5b2 & 09ab9b1 - Giao diện dịu mắt & CSS)
-    └── implement P0 core features for part-time student job portal.md (Commit eceaae8 - Hoàn thiện 100% tiêu chí P0)
+    ├── implement P0 core features for part-time student job portal.md (Commit eceaae8 - Hoàn thiện 100% tiêu chí P0)
+    └── modern web components passkey webauthn csp security and core web vitals optimization.md (Commit 718562f - 11 tính năng Modern Web & Vitals)
 ```
 
 ---
@@ -50,6 +51,7 @@ fix-bug-log/
 | `eceaae8` | 06/11/2026 | Nguyễn Bá Anh Khôi | Team Lead & Fullstack | Fullstack P0 | Hoàn thiện 100% P0: Admin duyệt tin (`PENDING`), Báo cáo lừa đảo, Quên mật khẩu, Ca làm | [Xem log](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_test/fix-bug-log/Khoi-lead/implement%20P0%20core%20features%20for%20part-time%20student%20job%20portal.md) |
 | `9254a78` | 12/11/2026 | Phạm Công Tài | FE Lead & Fullstack | BE / Email | Tự động gửi email chúc mừng sinh viên khi được nhận qua Spring Event-Driven | [Xem log](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_test/fix-bug-log/Tai-fe/implement%20automatic%20application%20acceptance%20email%20notification.md) |
 | `ddf53a9` | 12/11/2026 | Phạm Công Tài | FE Lead & Fullstack | Documentation | Báo cáo chi tiết kết quả đóng góp cá nhân của sinh viên Phạm Công Tài (CDTN2) | [Xem log](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_test/fix-bug-log/Tai-fe/add%20Pham%20Cong%20Tai%20CDTN2%20work%20report.md) |
+| `718562f` | 13/11/2026 | Nguyễn Bá Anh Khôi | Team Lead & Fullstack | Fullstack Modern | Triển khai 11 tính năng Modern Web, Passkey WebAuthn, CSP Security & Core Web Vitals | [Xem log](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_test/fix-bug-log/Khoi-lead/modern%20web%20components%20passkey%20webauthn%20csp%20security%20and%20core%20web%20vitals%20optimization.md) |
 
 ---
 

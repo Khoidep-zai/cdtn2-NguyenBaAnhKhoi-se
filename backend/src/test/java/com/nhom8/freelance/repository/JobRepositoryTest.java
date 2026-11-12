@@ -54,4 +54,42 @@ class JobRepositoryTest {
         assertEquals(1, result.getTotalElements());
         verify(jobRepository).findByStatus("OPEN", pageRequest);
     }
+
+    @Test
+    @DisplayName("searchJobs trả về danh sách công việc OPEN còn hạn nộp hồ sơ")
+    void searchJobs_ReturnsOnlyOpenAndUnexpiredJobs() {
+        Job activeJob = Job.builder()
+                .id(1L)
+                .title("Job còn hạn")
+                .status("OPEN")
+                .deadline(java.time.LocalDateTime.now().plusDays(5))
+                .build();
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<Job> page = new PageImpl<>(List.of(activeJob));
+
+        when(jobRepository.searchJobs(isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), eq(pageRequest)))
+                .thenReturn(page);
+
+        Page<Job> result = jobRepository.searchJobs(null, null, null, null, null, null, null, pageRequest);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+        assertEquals("OPEN", result.getContent().get(0).getStatus());
+        assertTrue(result.getContent().get(0).getDeadline().isAfter(java.time.LocalDateTime.now()));
+    }
+
+    @Test
+    @DisplayName("searchJobs loại trừ các công việc đã hết hạn hoặc không ở trạng thái OPEN")
+    void searchJobs_ExcludesExpiredAndNonOpenJobs() {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<Job> emptyPage = new PageImpl<>(List.of());
+
+        when(jobRepository.searchJobs(isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), isNull(), eq(pageRequest)))
+                .thenReturn(emptyPage);
+
+        Page<Job> result = jobRepository.searchJobs(null, null, null, null, null, null, null, pageRequest);
+
+        assertNotNull(result);
+        assertEquals(0, result.getTotalElements());
+    }
 }

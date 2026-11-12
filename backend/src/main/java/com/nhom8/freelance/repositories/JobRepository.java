@@ -26,6 +26,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Query(
         value = "SELECT j.* FROM jobs j WHERE j.status = 'OPEN' AND " +
+                "(j.deadline IS NULL OR j.deadline >= CURRENT_TIMESTAMP) AND " +
                 "(:keyword IS NULL OR :keyword = '' OR " +
                 "(LOWER(j.title) LIKE CONCAT('%', LOWER(:keyword), '%')) OR " +
                 "(LOWER(j.description) LIKE CONCAT('%', LOWER(:keyword), '%'))) AND " +
@@ -39,6 +40,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
         countQuery =
         "SELECT COUNT(*) FROM jobs j WHERE j.status = 'OPEN' AND " +
+                "(j.deadline IS NULL OR j.deadline >= CURRENT_TIMESTAMP) AND " +
                 "(:keyword IS NULL OR :keyword = '' OR " +
                 "(LOWER(j.title) LIKE CONCAT('%', LOWER(:keyword), '%')) OR " +
                 "(LOWER(j.description) LIKE CONCAT('%', LOWER(:keyword), '%'))) AND " +

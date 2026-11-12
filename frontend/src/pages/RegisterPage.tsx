@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { UserPlus, AlertCircle } from 'lucide-react';
@@ -18,6 +18,8 @@ export const RegisterPage: React.FC = () => {
   const { register } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get('redirect');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +40,11 @@ export const RegisterPage: React.FC = () => {
         university: role === 'ROLE_STUDENT' ? university : undefined,
         companyName: role === 'ROLE_EMPLOYER' ? companyName : undefined,
       });
-      navigate('/dashboard');
+      if (redirect && redirect.startsWith('/')) {
+        navigate(redirect, { replace: true });
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       const respData = err.response?.data;
       if (respData?.data && typeof respData.data === 'object' && Object.keys(respData.data).length > 0) {
@@ -171,7 +177,9 @@ export const RegisterPage: React.FC = () => {
 
         <div className="auth-footer">
           {t('auth.hasAccount')}
-          <Link to="/login">{t('auth.loginNow')}</Link>
+          <Link to={redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : '/login'}>
+            {t('auth.loginNow')}
+          </Link>
         </div>
       </div>
     </div>

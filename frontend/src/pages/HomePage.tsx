@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Sparkles, TrendingUp, ShieldCheck, MapPin, Database, Award, ArrowRight, Briefcase, Layers } from 'lucide-react';
+import { Search, Sparkles, TrendingUp, ShieldCheck, MapPin, Database, ArrowRight, Briefcase, Layers, Flame } from 'lucide-react';
 import { JobCard } from '../components/jobs/JobCard';
 import { HubbieMascot } from '../components/common/HubbieMascot';
-import { Job } from '../types';
+import { Job, Category } from '../types';
 import { jobService } from '../services/jobService';
 import { useLanguage } from '../context/LanguageContext';
+import { cleanMojibake } from '../utils/textUtils';
 
 const MOCK_FEATURED_JOBS: Job[] = [
   {
@@ -24,7 +25,7 @@ const MOCK_FEATURED_JOBS: Job[] = [
     slotsAvailable: 3,
     status: 'OPEN',
     createdAt: '2026-10-02',
-    category: { id: 4, name: 'Phục vụ & Pha chế (F&B)', slug: 'phuc-vu' },
+    category: { id: 2, name: 'Phục vụ, Nhà hàng & Khách sạn', slug: 'phuc-vu-nha-hang' },
     employer: { id: 2, fullName: 'Nguyễn Thị Tuyết', companyName: 'The Coffee House Bình Thạnh' }
   },
   {
@@ -43,7 +44,7 @@ const MOCK_FEATURED_JOBS: Job[] = [
     slotsAvailable: 1,
     status: 'OPEN',
     createdAt: '2026-10-02',
-    category: { id: 1, name: 'Lập trình & CNTT', slug: 'cntt' },
+    category: { id: 1, name: 'Lập trình & CNTT', slug: 'lap-trinh-cntt' },
     employer: { id: 3, fullName: 'Trần Văn Minh', companyName: 'Innovate Studio' }
   },
   {
@@ -62,9 +63,28 @@ const MOCK_FEATURED_JOBS: Job[] = [
     slotsAvailable: 2,
     status: 'OPEN',
     createdAt: '2026-10-02',
-    category: { id: 7, name: 'Marketing & Truyền thông', slug: 'marketing' },
+    category: { id: 7, name: 'Marketing, Truyền thông & Content', slug: 'marketing-content' },
     employer: { id: 4, fullName: 'Media Group Hà Nội', companyName: 'Media Group Hà Nội' }
   }
+];
+
+const INITIAL_CATEGORIES: Category[] = [
+  { id: 1, name: 'Lập trình & CNTT', slug: 'lap-trinh-cntt', icon: 'code' },
+  { id: 2, name: 'Phục vụ, Nhà hàng & Khách sạn', slug: 'phuc-vu-nha-hang', icon: 'coffee' },
+  { id: 3, name: 'Gia sư & Dạy kèm', slug: 'gia-su-day-kem', icon: 'book-open' },
+  { id: 4, name: 'Bán hàng & Chăm sóc khách hàng', slug: 'ban-hang-cskh', icon: 'shopping-bag' },
+  { id: 5, name: 'Kỹ thuật, Điện & Viễn thông', slug: 'ky-thuat-dien-tu', icon: 'cpu' },
+  { id: 6, name: 'Logistics, Giao hàng & Kho vận', slug: 'logistics-kho-van', icon: 'truck' },
+  { id: 7, name: 'Marketing, Truyền thông & Content', slug: 'marketing-content', icon: 'feather' },
+  { id: 8, name: 'Dịch thuật & Biên dịch', slug: 'dich-thuat', icon: 'globe' },
+  { id: 9, name: 'Hành chính & Nhân sự', slug: 'hanh-chinh-nhan-su', icon: 'users' },
+  { id: 10, name: 'Lao động & Việc làm khác', slug: 'viec-lam-khac', icon: 'briefcase' },
+  { id: 11, name: 'Môi trường & Năng lượng', slug: 'moi-truong-nang-luong', icon: 'leaf' },
+  { id: 12, name: 'Lao động phổ thông & Đóng gói', slug: 'lao-dong-pho-thong', icon: 'tool' },
+  { id: 13, name: 'Thiết kế đồ họa & Media', slug: 'thiet-ke-do-hoa', icon: 'palette' },
+  { id: 14, name: 'Tài chính & Kế toán', slug: 'tai-chinh-ke-toan', icon: 'pie-chart' },
+  { id: 15, name: 'Kiến trúc & Xây dựng', slug: 'kien-truc-xay-dung', icon: 'home' },
+  { id: 16, name: 'Y tế, Dược & Sức khỏe', slug: 'y-te-suc-khoe', icon: 'activity' }
 ];
 
 const QUICK_PROVINCES = [
@@ -76,34 +96,90 @@ const QUICK_PROVINCES = [
   'Đồng Nai',
 ];
 
-const POPULAR_CATEGORIES = [
-  { id: 1, nameVi: 'Lập trình & CNTT', nameEn: 'Software & IT', icon: '💻' },
-  { id: 2, nameVi: 'Thiết kế & Video', nameEn: 'Design & Media', icon: '🎨' },
-  { id: 3, nameVi: 'Gia sư & Dạy kèm', nameEn: 'Tutoring & Teaching', icon: '📚' },
-  { id: 4, nameVi: 'Phục vụ & Pha chế', nameEn: 'F&B & Barista', icon: '☕' },
-  { id: 7, nameVi: 'Marketing & Media', nameEn: 'Marketing & Content', icon: '📱' },
-  { id: 5, nameVi: 'Bán hàng & Thu ngân', nameEn: 'Sales & Cashier', icon: '🛒' },
-];
+const getCategoryIcon = (icon?: string, slug?: string, id?: number) => {
+  const key = (icon || slug || '').toLowerCase();
+  if (key.includes('code') || key.includes('lap-trinh') || id === 1) return '💻';
+  if (key.includes('coffee') || key.includes('phuc-vu') || id === 2) return '☕';
+  if (key.includes('book') || key.includes('gia-su') || id === 3) return '📚';
+  if (key.includes('shopping') || key.includes('ban-hang') || id === 4) return '🛒';
+  if (key.includes('cpu') || key.includes('ky-thuat') || id === 5) return '⚡';
+  if (key.includes('truck') || key.includes('logistics') || id === 6) return '🚚';
+  if (key.includes('feather') || key.includes('marketing') || id === 7) return '📱';
+  if (key.includes('globe') || key.includes('dich-thuat') || id === 8) return '🌐';
+  if (key.includes('user') || key.includes('hanh-chinh') || id === 9) return '👥';
+  if (key.includes('leaf') || key.includes('moi-truong') || id === 11) return '🌱';
+  if (key.includes('tool') || key.includes('lao-dong-pho-thong') || id === 12) return '📦';
+  if (key.includes('palette') || key.includes('thiet-ke') || id === 13) return '🎨';
+  if (key.includes('pie') || key.includes('tai-chinh') || id === 14) return '📊';
+  if (key.includes('home') || key.includes('kien-truc') || id === 15) return '🏗️';
+  if (key.includes('activity') || key.includes('y-te') || id === 16) return '💊';
+  return '💼';
+};
 
 export const HomePage: React.FC = () => {
   const [keyword, setKeyword] = useState('');
   const [featuredJobs, setFeaturedJobs] = useState<Job[]>(MOCK_FEATURED_JOBS);
+  const [categories, setCategories] = useState<Category[]>(INITIAL_CATEGORIES);
+  const [categoryCounts, setCategoryCounts] = useState<Record<number, number>>({});
   const { t, language } = useLanguage();
   const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
+
+    // Fetch categories and live job counts
+    const fetchCategoriesData = async () => {
+      try {
+        const catList = await jobService.getCategories();
+        if (isMounted && catList && catList.length > 0) {
+          setCategories(catList);
+          // Fetch counts for each category
+          const countPromises = catList.map(async (c: Category) => {
+            try {
+              const res = await jobService.getJobs({ categoryId: c.id, size: 1 });
+              return { id: c.id, count: res?.totalElements ?? 0 };
+            } catch {
+              return { id: c.id, count: 0 };
+            }
+          });
+
+          const results = await Promise.allSettled(countPromises);
+          if (isMounted) {
+            const countsMap: Record<number, number> = {};
+            results.forEach((r) => {
+              if (r.status === 'fulfilled' && r.value) {
+                countsMap[r.value.id] = r.value.count;
+              }
+            });
+            setCategoryCounts(countsMap);
+          }
+        }
+      } catch {
+        // Fallback to initial
+      }
+    };
+
+    // Fetch featured/hot jobs (status OPEN, latest by created_at, deadline not expired)
     const fetchFeatured = async () => {
       try {
-        const res = await jobService.getJobs({ size: 6 });
+        const res = await jobService.getJobs({ size: 12 });
         if (isMounted && res && res.content && res.content.length > 0) {
-          setFeaturedJobs(res.content);
+          const now = new Date();
+          const validJobs = res.content
+            .filter((j) => j.status === 'OPEN' && (!j.deadline || new Date(j.deadline) >= now))
+            .slice(0, 8);
+          if (validJobs.length > 0) {
+            setFeaturedJobs(validJobs);
+          }
         }
       } catch {
         // Fallback to mock
       }
     };
+
+    fetchCategoriesData();
     fetchFeatured();
+
     return () => {
       isMounted = false;
     };
@@ -224,62 +300,165 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Popular Categories */}
+      {/* Ngành Nghề Trọng Điểm / Key Industries */}
       <section style={{ padding: '3.5rem 0', background: 'var(--bg-main)' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>{t('home.catTitle')}</h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('home.catDesc')}</p>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                color: 'var(--primary)',
+                fontWeight: 700,
+                fontSize: '0.85rem',
+                marginBottom: '0.5rem',
+                background: 'var(--primary-light)',
+                padding: '0.25rem 0.75rem',
+                borderRadius: 'var(--radius-full)',
+              }}
+            >
+              <Layers size={15} /> {language === 'vi' ? 'NGÀNH NGHỀ TRỌNG ĐIỂM' : 'KEY INDUSTRIES'}
+            </div>
+            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
+              {t('home.catTitle')}
+            </h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+              {t('home.catDesc')}
+            </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem' }}>
-            {POPULAR_CATEGORIES.map((cat) => (
-              <div
-                key={cat.id}
-                onClick={() => navigate(`/jobs?category=${cat.id}`)}
-                style={{
-                  background: 'var(--bg-card)',
-                  borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--border-color)',
-                  padding: '1.25rem 1rem',
-                  textAlign: 'center',
-                  cursor: 'pointer',
-                  transition: 'var(--transition)',
-                  boxShadow: 'var(--shadow-sm)',
-                }}
-              >
-                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{cat.icon}</div>
-                <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)' }}>
-                  {language === 'vi' ? cat.nameVi : cat.nameEn}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
+            {categories.map((cat) => {
+              const count = categoryCounts[cat.id];
+              return (
+                <div
+                  key={cat.id}
+                  onClick={() => navigate(`/jobs?category=${cat.id}`)}
+                  style={{
+                    background: 'var(--bg-card)',
+                    borderRadius: 'var(--radius-lg)',
+                    border: '1px solid var(--border-color)',
+                    padding: '1.25rem 1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    transition: 'var(--transition)',
+                    boxShadow: 'var(--shadow-sm)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--primary)';
+                    e.currentTarget.style.transform = 'translateY(-3px)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border-color)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '50px',
+                      height: '50px',
+                      borderRadius: '50%',
+                      background: 'rgba(67, 56, 202, 0.08)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '1.6rem',
+                      marginBottom: '0.75rem',
+                    }}
+                  >
+                    {getCategoryIcon(cat.icon, cat.slug, cat.id)}
+                  </div>
+                  <div
+                    style={{
+                      fontWeight: 700,
+                      fontSize: '0.95rem',
+                      color: 'var(--text-main)',
+                      lineHeight: 1.35,
+                      minHeight: '2.6em',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {cleanMojibake(cat.name)}
+                  </div>
+                  <div
+                    style={{
+                      marginTop: '0.5rem',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      color: 'var(--primary)',
+                      background: 'var(--primary-light)',
+                      padding: '0.2rem 0.65rem',
+                      borderRadius: 'var(--radius-full)',
+                    }}
+                  >
+                    {count !== undefined ? `${count} việc làm` : 'Đang tải...'}
+                  </div>
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
-                  {language === 'vi' ? 'Khám phá cơ hội →' : 'Explore jobs →'}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Featured Jobs */}
+      {/* Việc Làm Nổi Bật / Hot Jobs */}
       <section style={{ padding: '4rem 0', background: 'var(--bg-card)' }}>
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-end',
+              marginBottom: '2rem',
+              flexWrap: 'wrap',
+              gap: '1rem',
+            }}
+          >
             <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: 'var(--primary)', fontWeight: 700, fontSize: '0.85rem', marginBottom: '0.25rem' }}>
-                <Award size={16} /> {language === 'vi' ? 'Cơ hội việc làm tuyển chọn' : 'Curated opportunities'}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  color: '#dc2626',
+                  fontWeight: 700,
+                  fontSize: '0.85rem',
+                  marginBottom: '0.35rem',
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  padding: '0.25rem 0.75rem',
+                  borderRadius: 'var(--radius-full)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                }}
+              >
+                <Flame size={16} color="#dc2626" />
+                {language === 'vi' ? 'VIỆC LÀM NỔI BẬT / HOT JOBS' : 'FEATURED & HOT JOBS'}
               </div>
-              <h2 style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--text-main)' }}>{t('home.featuredTitle')}</h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>{t('home.featuredDesc')}</p>
+              <h2 style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--text-main)', marginTop: '0.25rem' }}>
+                {t('home.featuredTitle')}
+              </h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                {t('home.featuredDesc')}
+              </p>
             </div>
-            <button onClick={() => navigate('/jobs')} className="btn btn-primary" style={{ padding: '0.65rem 1.25rem' }}>
+            <button
+              onClick={() => navigate('/jobs')}
+              className="btn btn-primary"
+              style={{ padding: '0.65rem 1.25rem', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+            >
               {t('home.viewAll')} <ArrowRight size={16} />
             </button>
           </div>
 
           <div className="job-grid">
             {featuredJobs.map((job) => (
-              <JobCard key={job.id} job={job} />
+              <JobCard key={job.id} job={job} isHot={true} />
             ))}
           </div>
         </div>

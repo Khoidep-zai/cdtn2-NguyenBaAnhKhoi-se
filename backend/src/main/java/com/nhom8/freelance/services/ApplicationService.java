@@ -9,6 +9,7 @@ import com.nhom8.freelance.repositories.ApplicationRepository;
 import com.nhom8.freelance.repositories.JobRepository;
 import com.nhom8.freelance.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class ApplicationService {
     private final JobRepository jobRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public Application applyJob(Long studentId, Long jobId, String coverLetter, String cvUrl) {
@@ -127,6 +129,8 @@ public class ApplicationService {
             }
         }
 
+        boolean newlyAccepted = "ACCEPTED".equalsIgnoreCase(status) && !"ACCEPTED".equalsIgnoreCase(application.getStatus());
+
         application.setStatus(status);
         if (rejectionReason != null) {
             application.setRejectionReason(rejectionReason);
@@ -145,6 +149,22 @@ public class ApplicationService {
                 saved.getId()
         );
 
+        if (newlyAccepted && eventPublisher != null) {
+            String employerName = application.getJob().getEmployer().getCompanyName();
+            if (employerName == null || employerName.isBlank()) {
+                employerName = application.getJob().getEmployer().getFullName();
+            }
+
+            eventPublisher.publishEvent(
+                    new ApplicationAcceptedEvent(
+                            saved.getId(),
+                            application.getStudent().getEmail(),
+                            application.getStudent().getFullName(),
+                            application.getJob().getTitle(),
+                            employerName
+                    )
+            );
+        }
         return saved;
     }
 }

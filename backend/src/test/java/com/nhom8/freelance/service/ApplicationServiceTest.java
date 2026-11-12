@@ -8,15 +8,18 @@ import com.nhom8.freelance.models.User;
 import com.nhom8.freelance.repositories.ApplicationRepository;
 import com.nhom8.freelance.repositories.JobRepository;
 import com.nhom8.freelance.repositories.UserRepository;
+import com.nhom8.freelance.services.ApplicationAcceptedEvent;
 import com.nhom8.freelance.services.ApplicationService;
 import com.nhom8.freelance.services.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Optional;
 
@@ -40,6 +43,9 @@ class ApplicationServiceTest {
     @Mock
     private NotificationService notificationService;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
+
     @InjectMocks
     private ApplicationService applicationService;
 
@@ -51,7 +57,7 @@ class ApplicationServiceTest {
     @BeforeEach
     void setUp() {
         student = User.builder().id(2L).email("student@test.com").fullName("Student Test").build();
-        employer = User.builder().id(1L).email("employer@test.com").fullName("Employer Test").build();
+        employer = User.builder().id(1L).email("employer@test.com").fullName("Employer Test").companyName("Công ty ABC").build();
 
         job = Job.builder()
                 .id(10L)
@@ -69,7 +75,7 @@ class ApplicationServiceTest {
     }
 
     @Test
-    @DisplayName("Nộp đơn ứng tuyển thành công")
+    @DisplayName("Nộp đơn ứng tuyển thành công - Không gửi email chúc mừng")
     void applyJob_Success() {
         when(applicationRepository.existsByJobIdAndStudentId(10L, 2L)).thenReturn(false);
         when(jobRepository.findById(10L)).thenReturn(Optional.of(job));
@@ -82,6 +88,7 @@ class ApplicationServiceTest {
         assertEquals("PENDING", result.getStatus());
         verify(applicationRepository).save(any(Application.class));
         verify(notificationService).createNotification(eq(1L), anyString(), anyString(), eq("NEW_APPLICATION"), anyLong());
+        verify(eventPublisher, never()).publishEvent(any());
     }
 
     @Test
@@ -108,7 +115,7 @@ class ApplicationServiceTest {
     }
 
     @Test
-    @DisplayName("Cập nhật trạng thái duyệt ứng viên thành ACCEPTED")
+    @DisplayName("Cập nhật trạng thái duyệt ứng viên thành ACCEPTED - Phát sinh sự kiện gửi email")
     void updateApplicationStatus_Accepted() {
         when(applicationRepository.findById(100L)).thenReturn(Optional.of(application));
         when(applicationRepository.save(any(Application.class))).thenReturn(application);
@@ -118,5 +125,41 @@ class ApplicationServiceTest {
         assertNotNull(updated);
         assertEquals("ACCEPTED", application.getStatus());
         verify(notificationService).createNotification(eq(2L), anyString(), anyString(), eq("APPLICATION_STATUS"), anyLong());
+
+        ArgumentCaptor<ApplicationAcceptedEvent> eventCaptor = ArgumentCaptor.forClass(ApplicationAcceptedEvent.class);
+        verify(eventPublisher, times(1)).publishEvent(eventCaptor.capture());
+        ApplicationAcceptedEvent event = eventCaptor.getValue();
+        assertEquals(100L, event.applicationId());
+        assertEquals("student@test.com", event.recipientEmail());
+        assertEquals("Student Test", event.studentName());
+        assertEquals("Lập trình Web", event.jobTitle());
+        assertEquals("Công ty ABC", event.employerName());
+    }
+
+    @Test
+    @DisplayName("Nhà tuyển dụng từ chối ứng viên (REJECTED) - Không phát sinh sự kiện gửi email")
+    void updateApplicationStatus_Rejected_DoesNotPublishEvent() {
+        when(applicationRepository.findById(100L)).thenReturn(Optional.of(application));
+        when(applicationRepository.save(any(Application.class))).thenReturn(application);
+
+        Application updated = applicationService.updateApplicationStatus(100L, "REJECTED", "Không đủ kinh nghiệm");
+
+        assertNotNull(updated);
+        assertEquals("REJECTED", application.getStatus());
+        verify(notificationService).createNotification(eq(2L), anyString(), anyString(), eq("APPLICATION_STATUS"), anyLong());
+        verify(eventPublisher, never()).publishEvent(any());
+    }
+
+    @Test
+    @DisplayName("Nhấn chấp nhận lại khi hồ sơ đã ACCEPTED - Không gửi email trùng lặp")
+    void updateApplicationStatus_AlreadyAccepted_DoesNotPublishDuplicateEvent() {
+        application.setStatus("ACCEPTED");
+        when(applicationRepository.findById(100L)).thenReturn(Optional.of(application));
+        when(applicationRepository.save(any(Application.class))).thenReturn(application);
+
+        Application updated = applicationService.updateApplicationStatus(100L, "ACCEPTED", null);
+
+        assertNotNull(updated);
+        verify(eventPublisher, never()).publishEvent(any());
     }
 }

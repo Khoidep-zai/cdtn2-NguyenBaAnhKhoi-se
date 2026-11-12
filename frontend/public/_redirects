@@ -1,0 +1,5 @@
+# API Reverse Proxy to Backend Cloud Service
+/api/v1/*  https://freelance-platform-api.onrender.com/api/v1/:splat  200!
+
+# SPA Fallback for Client-Side Routing
+/*         /index.html                                                 200

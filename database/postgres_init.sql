@@ -3,7 +3,7 @@
 -- Database: freelance_db (PostgreSQL 16/18)
 -- ========================================================
 
-DROP TABLE IF EXISTS notifications, reviews, applications, jobs, categories, users, roles CASCADE;
+DROP TABLE IF EXISTS user_passkey_credentials, notifications, reviews, applications, jobs, categories, users, roles CASCADE;
 
 
 CREATE TABLE IF NOT EXISTS roles (
@@ -97,6 +97,17 @@ CREATE TABLE IF NOT EXISTS notifications (
     is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS user_passkey_credentials (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    credential_id VARCHAR(500) NOT NULL UNIQUE,
+    public_key TEXT,
+    sign_count BIGINT DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_passkey_user_id ON user_passkey_credentials(user_id);
 
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role_id ON users(role_id);
@@ -4253,3 +4264,4 @@ SELECT setval('jobs_id_seq', (SELECT COALESCE(MAX(id), 1) FROM jobs));
 SELECT setval('applications_id_seq', (SELECT COALESCE(MAX(id), 1) FROM applications));
 SELECT setval('reviews_id_seq', (SELECT COALESCE(MAX(id), 1) FROM reviews));
 SELECT setval('notifications_id_seq', (SELECT COALESCE(MAX(id), 1) FROM notifications));
+SELECT setval('user_passkey_credentials_id_seq', (SELECT COALESCE(MAX(id), 1) FROM user_passkey_credentials));

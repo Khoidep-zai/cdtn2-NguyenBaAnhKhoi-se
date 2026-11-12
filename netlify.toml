@@ -1,0 +1,52 @@
+# ========================================================
+# Netlify Configuration - FreelanceHub Platform
+# Fullstack Cloud Deployment (SPA + API Reverse Proxy)
+# ========================================================
+
+[build]
+  base = "frontend"
+  publish = "dist"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_FLAGS = "--legacy-peer-deps"
+
+# 1. API Reverse Proxy (Zero-CORS Gateway to Cloud Backend Container)
+# Directs all /api/v1/* traffic directly to the Spring Boot REST API
+[[redirects]]
+  from = "/api/v1/*"
+  to = "https://freelance-platform-api.onrender.com/api/v1/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify-Proxy"}
+
+# 2. SPA Fallback Routing
+# Ensures HTML5 client-side routing works for all subroutes (e.g. /jobs, /login, /admin)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# 3. Global Security Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+# 4. Long-term Caching for Immutable Static Assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# 5. Non-cached Index HTML for Fast Release Propagation
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

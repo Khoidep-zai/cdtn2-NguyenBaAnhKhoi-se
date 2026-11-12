@@ -1,0 +1,48 @@
+# ========================================================
+# Render Blueprint Specification for FreelanceHub Backend
+# Multi-stage Docker Container on Render Cloud Platform
+# ========================================================
+
+services:
+  - type: web
+    name: freelance-platform-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: singapore
+    branch: main
+    healthCheckPath: /api/v1/jobs
+    autoDeploy: true
+    envVars:
+      - key: SERVER_PORT
+        value: 8080
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      # Connection to Neon / Netlify DB Serverless PostgreSQL
+      # Example: jdbc:postgresql://ep-example-pooler.ap-southeast-1.aws.neon.tech/freelance_db?sslmode=require
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      # High-entropy JWT Secret (generate automatically if left empty)
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRATION_MS
+        value: 86400000
+      # CORS configuration allowing Netlify frontend domains
+      - key: APP_CORS_ALLOWED_ORIGINS
+        value: "https://*.netlify.app,http://localhost:3000,http://localhost:5173,http://localhost:8888,*"
+      # HikariCP Serverless Connection Pool Tuning
+      - key: HIKARI_MAX_POOL_SIZE
+        value: 10
+      - key: HIKARI_MIN_IDLE
+        value: 2
+      - key: HIKARI_IDLE_TIMEOUT
+        value: 30000
+      - key: HIKARI_CONN_TIMEOUT
+        value: 20000
+      - key: HIKARI_MAX_LIFETIME
+        value: 600000

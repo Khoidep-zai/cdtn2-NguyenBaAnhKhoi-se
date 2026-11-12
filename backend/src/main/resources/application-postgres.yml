@@ -5,17 +5,19 @@ server:
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:freelance_db}}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:freelance_db}?sslmode=${DB_SSL_MODE:prefer}}
     driver-class-name: org.postgresql.Driver
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:12345}
     hikari:
       pool-name: FreelanceHub-Postgres-Pool
-      maximum-pool-size: 10
-      minimum-idle: 5
-      connection-timeout: 30000
-      idle-timeout: 600000
-      max-lifetime: 1800000
+      maximum-pool-size: ${HIKARI_MAX_POOL_SIZE:10}
+      minimum-idle: ${HIKARI_MIN_IDLE:2}
+      idle-timeout: ${HIKARI_IDLE_TIMEOUT:30000}
+      connection-timeout: ${HIKARI_CONN_TIMEOUT:20000}
+      max-lifetime: ${HIKARI_MAX_LIFETIME:600000}
+      keepalive-time: ${HIKARI_KEEPALIVE_TIME:30000}
+      leak-detection-threshold: ${HIKARI_LEAK_DETECTION:20000}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:

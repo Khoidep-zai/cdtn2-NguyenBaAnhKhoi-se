@@ -1,15 +1,13 @@
 <!--
 Sync Impact Report:
-- Version change: 2.0.0 -> 2.1.0
+- Version change: 2.1.0 -> 2.2.0
 - Ratification Date: 2026-10-15
 - Last Amended: 2026-11-13
 - Project: Chuyen de Tot nghiep 2 (CDTN2) - Freelance Marketplace (FreelanceHub)
 - Team: Nhom 8 (Nguyen Ba Anh Khoi - BA/DevOps, Nguyen Tan Tai - Tech Lead/FE, Hoang Bao Long - QA/QC/BE)
 - Added sections:
-  1. Core Principles (I. Layered Architecture, II. Business Invariants BR-01..BR-06, III. TDD & Multi-Tier Testing, IV. API Contract & ApiResponse, V. RBAC & IDOR Prevention, VI. Frontend Design Tokens, i18n & Dark/Light Mode, VII. Zero-Waste Token & CodeGraph, VIII. Modern Web APIs, WebAuthn Passkeys, CSP & Core Web Vitals)
-  2. Technology Stack & Execution Invariants
-  3. Spec-Kit 6-Stage Deep Reasoning & Engineering Pipeline
-  4. Governance & Amendment Procedures
+  1. Core Principles (IX. Triển Khai Đám Mây Netlify, Cloud Database Neon & Reverse Proxy Gateway Không Lỗi CORS)
+  2. Cloud Deployment Stack & Execution Invariants
 -->
 
 # FreelanceHub (CDTN2 - Nhóm 8) Constitution
@@ -84,6 +82,24 @@ Mọi dòng code phát sinh MUST tôn trọng đầy đủ các quy tắc nghi�
   - **Link Prefetching:** Preload bundle/dữ liệu trang khi người dùng hover/focus vào các liên kết điều hướng quan trọng.
   - **INP (Interaction to Next Paint):** Cắt nhỏ các long task, giải phóng main thread bằng `scheduler.yield()` / `requestIdleCallback` hoặc `React.startTransition`.
   - **LCP (Largest Contentful Paint):** Tối ưu hóa render hero element, lazy loading route với React Suspense, đặt `fetchpriority="high"` cho tài nguyên quan trọng để thời gian hiển thị LCP < 2.5s.
+
+### IX. Triển Khai Đám Mây Netlify, Cloud Database Neon & Reverse Proxy Gateway Không Lỗi CORS (Netlify Cloud Deployment, Managed Database & Zero-CORS Gateway Invariants)
+- **Frontend Netlify Edge Hosting:**
+  - Triển khai Single Page Application (React + Vite) trực tiếp trên Netlify CDN (`base = "frontend"`, `publish = "dist"`, `command = "npm run build"`).
+  - SPA Routing Rewrite: Cưỡng chế quy tắc `/* /index.html 200` trong `netlify.toml` và `_redirects` để đảm bảo định tuyến Client-side của React Router không bao giờ bị lỗi 404 khi người dùng refresh hoặc truy cập trực tiếp URL.
+  - Security Headers: Khai báo đầy đủ HTTP Security Headers trong `_headers` và `netlify.toml` (`Content-Security-Policy`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`).
+- **Cloud Database (DB) via Netlify DB & Neon Serverless PostgreSQL:**
+  - Sử dụng Neon Serverless PostgreSQL (tương thích 100% PostgreSQL 16) làm kho lưu trữ chính trên môi trường cloud.
+  - Bắt buộc kích hoạt SSL (`sslmode=require`) và sử dụng pooled connection (PgBouncer) để xử lý tải cao không tràn kết nối.
+  - Đồng bộ cấu trúc dữ liệu tự động thông qua các migration SQL chuẩn trong `database/migrations/` và `database/postgres_init.sql`.
+  - Spring Boot datasource profile `postgres` và `prod` đọc thông số từ `SPRING_DATASOURCE_URL`, `DB_USER`, `DB_PASSWORD`.
+- **Backend (BE) Multi-Stage Container & Zero-CORS Reverse Proxy:**
+  - Backend Spring Boot được đóng gói bằng Dockerfile multi-stage (Maven build + Eclipse Temurin 17 JRE Alpine) tối ưu dung lượng và thời gian khởi động, sẵn sàng deploy lên container PaaS (Render / Railway / Fly.io / Koyeb / Docker VPS).
+  - `netlify.toml` đóng vai trò API Reverse Proxy Gateway: Toàn bộ request từ trình duyệt gọi tới `/api/v1/*` sẽ được Netlify tự động rewrite sang backend cloud URL tương ứng (`${BACKEND_URL}/api/v1/:splat` 200!). Điều này triệt tiêu hoàn toàn lỗi CORS trên trình duyệt, thống nhất domain và giữ an toàn tuyệt đối cho kiến trúc phân tán.
+  - Spring Security `CorsConfig` và `SecurityConfig` hỗ trợ đồng thời local development, domain Netlify preview (`https://*.netlify.app`) và custom domain sản xuất.
+- **Tự động hóa & Khả năng Vận hành Cục bộ:**
+  - Hỗ trợ `npx netlify dev` cho phép lập trình viên chạy kiểm thử frontend và reverse proxy tới backend cục bộ hoặc đám mây một cách đồng nhất trước khi phát hành.
+  - Cung cấp tài liệu và quy trình triển khai chuẩn 3 bước minh bạch: Database (Neon/Netlify DB) -> Backend (Container) -> Frontend (Netlify).
 
 ---
 

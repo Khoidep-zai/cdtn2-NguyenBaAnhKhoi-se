@@ -44,3 +44,12 @@ data/
 backend/data/
 .neon
 dataset/_it_job_posting/
+
+# Internal agent configs & specifications
+.agent/
+frontend/.agent/
+.agents/
+.codegraph/
+.gemini/
+.specify/
+specs/

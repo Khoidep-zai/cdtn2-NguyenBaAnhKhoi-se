@@ -8,3 +8,4 @@ public record ApplicationRejectedEvent(
         String employerName,
         String rejectionReason
 ) {}
+

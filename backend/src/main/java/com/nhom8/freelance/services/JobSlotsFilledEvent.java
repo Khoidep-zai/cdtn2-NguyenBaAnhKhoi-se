@@ -7,3 +7,4 @@ public record JobSlotsFilledEvent(
         String jobTitle,
         int filledCount
 ) {}
+

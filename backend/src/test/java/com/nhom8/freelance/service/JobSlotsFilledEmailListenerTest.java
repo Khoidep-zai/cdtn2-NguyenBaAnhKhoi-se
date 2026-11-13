@@ -65,3 +65,4 @@ class JobSlotsFilledEmailListenerTest {
         verify(emailService, times(1)).sendJobSlotsFilledEmail(anyString(), anyString(), anyString(), anyInt());
     }
 }
+

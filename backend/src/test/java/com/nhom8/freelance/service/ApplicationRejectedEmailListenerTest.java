@@ -68,3 +68,4 @@ class ApplicationRejectedEmailListenerTest {
         verify(emailService, times(1)).sendApplicationRejectedEmail(anyString(), anyString(), anyString(), anyString(), anyString());
     }
 }
+

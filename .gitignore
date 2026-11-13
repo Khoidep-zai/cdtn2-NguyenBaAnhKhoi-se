@@ -36,7 +36,7 @@ pnpm-debug.log*
 *.sublime-project
 *.sublime-workspace
 
-# Database
+# Database & Datasets
 *.log
 *.sqlite
 *.mv.db
@@ -44,6 +44,7 @@ data/
 backend/data/
 .neon
 dataset/_it_job_posting/
+dataset/output/
 
 # Internal agent configs & specifications
 .agent/

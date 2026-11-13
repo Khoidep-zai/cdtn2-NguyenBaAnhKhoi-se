@@ -7,11 +7,11 @@
 FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 
-# Cache Maven dependencies layer
-COPY pom.xml .
-RUN mvn dependency:go-offline -B || true
+# Optimize Maven memory and GC for cloud builders
+ENV MAVEN_OPTS="-Xmx400m -XX:+UseSerialGC"
 
-# Copy source code and build production artifact
+# Copy pom.xml and source code to package
+COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests -B
 
@@ -32,7 +32,7 @@ USER spring:spring
 EXPOSE 8080
 
 # Configure JVM container memory flags and performance tunings
-ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom"
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+UseSerialGC -Djava.security.egd=file:/dev/./urandom"
 
 # Container healthcheck using 127.0.0.1 (avoiding Alpine IPv6 DNS delay)
 HEALTHCHECK --interval=15s --timeout=3s --start-period=30s --retries=5 \

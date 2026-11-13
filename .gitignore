@@ -42,3 +42,4 @@ pnpm-debug.log*
 *.mv.db
 data/
 backend/data/
+.neon

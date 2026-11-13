@@ -2,8 +2,8 @@
 
 **Dự án:** Nền tảng quản lý freelance & marketplace việc làm part-time cho sinh viên  
 **Học phần:** Chuyên đề tốt nghiệp 2 — Khoa CNTT — Trường ĐH Văn Lang (Mã lớp: 261_71ITGR40303_04)  
-**Người thực hiện kiểm thử:** Hoàng Bảo Long — QA/QC & Backend Lead  
-**Người phê duyệt:** Nguyễn Tấn Tài — Tech Lead & Trưởng nhóm  
+**Người thực hiện kiểm thử:** Phan Văn Hoàng Long — QA/QC & Backend Lead  
+**Người phê duyệt:** Phạm Công Tài — Tech Lead & Trưởng nhóm  
 **Ngày thực hiện kiểm thử:** 13/11/2026 – 27/11/2026 (Nghiệm thu toàn diện Buổi 8 & Buổi 10)  
 **Phiên bản nghiệm thu:** v1.2.0 (Bản hoàn thiện bảo vệ Hội đồng)  
 

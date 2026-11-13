@@ -94,9 +94,9 @@ Dành cho môi trường đóng gói độc lập:
 | **Quản trị viên** | `admin@freelancehub.vn` | Quản Trị Viên Nhóm 8 | Xem thống kê KPI, khóa/mở khóa tài khoản, xóa tin vi phạm |
 | **Nhà tuyển dụng** | `recruiter@thecoffee.vn` | Nguyễn Thị Tuyết (The Coffee House) | Đăng tin part-time, quản lý tin của tôi, đổi trạng thái tin |
 | **Nhà tuyển dụng** | `techlead@innovate.vn` | Trần Văn Minh (Innovate Studio) | Xem danh sách ứng viên, duyệt/từ chối đơn, đánh giá sinh viên |
-| **Sinh viên** | `sinhvien.tai@vanlanguni.vn` | Nguyễn Tấn Tài | Xem đơn đã được duyệt, thực hiện đánh giá NTD sau hoàn thành |
+| **Sinh viên** | `sinhvien.tai@vanlanguni.vn` | Phạm Công Tài | Xem đơn đã được duyệt, thực hiện đánh giá NTD sau hoàn thành |
 | **Sinh viên** | `sinhvien.khoi@vanlanguni.vn` | Nguyễn Bá Anh Khôi | Tìm kiếm/lọc tin, nộp hồ sơ ứng tuyển mới kèm link CV |
-| **Sinh viên** | `sinhvien.long@vanlanguni.vn` | Hoàng Bảo Long | Cập nhật hồ sơ kỹ năng, xem danh sách thông báo hệ thống |
+| **Sinh viên** | `sinhvien.long@vanlanguni.vn` | Phan Văn Hoàng Long | Cập nhật hồ sơ kỹ năng, xem danh sách thông báo hệ thống |
 
 ---
 

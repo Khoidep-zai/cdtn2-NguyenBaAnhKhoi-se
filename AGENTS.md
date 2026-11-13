@@ -81,7 +81,7 @@ Khi người dùng gửi prompt, đối chiếu nhanh bảng dưới đây để
 | Rà soát khớp nối 3 file trước khi code, loại bỏ mâu thuẫn | `/speckit-analyze` | Báo cáo kiểm định chéo (Cross-Artifact Report) |
 | Thực thi viết code tuần tự từng task, kiểm thử và nghiệm thu DoD | `/speckit-implement` | Viết code, chạy test, cập nhật checkbox `[x]` |
 
-### 3.2 Backend (BE) & QA/QC — Trách nhiệm: Hoàng Bảo Long
+### 3.2 Backend (BE) & QA/QC — Trách nhiệm: Phan Văn Hoàng Long
 | Ý định / Từ khóa trong Prompt | Skill điều hướng chính | File mã nguồn / Tài liệu liên quan |
 |---|---|---|
 | Viết Controller, Service, DTO, validate dữ liệu, xử lý lỗi API | `.agent/BE/spring-boot-best-practices` | `backend/src/main/java/com/nhom8/freelance/...` |
@@ -91,7 +91,7 @@ Khi người dùng gửi prompt, đối chiếu nhanh bảng dưới đây để
 | Tối ưu PostgreSQL / schema / connection | `.agent/BE/supabase-postgres-best-practices` | `application-postgres.yml`, `database/` |
 | Lỗi runtime, kết nối DB thất bại, ngoại lệ chưa bắt | `.agent/BE/debugging-and-error-recovery` | `exceptions/GlobalExceptionHandler.java` |
 
-### 3.3 Frontend (FE) & Tech Lead — Trách nhiệm: Nguyễn Tấn Tài
+### 3.3 Frontend (FE) & Tech Lead — Trách nhiệm: Phạm Công Tài
 | Ý định / Từ khóa trong Prompt | Skill điều hướng chính | File mã nguồn / Tài liệu liên quan |
 |---|---|---|
 | Song ngữ VI/EN, đa ngôn ngữ, dịch văn bản, Theme Sáng/Tối | `.agent/FE/react-i18n-theming` | `frontend/src/context/LanguageContext.tsx`, `ThemeContext.tsx`, `styles/variables.css` |
@@ -101,7 +101,7 @@ Khi người dùng gửi prompt, đối chiếu nhanh bảng dưới đây để
 | Tối ưu render danh sách 1.470 tin việc làm, nén bundle Vite | `.agent/FE/performance-optimization` | `frontend/src/pages/JobList.tsx`, `vite.config.ts` |
 | Viết unit test cho Frontend (React components, hooks) | `.agent/FE/vitest-skill` | `frontend/src/**/*.test.tsx` |
 
-### 3.4 Kiểm thử & QA/QC (TESTER) — Trách nhiệm: Hoàng Bảo Long
+### 3.4 Kiểm thử & QA/QC (TESTER) — Trách nhiệm: Phan Văn Hoàng Long
 | Ý định / Từ khóa trong Prompt | Skill điều hướng chính | File mã nguồn / Tài liệu liên quan |
 |---|---|---|
 | Viết Unit test & Mockito cho Spring Boot (Service, Controller) | `.agent/TESTER/junit-5-skill` | `backend/src/test/java/...` |

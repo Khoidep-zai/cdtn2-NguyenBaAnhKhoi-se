@@ -12,9 +12,9 @@
 
 | STT | Họ và tên | MSSV | Vai trò chính | Trách nhiệm cụ thể |
 |---|---|---|---|---|
-| 1 | **Nguyễn Tấn Tài** | 2174802010839 (Trưởng nhóm) | Tech Lead & Frontend Lead | Quản lý kỹ thuật và tiến độ Sprint, xây dựng toàn bộ giao diện Web React 18 TypeScript Vite, thiết kế UI/UX, hỗ trợ Dark Mode và song ngữ VI/EN. |
+| 1 | **Phạm Công Tài** | 2174802010839 (Trưởng nhóm) | Tech Lead & Frontend Lead | Quản lý kỹ thuật và tiến độ Sprint, xây dựng toàn bộ giao diện Web React 18 TypeScript Vite, thiết kế UI/UX, hỗ trợ Dark Mode và song ngữ VI/EN. |
 | 2 | **Nguyễn Bá Anh Khôi** | 2174802010842 (Thành viên) | Business Analyst (BA) & DevOps Lead | Thu thập & đặc tả yêu cầu (SRS, 14 User Stories), thiết kế API Contract, đóng gói cụm container Docker Compose, cấu hình tự động hóa script 1-Click launcher (`run.bat`). |
-| 3 | **Hoàng Bảo Long** | 2174802010850 (Thành viên) | QA/QC & Backend Lead | Thiết kế CSDL 7 bảng chuẩn 3NF, lập trình toàn bộ Backend RESTful API Spring Boot 3 & JWT Stateless, lập và thực thi Kế hoạch kiểm thử Test Plan toàn diện 70/70 ca Pass (45 Unit/Integration + 15 API + 10 UI), xử lý triệt để 12 lỗi trong Bug Log. |
+| 3 | **Phan Văn Hoàng Long** | 2174802010850 (Thành viên) | QA/QC & Backend Lead | Thiết kế CSDL 7 bảng chuẩn 3NF, lập trình toàn bộ Backend RESTful API Spring Boot 3 & JWT Stateless, lập và thực thi Kế hoạch kiểm thử Test Plan toàn diện 70/70 ca Pass (45 Unit/Integration + 15 API + 10 UI), xử lý triệt để 12 lỗi trong Bug Log. |
 
 ---
 

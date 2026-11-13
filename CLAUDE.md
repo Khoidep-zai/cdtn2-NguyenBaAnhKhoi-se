@@ -1,7 +1,7 @@
 # CLAUDE.md — Freelance Marketplace (CDTN2 - Nhóm 8)
 **Dự án:** Chuyên đề Tốt nghiệp 2 (CDTN2) | Khoa CNTT – Đại học Văn Lang  
 **Phân hệ:** Freelance Marketplace (FreelanceHub)  
-**Nhóm sinh viên:** Nhóm 8 (Nguyễn Bá Anh Khôi, Nguyễn Tấn Tài, Hoàng Bảo Long)  
+**Nhóm sinh viên:** Nhóm 8 (Nguyễn Bá Anh Khôi, Phạm Công Tài, Phan Văn Hoàng Long)  
 **Quy chuẩn cốt lõi (Hiến pháp):** `.specify/memory/constitution.md`
 
 ---

@@ -128,7 +128,7 @@
     "tokenType": "Bearer",
     "role": "ROLE_STUDENT",
     "email": "sinhvien.tai@vanlanguni.vn",
-    "fullName": "Nguyễn Tấn Tài"
+    "fullName": "Phạm Công Tài"
   }
 }
 ```

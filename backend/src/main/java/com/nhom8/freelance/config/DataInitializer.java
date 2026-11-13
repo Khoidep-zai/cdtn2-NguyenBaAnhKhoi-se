@@ -123,7 +123,7 @@ public class DataInitializer implements CommandLineRunner {
         User studentTai = getOrCreateUser(
                 "sinhvien.tai@vanlanguni.vn",
                 defaultPasswordHash,
-                "Nguyễn Tấn Tài",
+                "Phạm Công Tài",
                 "0934567890",
                 studentRole,
                 "Trường Đại học Văn Lang",
@@ -247,7 +247,7 @@ public class DataInitializer implements CommandLineRunner {
             notificationRepository.save(Notification.builder()
                     .user(employerCoffee)
                     .title("Có ứng viên mới nộp đơn")
-                    .message("Sinh viên Nguyễn Tấn Tài vừa nộp đơn ứng tuyển cho vị trí 'Barista & Phục vụ ca tối'.")
+                    .message("Sinh viên Phạm Công Tài vừa nộp đơn ứng tuyển cho vị trí 'Barista & Phục vụ ca tối'.")
                     .type("NEW_APPLICATION")
                     .referenceId(app2.getId())
                     .isRead(false)

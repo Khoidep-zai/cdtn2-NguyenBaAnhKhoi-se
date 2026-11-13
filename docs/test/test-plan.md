@@ -2,8 +2,8 @@
 
 **Dự án:** Nền tảng quản lý freelance & marketplace việc làm part-time cho sinh viên  
 **Học phần:** Chuyên đề tốt nghiệp 2 — Khoa CNTT — Trường ĐH Văn Lang (Mã lớp: 261_71ITGR40303_04)  
-**Người lập kế hoạch:** Hoàng Bảo Long — QA/QC & Backend Lead  
-**Người phê duyệt:** Nguyễn Tấn Tài — Tech Lead & Trưởng nhóm  
+**Người lập kế hoạch:** Phan Văn Hoàng Long — QA/QC & Backend Lead  
+**Người phê duyệt:** Phạm Công Tài — Tech Lead & Trưởng nhóm  
 **Phiên bản:** v1.2 (Bản hoàn thiện toàn khóa)  
 
 ---

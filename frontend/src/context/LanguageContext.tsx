@@ -143,7 +143,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'footer.organization': 'Đơn vị chủ quản: Khoa Công nghệ Thông tin — Trường Đại học Văn Lang',
     'footer.address': 'Cơ sở chính: 69/68 Đặng Thùy Trâm, Phường 13, Quận Bình Thạnh, TP. Hồ Chí Minh',
     'footer.contact': 'Tổng đài hỗ trợ sinh viên: 1900 6868 • Email: support@freelancehub.vn',
-    'footer.team': 'Phát triển bởi Nhóm 8: Nguyễn Tấn Tài (PM), Nguyễn Bá Anh Khôi (BA), Hoàng Bảo Long (Tester)',
+    'footer.team': 'Phát triển bởi Nhóm 8: Phạm Công Tài (PM), Nguyễn Bá Anh Khôi (BA), Phan Văn Hoàng Long (Tester)',
   },
   en: {
     // Navigation
@@ -285,7 +285,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'footer.organization': 'Governing Body: Faculty of Information Technology — Van Lang University',
     'footer.address': 'Main Campus: 69/68 Dang Thuy Tram, Ward 13, Binh Thanh Dist, Ho Chi Minh City',
     'footer.contact': 'Student Support Hotline: 1900 6868 • Email: support@freelancehub.vn',
-    'footer.team': 'Engineered by Team 8: Nguyen Tan Tai (PM), Nguyen Ba Anh Khoi (BA), Hoang Bao Long (QA/Tester)',
+    'footer.team': 'Engineered by Team 8: Pham Cong Tai (PM), Nguyen Ba Anh Khoi (BA), Phan Van Hoang Long (QA/Tester)',
   },
 };
 

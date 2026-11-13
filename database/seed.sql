@@ -27,9 +27,9 @@ INSERT INTO users (id, email, password_hash, full_name, phone, role_id, universi
 (1, 'admin@freelancehub.vn', '$2a$10$C1hSAVkq0Gi9/oHZyvY6E.lYxnQiF1/kM9xzSIdWcadOqurdRD9tC', 'Quản Trị Viên Nhóm 8', '0901234567', 1, 'Trường ĐH Văn Lang', 'Khoa CNTT', 'FreelanceHub System', 'TP.HCM', 'Tài khoản quản trị viên hệ thống'),
 (2, 'recruiter@thecoffee.vn', '$2a$10$C1hSAVkq0Gi9/oHZyvY6E.lYxnQiF1/kM9xzSIdWcadOqurdRD9tC', 'Nguyễn Thị Tuyết (The Coffee House)', '0912345678', 2, NULL, NULL, 'The Coffee House Bình Thạnh', 'Bình Thạnh, TP.HCM', 'Chuỗi cà phê chuyên tuyển nhân sự sinh viên theo ca linh hoạt'),
 (3, 'techlead@innovate.vn', '$2a$10$C1hSAVkq0Gi9/oHZyvY6E.lYxnQiF1/kM9xzSIdWcadOqurdRD9tC', 'Trần Văn Minh (Innovate Studio)', '0923456789', 2, NULL, NULL, 'Innovate Media & Tech', 'Quận 1, TP.HCM', 'Agency thiết kế website và sản xuất nội dung số'),
-(4, 'sinhvien.tai@vanlanguni.vn', '$2a$10$C1hSAVkq0Gi9/oHZyvY6E.lYxnQiF1/kM9xzSIdWcadOqurdRD9tC', 'Nguyễn Tấn Tài', '0934567890', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, NULL, 'Sinh viên năm 4 đam mê Backend Java Spring Boot và cơ sở dữ liệu'),
+(4, 'sinhvien.tai@vanlanguni.vn', '$2a$10$C1hSAVkq0Gi9/oHZyvY6E.lYxnQiF1/kM9xzSIdWcadOqurdRD9tC', 'Phạm Công Tài', '0934567890', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, NULL, 'Sinh viên năm 4 đam mê Backend Java Spring Boot và cơ sở dữ liệu'),
 (5, 'sinhvien.khoi@vanlanguni.vn', '$2a$10$C1hSAVkq0Gi9/oHZyvY6E.lYxnQiF1/kM9xzSIdWcadOqurdRD9tC', 'Nguyễn Bá Anh Khôi', '0945678901', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, NULL, 'Sinh viên năm 4 chuyên ngành CNPM, có kinh nghiệm phân tích nghiệp vụ và ReactJS'),
-(6, 'sinhvien.long@vanlanguni.vn', '$2a$10$C1hSAVkq0Gi9/oHZyvY6E.lYxnQiF1/kM9xzSIdWcadOqurdRD9tC', 'Hoàng Bảo Long', '0956789012', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, NULL, 'Sinh viên năm 4 yêu thích UI/UX, kiểm thử phần mềm tự động')
+(6, 'sinhvien.long@vanlanguni.vn', '$2a$10$C1hSAVkq0Gi9/oHZyvY6E.lYxnQiF1/kM9xzSIdWcadOqurdRD9tC', 'Phan Văn Hoàng Long', '0956789012', 3, 'Trường ĐH Văn Lang', 'Công nghệ thông tin', NULL, NULL, 'Sinh viên năm 4 yêu thích UI/UX, kiểm thử phần mềm tự động')
 ON CONFLICT (id) DO NOTHING;
 
 -- 4. Insert Demo Jobs

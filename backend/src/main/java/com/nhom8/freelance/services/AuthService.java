@@ -14,6 +14,7 @@ import com.nhom8.freelance.repositories.RoleRepository;
 import com.nhom8.freelance.repositories.UserRepository;
 import com.nhom8.freelance.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -38,6 +40,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final EmailService emailService;
 
     @Transactional
     public JwtAuthResponse register(RegisterRequest request) {
@@ -73,7 +76,18 @@ public class AuthService {
                 .isActive(true)
                 .build();
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        // Gửi email xác nhận đăng ký tài khoản kèm mã OTP
+        String regOtp = String.format("%06d", 100000 + new java.util.Random().nextInt(900000));
+        if (emailService != null) {
+            try {
+                emailService.sendRegistrationOtpEmail(savedUser.getEmail(), savedUser.getFullName(), regOtp);
+                log.info("Sent registration welcome email with OTP to {}", savedUser.getEmail());
+            } catch (Exception e) {
+                log.warn("Could not send registration email to {}: {}", savedUser.getEmail(), e.getMessage());
+            }
+        }
 
         return login(new LoginRequest() {{
             setEmail(request.getEmail());
@@ -122,7 +136,7 @@ public class AuthService {
             // Delete old tokens for clean state
             passwordResetTokenRepository.deleteByUserId(user.getId());
 
-            String token = UUID.randomUUID().toString();
+            String token = String.format("%06d", 100000 + new java.util.Random().nextInt(900000));
             PasswordResetToken resetToken = PasswordResetToken.builder()
                     .token(token)
                     .user(user)
@@ -130,6 +144,15 @@ public class AuthService {
                     .used(false)
                     .build();
             passwordResetTokenRepository.save(resetToken);
+
+            if (emailService != null) {
+                try {
+                    emailService.sendPasswordResetOtpEmail(user.getEmail(), user.getFullName(), token);
+                    log.info("Sent password reset OTP email to {}", user.getEmail());
+                } catch (Exception e) {
+                    log.warn("Could not send password reset OTP email to {}: {}", user.getEmail(), e.getMessage());
+                }
+            }
 
             result.put("resetTokenPreview", token);
         } else {

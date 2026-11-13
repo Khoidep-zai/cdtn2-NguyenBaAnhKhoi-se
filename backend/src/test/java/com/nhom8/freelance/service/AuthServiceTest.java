@@ -56,6 +56,9 @@ class AuthServiceTest {
     @Mock
     private PasswordResetTokenRepository passwordResetTokenRepository;
 
+    @Mock
+    private com.nhom8.freelance.services.EmailService emailService;
+
     @InjectMocks
     private AuthService authService;
 

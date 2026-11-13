@@ -9,6 +9,8 @@ import com.nhom8.freelance.repositories.ApplicationRepository;
 import com.nhom8.freelance.repositories.JobRepository;
 import com.nhom8.freelance.repositories.UserRepository;
 import com.nhom8.freelance.services.ApplicationAcceptedEvent;
+import com.nhom8.freelance.services.ApplicationRejectedEvent;
+import com.nhom8.freelance.services.JobSlotsFilledEvent;
 import com.nhom8.freelance.services.ApplicationService;
 import com.nhom8.freelance.services.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -170,8 +172,8 @@ class ApplicationServiceTest {
     }
 
     @Test
-    @DisplayName("Nhà tuyển dụng từ chối ứng viên (REJECTED) - Không phát sinh sự kiện gửi email")
-    void updateApplicationStatus_Rejected_DoesNotPublishEvent() {
+    @DisplayName("Nhà tuyển dụng từ chối ứng viên (REJECTED) - Phát sinh sự kiện gửi email từ chối")
+    void updateApplicationStatus_Rejected_PublishesRejectionEvent() {
         when(applicationRepository.findById(100L)).thenReturn(Optional.of(application));
         when(applicationRepository.save(any(Application.class))).thenReturn(application);
 
@@ -180,7 +182,48 @@ class ApplicationServiceTest {
         assertNotNull(updated);
         assertEquals("REJECTED", application.getStatus());
         verify(notificationService).createNotification(eq(2L), anyString(), anyString(), eq("APPLICATION_STATUS"), anyLong());
-        verify(eventPublisher, never()).publishEvent(any());
+
+        ArgumentCaptor<ApplicationRejectedEvent> eventCaptor = ArgumentCaptor.forClass(ApplicationRejectedEvent.class);
+        verify(eventPublisher, times(1)).publishEvent(eventCaptor.capture());
+        ApplicationRejectedEvent event = eventCaptor.getValue();
+        assertEquals(100L, event.applicationId());
+        assertEquals("student@test.com", event.recipientEmail());
+        assertEquals("Student Test", event.studentName());
+        assertEquals("Lập trình Web", event.jobTitle());
+        assertEquals("Công ty ABC", event.employerName());
+        assertEquals("Không đủ kinh nghiệm", event.rejectionReason());
+    }
+
+    @Test
+    @DisplayName("Duyệt ứng viên đủ chỉ tiêu slotsAvailable - Phát sinh sự kiện thông báo nhà tuyển dụng đã đủ người")
+    void updateApplicationStatus_Accepted_WhenSlotsFilled_PublishesJobSlotsFilledEvent() {
+        when(applicationRepository.findById(100L)).thenReturn(Optional.of(application));
+        when(applicationRepository.save(any(Application.class))).thenReturn(application);
+        // Job slotsAvailable = 1, countByJobIdAndStatus = 1 -> Đã đủ người
+        when(applicationRepository.countByJobIdAndStatus(eq(10L), eq("ACCEPTED"))).thenReturn(1L);
+
+        Application updated = applicationService.updateApplicationStatus(100L, "ACCEPTED", null);
+
+        assertNotNull(updated);
+        assertEquals("ACCEPTED", application.getStatus());
+
+        ArgumentCaptor<Object> eventCaptor = ArgumentCaptor.forClass(Object.class);
+        verify(eventPublisher, times(2)).publishEvent(eventCaptor.capture());
+
+        var publishedEvents = eventCaptor.getAllValues();
+        assertTrue(publishedEvents.stream().anyMatch(e -> e instanceof ApplicationAcceptedEvent));
+        assertTrue(publishedEvents.stream().anyMatch(e -> e instanceof JobSlotsFilledEvent));
+
+        JobSlotsFilledEvent filledEvent = (JobSlotsFilledEvent) publishedEvents.stream()
+                .filter(e -> e instanceof JobSlotsFilledEvent)
+                .findFirst()
+                .orElse(null);
+        assertNotNull(filledEvent);
+        assertEquals(10L, filledEvent.jobId());
+        assertEquals("employer@test.com", filledEvent.employerEmail());
+        assertEquals("Công ty ABC", filledEvent.employerName());
+        assertEquals("Lập trình Web", filledEvent.jobTitle());
+        assertEquals(1, filledEvent.filledCount());
     }
 
     @Test

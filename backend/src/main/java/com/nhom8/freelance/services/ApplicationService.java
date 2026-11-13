@@ -130,6 +130,7 @@ public class ApplicationService {
         }
 
         boolean newlyAccepted = "ACCEPTED".equalsIgnoreCase(status) && !"ACCEPTED".equalsIgnoreCase(application.getStatus());
+        boolean newlyRejected = "REJECTED".equalsIgnoreCase(status) && !"REJECTED".equalsIgnoreCase(application.getStatus());
 
         application.setStatus(status);
         if (rejectionReason != null) {
@@ -162,6 +163,43 @@ public class ApplicationService {
                             application.getStudent().getFullName(),
                             application.getJob().getTitle(),
                             employerName
+                    )
+            );
+
+            // Check if job slots are now fully filled
+            long acceptedCount = applicationRepository.countByJobIdAndStatus(application.getJob().getId(), "ACCEPTED");
+            Integer slotsAvailable = application.getJob().getSlotsAvailable();
+            if (slotsAvailable != null && slotsAvailable > 0 && acceptedCount >= slotsAvailable) {
+                User employer = application.getJob().getEmployer();
+                String empEmail = employer != null ? employer.getEmail() : null;
+                if (empEmail != null && !empEmail.isBlank()) {
+                    eventPublisher.publishEvent(
+                            new JobSlotsFilledEvent(
+                                    application.getJob().getId(),
+                                    empEmail,
+                                    employerName,
+                                    application.getJob().getTitle(),
+                                    (int) acceptedCount
+                            )
+                    );
+                }
+            }
+        }
+
+        if (newlyRejected && eventPublisher != null) {
+            String employerName = application.getJob().getEmployer().getCompanyName();
+            if (employerName == null || employerName.isBlank()) {
+                employerName = application.getJob().getEmployer().getFullName();
+            }
+
+            eventPublisher.publishEvent(
+                    new ApplicationRejectedEvent(
+                            saved.getId(),
+                            application.getStudent().getEmail(),
+                            application.getStudent().getFullName(),
+                            application.getJob().getTitle(),
+                            employerName,
+                            rejectionReason
                     )
             );
         }

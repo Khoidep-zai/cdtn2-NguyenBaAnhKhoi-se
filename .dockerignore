@@ -1,0 +1,28 @@
+# ==============================================================================
+# .dockerignore — Root-level Docker Build Context Optimization (CDTN2 - Nhóm 8)
+# Loại bỏ triệt để các tệp không cần thiết giúp docker build truyền context cực nhanh (< 20MB)
+# ==============================================================================
+node_modules
+target
+dist
+.git
+.gitignore
+.env*
+.idea
+.vscode
+docs
+specs
+fix-bug-log
+dataset
+scratch
+*.drawio
+*.png
+*.jpg
+*.log
+coverage
+.agent
+.agents
+.codegraph
+.gemini
+.specify
+

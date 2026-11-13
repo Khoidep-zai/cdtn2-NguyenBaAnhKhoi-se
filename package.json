@@ -1,0 +1,27 @@
+{
+  "name": "cdtn2-nhom8-freelance-platform",
+  "version": "1.0.0",
+  "description": "Nền tảng Tuyển dụng Sinh viên Freelance & Part-time (CDTN2 - Nhóm 8)",
+  "scripts": {
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down -v",
+    "docker:logs": "docker compose logs -f",
+    "docker:ps": "docker compose ps",
+    "docker:restart": "docker compose restart",
+    "test:backend": "cd backend && mvn test",
+    "test:frontend": "cd frontend && npm run build"
+  },
+  "keywords": [
+    "freelance",
+    "part-time",
+    "spring-boot",
+    "react",
+    "vite",
+    "docker",
+    "postgresql",
+    "cdtn2"
+  ],
+  "author": "Nhom 8 - Nguyen Ba Anh Khoi, Phan Van Hoang Long, Pham Cong Tai",
+  "license": "ISC"
+}
+

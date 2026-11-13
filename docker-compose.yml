@@ -1,11 +1,24 @@
-version: '3.8'
+# ==============================================================================
+# docker-compose.yml — Đóng gói ứng dụng web nhiều tầng theo chuẩn SE CDTN1 & CDTN2
+# Tái lập toàn bộ hệ thống bằng 2 lệnh:
+#   cp .env.example .env && docker compose up -d --build
+# ==============================================================================
 
 services:
-  # 1a. Database Service: PostgreSQL
+  # 1. Cơ sở dữ liệu quan hệ PostgreSQL 16 Alpine
+  # Đã cấu hình tối ưu bộ đệm, tắt synchronous_commit và tinh chỉnh checkpoint để nạp 1.470+ việc làm mượt mà
   postgres_db:
     image: postgres:16-alpine
     container_name: nhom8_freelance_postgres
-    restart: always
+    restart: unless-stopped
+    command: >
+      postgres
+      -c shared_buffers=256MB
+      -c work_mem=16MB
+      -c max_connections=100
+      -c synchronous_commit=off
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
     environment:
       POSTGRES_DB: ${DB_NAME:-freelance_db}
       POSTGRES_USER: ${DB_USER:-postgres}
@@ -19,15 +32,74 @@ services:
       - freelance_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-freelance_db}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 3s
+      timeout: 2s
+      retries: 15
+      start_period: 3s
 
-  # 1b. Database Service: MySQL
+  # 2. Máy chủ Backend REST API (Spring Boot 3.2.x + Temurin 17 JRE Alpine)
+  # BẮT BUỘC chờ postgres_db đạt trạng thái healthy mới khởi động, chống hoàn toàn lỗi Connection Refused
+  backend_api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: nhom8-freelance-backend:latest
+    container_name: nhom8_freelance_backend
+    restart: unless-stopped
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-postgres}
+      DB_HOST: postgres_db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-freelance_db}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-12345}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_db:5432/${DB_NAME:-freelance_db}
+      JWT_SECRET: ${JWT_SECRET:-9a7f8e3b2c1d0f5e4a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
+      SERVER_PORT: 8080
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    networks:
+      - freelance_network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:8080/api/v1/jobs?page=0&size=1 || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 25s
+
+  # 3. Máy chủ Frontend Web & Reverse Proxy (React Vite SPA + Nginx Alpine)
+  # Chờ backend_api healthy mới khởi động; Nginx tích hợp Zero-CORS API reverse proxy sang backend
+  frontend_web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: nhom8-freelance-frontend:latest
+    container_name: nhom8_freelance_frontend
+    restart: unless-stopped
+    depends_on:
+      backend_api:
+        condition: service_healthy
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    networks:
+      - freelance_network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1:80/ || exit 1"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # 4. (Tùy chọn) Cơ sở dữ liệu MySQL 8.0 (Chỉ khởi chạy khi gọi: docker compose --profile mysql up -d)
   mysql_db:
+    profiles: ["mysql"]
     image: mysql:8.0
     container_name: nhom8_freelance_mysql
-    restart: always
+    restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${DB_NAME:-freelance_db}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-12345}
@@ -47,48 +119,13 @@ services:
       timeout: 5s
       retries: 5
 
-  # 2. Backend REST API Service (Spring Boot)
-  backend_api:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: nhom8_freelance_backend
-    restart: on-failure
-    environment:
-      SPRING_PROFILES_ACTIVE: ${DB_TYPE:-postgres}
-      DB_HOST: ${DB_HOST:-postgres_db}
-      DB_PORT: ${DB_PORT:-5432}
-      DB_NAME: ${DB_NAME:-freelance_db}
-      DB_USER: ${DB_USER:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-12345}
-      JWT_SECRET: ${JWT_SECRET:-9a7f8e3b2c1d0f5e4a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f}
-      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
-      SERVER_PORT: 8080
-    ports:
-      - "${BACKEND_PORT:-8080}:8080"
-    networks:
-      - freelance_network
-
-  # 3. Frontend Web Service (React + Nginx)
-  frontend_web:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: nhom8_freelance_frontend
-    restart: always
-    depends_on:
-      - backend_api
-    ports:
-      - "${FRONTEND_PORT:-3000}:80"
-    networks:
-      - freelance_network
-
 networks:
   freelance_network:
     driver: bridge
+    name: nhom8_freelance_network
 
 volumes:
   postgres_data:
-    driver: local
+    name: nhom8_postgres_data
   mysql_data:
-    driver: local
+    name: nhom8_mysql_data

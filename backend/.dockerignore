@@ -1,0 +1,11 @@
+# ==============================================================================
+# backend/.dockerignore — Build context optimization for Spring Boot Dockerfile
+# ==============================================================================
+target
+.git
+.idea
+.vscode
+*.log
+.mvn/wrapper/*.jar
+.codegraph
+

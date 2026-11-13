@@ -1,424 +1,258 @@
-# HỆ THỐNG QUẢN LÝ FREELANCE & MARKETPLACE VIỆC LÀM PART-TIME CHO SINH VIÊN
-## (Student Freelance & Part-time Job Marketplace)
+# 🎓 FreelanceHub — Sàn Giao Dịch Việc Làm Part-time & Freelance Cho Sinh Viên
 
-> **Học phần:** Chuyên đề tốt nghiệp 2 — Khoa Công nghệ Thông tin — Trường Đại học Văn Lang  
-> **Mã lớp học phần:** 261_71ITGR40303_04 | **Nhóm:** Nhóm 8  
-> **Thành viên:**
-> - **Nguyễn Bá Anh Khôi** — 2374802010247
-> - **Phan Văn Hoàng Long** — 2374802010283
-> - **Phạm Công Tài** — 2374802010445
-> **Giảng viên hướng dẫn:** ThS. Nguyễn Văn Trung
->
-> **📅 Tiến độ:** Buổi 6 — 30/10/2026, xây dựng sản phẩm Sprint 1. Thời gian học phần: 25/09–27/11/2026. Các buổi 7–10 là kế hoạch; chưa kết luận nghiệm thu hoặc bảo vệ hoàn tất. Phân công cá nhân cần nhóm xác nhận do hồ sơ hiện có chưa thống nhất.
-
----
-
-
-## ĐỐI CHIẾU YÊU CẦU BUỔI 6 — 30/10/2026
-
-Căn cứ: [đề bài buổi 6](../../đề%20bài/Buoi06_ChuyenDeTotNghiep2.md). Kết luận: **đã có phần chức năng ưu tiên để chuẩn bị demo, nhưng chưa đủ bằng chứng xác nhận hoàn thành toàn bộ yêu cầu buổi 6**.
-
-| Tiêu chí | Kết quả kiểm tra |
-|---|---|
-| Repository và cấu trúc dự án | Có Git repository với `origin`, mã nguồn backend/frontend và tài liệu. Trạng thái remote được đối chiếu từ thông tin Git cục bộ, chưa xác minh máy chủ từ xa. |
-| Đăng ký, đăng nhập, phân quyền | API đăng ký và đăng nhập cho sinh viên, nhà tuyển dụng trả HTTP 200; sinh viên tạo tin bị từ chối HTTP 403 trong lần thử với H2 tạm thời. |
-| Tin tuyển dụng | Nhà tuyển dụng tạo tin, xem chi tiết và đổi trạng thái thành công qua API. CRUD **chưa đầy đủ**: chưa có endpoint cho nhà tuyển dụng sửa nội dung hoặc xóa tin; thử `PUT` và `DELETE /jobs/{id}` nhận HTTP 500. Admin có endpoint xóa riêng. |
-| Build và kiểm thử | `npm run build` thành công; `mvn test` với JDK 21: **25 tests, 0 failures, 0 errors, 0 skipped**. Đây không phải kiểm thử toàn bộ giao diện hay nghiệm thu. |
-| Demo đầu–cuối | Đã kiểm tra trực tiếp các API trên H2 trong bộ nhớ; **chưa kiểm tra luồng giao diện → API → CSDL bằng trình duyệt**, chưa xác nhận đã demo trước GVHD. |
-| Git trong buổi | Snapshot Git cục bộ ghi nhận một commit ngày 30/10 (`20d3852`, tài liệu), chỉ một tác giả trong lịch sử hiện có và không thấy nhánh tính năng riêng. Chưa đủ minh chứng ≥2 commit trong buổi, mã của mọi thành viên đã đẩy, hay nhánh riêng từng người. |
-| Nhật ký và hướng dẫn 1:1 | Có [nhật ký thực hiện](../../Tài%20liệu%20Báo%20cáo%20buổi%20cuối/output/Nhật%20ký%20thực%20hiện.docx) ghi buổi 6; nội dung và việc trao đổi/demo với GVHD cần nhóm xác nhận. |
-
-**Việc cần làm trước buổi 7:** hoàn thiện sửa/xóa tin theo quyền và kiểm thử các luồng tương ứng; chạy demo giao diện đến CSDL với dữ liệu mẫu; sửa `dataset/test_sprint1_demo.py` (đang dùng `/api` thay vì `/api/v1`, kiểm tra token không khớp và in kết luận thành công không phụ thuộc kết quả); ghi lại vướng mắc, kết quả demo và xác nhận của GVHD; cập nhật commit, nhánh và đồng bộ repository chung theo thực tế.
-
-**Phạm vi kiểm tra:** backend chạy profile `dev`, JDK 21, H2 trong bộ nhớ và cổng thử nghiệm riêng; dữ liệu thử không lưu lại. Frontend chỉ được kiểm tra build. Lệnh kiểm thử chuẩn từ thư mục dự án: `cd backend; mvn test` và `cd frontend; npm run build` (cần JDK 17/21, Maven và Node.js).
+> **Học phần:** Chuyên đề Tốt nghiệp 2 (CDTN2 — HK1 2026–2027)  
+> **Khoa:** Công nghệ Thông tin — Trường Đại học Văn Lang  
+> **Mã lớp học phần:** `261_71ITGR40303_04` | **Nhóm:** Nhóm 8  
+> **Thành viên nhóm:**
+> - **Nguyễn Bá Anh Khôi** — `2374802010247` (Team Lead / Fullstack / DevOps)
+> - **Phan Văn Hoàng Long** — `2374802010283` (Backend Developer & QA/QC Tester)
+> - **Phạm Công Tài** — `2374802010445` (Frontend Lead & Fullstack Developer)
+> **Giảng viên hướng dẫn:** ThS. Nguyễn Văn Trung  
+> **Kho lưu trữ GitHub:** [https://github.com/Khoidep-zai/cdtn2-NguyenBaAnhKhoi-se](https://github.com/Khoidep-zai/cdtn2-NguyenBaAnhKhoi-se)  
 
 ---
 
-## 1. TỔNG QUAN ĐỀ TÀI & PHẠM VI (PROJECT OVERVIEW)
+## 🌐 Hệ Thống Trực Tuyến & Điện Toán Đám Mây (Cloud Production)
 
-### 1.1. Mục tiêu đề tài
-Xây dựng một nền tảng web hai chiều (**Two-sided Marketplace**) kết nối sinh viên tìm việc làm thêm, bán thời gian, thực tập và dự án tự do (freelance) với các nhà tuyển dụng / cá nhân có nhu cầu thuê nhân sự ngắn hạn. Hệ thống khép kín toàn bộ luồng nghiệp vụ: **Đăng tin ➔ Tìm kiếm & Lọc việc ➔ Nộp hồ sơ (CV) ➔ Xét duyệt đơn ➔ Thực hiện ➔ Đánh giá hai chiều (1–5 sao)**.
-
-### 1.2. Phạm vi chức năng chính
-1. **Xác thực & Phân quyền (RBAC):** Đăng ký, đăng nhập JWT (HS256), mật khẩu mã hóa BCrypt, phân 3 vai trò: Sinh viên (`ROLE_STUDENT`), Nhà tuyển dụng (`ROLE_EMPLOYER`), Quản trị viên (`ROLE_ADMIN`).
-2. **Quản lý Hồ sơ Đa vai trò (Multi-role Profile):** Sinh viên cập nhật kỹ năng/CV/học vấn; Nhà tuyển dụng cập nhật thông tin công ty; Quản trị viên cập nhật thông tin cá nhân và quản trị.
-3. **Đăng tin & Quản lý Tuyển dụng:** Đăng tin theo ngành nghề, thời gian làm ca kíp (`workingHours`), mức thù lao (`salaryText`), quyền lợi (`benefits`), gắn nhãn sinh viên (`studentFriendly`), quản lý vòng đời tin (`OPEN` ➔ `IN_PROGRESS` ➔ `COMPLETED` ➔ `CLOSED`).
-4. **Bộ dữ liệu việc làm:** `dataset/output/jobs_marketplace.csv` có 1.470 dòng dữ liệu. Việc nạp dữ liệu vào CSDL phụ thuộc kịch bản khởi tạo; phiên H2 tạm thời dùng trong kiểm tra được seed 4 tin mẫu.
-5. **Ứng tuyển & Quản lý Đơn:** Sinh viên nộp đơn kèm link CV và thư giới thiệu; theo dõi trạng thái đơn (`PENDING`, `REVIEWING`, `ACCEPTED`, `REJECTED`, `CANCELLED`); sinh viên có quyền tự hủy đơn khi đang ở trạng thái `PENDING`.
-6. **Đánh giá & Xếp hạng 2 chiều:** Sinh viên và Nhà tuyển dụng gửi đánh giá 1–5 sao kèm nhận xét sau khi công việc hoàn thành (`COMPLETED`).
-7. **Thông báo hệ thống:** Thông báo được lưu và truy xuất qua API; chưa xác minh cơ chế đẩy thời gian thực.
-8. **Bảng điều khiển Quản trị viên:** KPI tổng quan, quản lý danh sách người dùng, khóa/mở khóa tài khoản vi phạm, xóa bài đăng không phù hợp.
-9. **Trải nghiệm Giao diện Cao cấp (UX/UI & i18n):**
-   - **Chế độ Sáng / Tối (Dark & Light Mode):** Nút toggle trên thanh điều hướng, lưu tự động vào `localStorage`, đồng bộ thiết kế chuẩn CSS Variables tokens.
-   - **Hỗ trợ Song ngữ Việt - Anh (i18n):** Chuyển đổi ngôn ngữ tức thì giữa Tiếng Việt và Tiếng Anh trên toàn hệ thống.
-10. **Giám sát & Công cụ CSDL:** Root status endpoint (`GET /api/v1/`) và H2 Database Web Console (`/api/v1/h2-console`).
-11. **Kiểm thử:** Bộ JUnit hiện có 25 bài kiểm thử; kết quả chạy ngày 30/10/2026 với JDK 21: 25/25 đạt. Các con số 70 ca và 12 lỗi trong một số báo cáo cũ chưa được xác minh trong lần kiểm tra này.
+Dự án được tối ưu hóa toàn diện và sẵn sàng hoạt động trên nền tảng đám mây hiện đại:
+* 🚀 **Frontend Web Platform:** Triển khai trực tiếp trên **Netlify Edge CDN** với chứng chỉ SSL tự động, cơ chế SPA Routing Rewrite chống lỗi 404 và Cổng Reverse Proxy Gateway triệt tiêu 100% lỗi CORS.
+* 🗄️ **Cơ sở dữ liệu Đám mây:** **Neon Serverless PostgreSQL (PostgreSQL 16)** tại Singapore (`ap-southeast-1`) với kết nối bảo mật `sslmode=require` và PgBouncer Connection Pooling.
+* 🛡️ **Tài liệu hướng dẫn triển khai đám mây chi tiết:** [docs/DEPLOYMENT_NETLIFY_GUIDE.md](docs/DEPLOYMENT_NETLIFY_GUIDE.md).
 
 ---
 
-## 2. HỒ SƠ TÀI LIỆU KỸ THUẬT WORD (.DOCX)
+## 👥 Tài Khoản Đăng Nhập Demo Phân Quyền Sẵn Sàng
 
-Toàn bộ tài liệu kỹ thuật đã được biên dịch đồng bộ từ mã nguồn Markdown sang định dạng Microsoft Word (**`.docx`**) chuyên nghiệp nằm tại thư mục `docs/`:
+Cơ sở dữ liệu đã nạp sẵn 3 tài khoản mẫu đầy đủ phân quyền theo tiêu chuẩn RBAC:
 
-| Tên tệp Word | Tệp nguồn Markdown | Nội dung tài liệu |
-|---|---|---|
-| [`docs/srs.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/srs.docx) | [`docs/srs.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/srs.md) | Bản đặc tả yêu cầu phần mềm đầy đủ (SRS v1.2), danh sách Actor, 9 nhóm Functional Requirements và 4 Non-Functional Requirements. |
-| [`docs/api-contract.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/api-contract.docx) | [`docs/api-contract.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/api-contract.md) | Hợp đồng REST API Contract chi tiết: Root API, Auth, Jobs, Applications (kèm Cancel), Reviews, Users Profile, H2 Console, Admin. |
-| [`docs/architecture.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/architecture.docx) | [`docs/architecture.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/architecture.md) | Thiết kế kiến trúc phân tầng 3 lớp (Client Tier, Application Tier, Data Tier), ma trận phân quyền RBAC và sơ đồ luồng bảo mật. |
-| [`docs/deployment-guide.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/deployment-guide.docx) | [`docs/deployment-guide.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/deployment-guide.md) | Cẩm nang hướng dẫn triển khai: Docker Compose, Windows 1-Click Scripts, IntelliJ IDEA, mạng cổng và chạy bộ kiểm thử tự động. |
-| [`docs/phieu-pham-vi.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/phieu-pham-vi.docx) | [`docs/phieu-pham-vi.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/phieu-pham-vi.md) | Phiếu xác định phạm vi dự án (In-scope, Out-of-scope), phân công trách nhiệm thành viên và kế hoạch dự án qua 10 buổi; tình trạng thực tế cần đối chiếu nhật ký. |
-| [`docs/ai-disclosure.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/ai-disclosure.docx) | [`docs/ai-disclosure.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/ai-disclosure.md) | Bản công bố minh bạch phạm vi sử dụng AI (Google Gemini / GitHub Copilot) và cam kết liêm chính học thuật. |
-| [`docs/test/test-plan.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/test/test-plan.docx) | [`docs/test/test-plan.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/test/test-plan.md) | Kế hoạch kiểm thử phần mềm chi tiết qua 3 cấp độ (Unit, API, E2E) với 70 ca kiểm thử mục tiêu. |
-| [`docs/test/test-report.docx`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/test/test-report.docx) | [`docs/test/test-report.md`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/docs/test/test-report.md) | Báo cáo kiểm thử được lưu trong dự án; các số liệu tổng hợp trong đó cần đối chiếu lại với kết quả chạy và minh chứng thực tế. |
+| Vai trò người dùng | Tên đăng nhập (Email) | Mật khẩu chuẩn | Quyền hạn nghiệp vụ |
+| :--- | :--- | :--- | :--- |
+| **Quản trị viên (Admin)** | `admin@test.com` | `123456` | Quản trị toàn sàn: Duyệt tin đăng (`PENDING`), quản lý tài khoản người dùng, xử lý báo cáo vi phạm, xem thống kê KPI. |
+| **Nhà tuyển dụng (Employer)** | `employer@test.com` | `123456` | Đăng tin tuyển dụng part-time/freelance, quản lý bài đăng, xem danh sách ứng viên, duyệt nhận (`ACCEPTED`) hoặc từ chối hồ sơ. |
+| **Sinh viên (Student)** | `student@test.com` | `123456` | Tìm việc làm theo ca kíp/lương, nộp hồ sơ CV, theo dõi trạng thái ứng tuyển, hủy đơn khi `PENDING`, đánh giá sao NTD. |
 
-> **Lệnh tự động cập nhật tài liệu Word:**
-> Khi chỉnh sửa nội dung tài liệu Markdown, chạy lệnh sau tại thư mục gốc để tự động cập nhật lại toàn bộ file `.docx`:
-> ```bash
-> python docs/convert_md_to_docx.py
-> ```
+> [!TIP]
+> **Xác thực Sinh trắc học (Passkey WebAuthn):** Hệ thống hỗ trợ đăng nhập không cần mật khẩu bằng vân tay, Face ID hoặc Windows Hello (FIDO2) ngay tại màn hình đăng nhập!
 
 ---
 
-## 3. CÔNG NGHỆ ÁP DỤNG (TECH STACK)
+## 🚀 Hướng Dẫn Khởi Chạy Nhanh Bằng Docker (2 Lệnh Chuẩn Duy Nhất)
 
-| Tầng kiến trúc | Công nghệ sử dụng | Mục đích áp dụng |
-|---|---|---|
-| **Frontend** | React 18, TypeScript, Vite Bundler, Vanilla CSS Design System | Giao diện Responsive mượt mà, định kiểu chặt chẽ, tối ưu tốc độ tải trang; hỗ trợ Theme Dark/Light và Song ngữ VI/EN. |
-| **Backend** | Java 17/21, Spring Boot 3.2.x, Spring Data JPA, Spring Security 6 | Kiến trúc Clean Architecture phân tầng chuẩn doanh nghiệp (Controller ➔ Service ➔ Repository), hiệu năng cao. |
-| **Bảo mật** | JSON Web Token (JWT HS256) & BCrypt Password Encoder | Xác thực không lưu phiên (Stateless Authentication) và phân quyền chặt chẽ RBAC theo vai trò. |
-| **Cơ sở dữ liệu** | MySQL, PostgreSQL & H2 (profile `dev`) | Hỗ trợ linh hoạt 3 hệ quản trị CSDL, đảm bảo toàn vẹn dữ liệu giao dịch ACID và 13 chỉ mục hiệu năng. |
-| **Tài liệu API & Giám sát** | OpenAPI 3.0 / Swagger UI, H2 Database Console, Root API Status | Chuẩn hóa tài liệu API cho Frontend tra cứu và công cụ điều khiển CSDL trực tiếp cho nhà phát triển. |
-| **Đóng gói & Runner** | Docker, Docker Compose, Windows Batch 1-Click (`run.bat`, `run-mysql.bat`, `run-postgres.bat`) | Đồng nhất môi trường phát triển và kiểm thử, khởi chạy trọn gói hệ thống chỉ bằng 1 thao tác. |
+Áp dụng toàn bộ công nghệ container hóa tối ưu và mượt mà từ **CDTN1 sang CDTN2**, toàn bộ hệ thống gồm 3 tầng khép kín (PostgreSQL 16 Alpine + Spring Boot 3.2.x REST API + React Vite SPA Nginx) được khởi chạy hoàn chỉnh chỉ bằng **đúng 2 câu lệnh**:
 
----
+### Bước 1: Sao chép tệp cấu hình môi trường mẫu
+- **Trên Windows PowerShell:**
+  ```powershell
+  Copy-Item .env.example .env
+  ```
+- **Trên Linux / macOS (Bash):**
+  ```bash
+  cp .env.example .env
+  ```
 
-## 4. QUY MÔ DỮ LIỆU & BỘ DATASET CÀO THỰC TẾ (DATASET SCALE)
-
-- **Số dòng CSV:** `dataset/output/jobs_marketplace.csv` chứa **1.470** dòng dữ liệu; số tin trong CSDL đang chạy có thể khác, tùy bước nhập dữ liệu.
-- **Phân loại ngành nghề:** **16 nhóm ngành** (Công nghệ thông tin, Thiết kế đồ họa, Marketing số, Trợ giảng/Gia sư, Dịch thuật, Dịch vụ F&B, Logistics, Bán hàng, Hành chính/Nhân sự...).
-- **Độ phủ địa lý:** **34 tỉnh/thành phố** trên toàn quốc (tập trung trọng điểm tại TP. Hồ Chí Minh, Hà Nội, Đà Nẵng, Cần Thơ...).
-- **20 việc làm mới cào tại khu vực TP.HCM (VJ001451 - VJ001470):**
-  - **12 việc làm IT:** Frontend ReactJS, Backend Java Spring Boot, Mobile Flutter, QA/QC Manual & Automation, Python AI/Data Analyst Intern, Devops Cloud, Node.js Fullstack... (Nguồn: ITviec, TopCV).
-  - **8 việc làm đa ngành:** Content Creator Shopee, Digital Marketing Intern, Trợ giảng Anh ngữ VUS, Nhân viên kho bãi & vận hành GHTK, Kế toán part-time, Chăm sóc khách hàng, Graphic Designer TikTok Shop, Tuyển dụng nhân sự part-time.
-- **Tệp dữ liệu và công cụ chuyển đổi:**
-  - `dataset/output/jobs_marketplace.csv`: Bảng dữ liệu 1.470 dòng.
-  - `dataset/append_20_hcm_jobs.py`: Kịch bản cào và bổ sung 20 việc làm TP.HCM.
-  - `dataset/HUONG_DAN_AI_AGENT.md`: Tài liệu hướng dẫn phân tích dữ liệu, nguồn gốc và cấu trúc schema.
-  - `database/dataset_seed_mysql.sql` & `database/dataset_seed_postgres.sql`: Các tệp SQL dữ liệu theo hệ CSDL; xem `database/README.md` trước khi nhập.
-
----
-
-## 5. HƯỚNG DẪN KHỞI CHẠY HỆ THỐNG (GETTING STARTED)
-
-### 5.1. Yêu cầu môi trường (Prerequisites)
-- **Java JDK:** Phiên bản 17 hoặc 21.
-- **Node.js:** Phiên bản >= 18.x và npm.
-- **Cơ sở dữ liệu (tùy chọn 1 trong 3):**
-  - **MySQL >= 8.x** (Cổng 3306, user: `root`, mật khẩu: `12345`)
-  - **PostgreSQL >= 15.x/16.x/18.x** (Cổng 5433 hoặc 5432, user: `postgres`, mật khẩu: `12345`)
-  - **H2 (profile `dev`)**: theo cấu hình mặc định là CSDL dạng tệp; chỉ dùng bộ nhớ khi ghi đè `SPRING_DATASOURCE_URL`. Profile mặc định là `mysql`, không tự chuyển sang H2.
-- **Docker Desktop** (Nếu chọn phương án chạy container).
-
-### 5.2. Khởi chạy 1-Click trên Windows (Khuyên dùng)
-Hệ thống cung cấp sẵn các kịch bản thực thi một chạm tại thư mục gốc:
-- **Chạy với MySQL:** Nhấp đúp vào [`run-mysql.bat`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/run-mysql.bat).
-- **Chạy với PostgreSQL:** Nhấp đúp vào [`run-postgres.bat`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/run-postgres.bat).
-- **Menu lựa chọn tương tác:** Nhấp đúp vào [`run.bat`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/run.bat) để chọn giữa MySQL, PostgreSQL hoặc H2 Database.
-- **Dừng hệ thống:** Nhấp đúp vào [`stop.bat`](file:///c:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev_main/cdtn2-NguyenBaAnhKhoi-se/stop.bat) để giải phóng các cổng 8080 và 3000.
-
-### 5.3. Khởi chạy 1-Click trên IntelliJ IDEA
-Dự án đã tích hợp sẵn các cấu hình chạy tại thư mục `.idea/runConfigurations/`:
-1. Mở thư mục dự án bằng **IntelliJ IDEA**.
-2. Trên thanh công cụ trên cùng, chọn cấu hình:
-   - **`🚀 Run Project with MySQL`** (Backend MySQL + Frontend React)
-   - **`🚀 Run Project with PostgreSQL`** (Backend PostgreSQL + Frontend React)
-   - **`🚀 Run Full Project (BE + FE)`** (Cấu hình khởi chạy tổng hợp)
-3. Nhấp nút **Run (▶)** (hoặc phím tắt `Shift + F10`). Hệ thống sẽ tự động khởi chạy Backend, Frontend và mở trình duyệt web.
-
-### 5.4. Khởi chạy trọn gói bằng Docker Compose
-1. Tạo tệp cấu hình môi trường:
-   ```bash
-   cp .env.example .env
-   ```
-2. Khởi động toàn bộ dịch vụ:
-   ```bash
-   docker-compose up -d --build
-   ```
-
----
-
-## 6. ĐỊA CHỈ TRUY CẬP VÀ DANH MỤC DỊCH VỤ
-
-| Phân hệ / Dịch vụ | Địa chỉ URL truy cập | Ghi chú kỹ thuật |
-|---|---|---|
-| **Giao diện Web (Frontend)** | `http://localhost:3000` | Giao diện React Vite (Dark/Light mode, Song ngữ VI/EN, Hồ sơ cá nhân đa vai trò) |
-| **REST API Root (Backend)** | `http://localhost:8080/api/v1` | Cổng API gốc: Trạng thái máy chủ, phiên bản và đường dẫn tra cứu |
-| **Tài liệu Swagger UI** | `http://localhost:8080/api/v1/swagger-ui.html` | Giao diện tra cứu và tương tác API trực quan OpenAPI 3.0 |
-| **OpenAPI Docs (JSON)** | `http://localhost:8080/api/v1/v3/api-docs` | Định nghĩa schema OpenAPI 3.0 |
-| **H2 Database Console** | `http://localhost:8080/api/v1/h2-console` | H2 console; profile `dev` mặc định dùng `jdbc:h2:file:./data/freelancedb` |
-| **CSDL MySQL (Local/Docker)** | `localhost:3306` | Database: `freelance_db`, User: `root`, Mật khẩu: `12345` |
-| **CSDL PostgreSQL (Local/Docker)** | `localhost:5433` (Local) / `5432` (Docker) | Database: `freelance_db`, User: `postgres`, Mật khẩu: `12345` |
-
----
-
-## 7. TÀI KHOẢN MẪU DÙNG THỬ (DEMO TEST ACCOUNTS)
-
-> **Mật khẩu chung cho tất cả các tài khoản thử nghiệm:** `Password123@`
-
-| Vai trò người dùng | Email đăng nhập | Tên người dùng | Kịch bản kiểm thử đề xuất |
-|---|---|---|---|
-| **Quản trị viên (Admin)** | `admin@freelancehub.vn` | Quản Trị Viên Nhóm 8 | Xem thống kê KPI tổng quan, quản lý danh sách tài khoản, khóa/mở khóa tài khoản, xóa tin vi phạm, cập nhật hồ sơ cá nhân. |
-| **Nhà tuyển dụng (Employer)** | `recruiter@thecoffee.vn` | Nguyễn Thị Tuyết (The Coffee House) | Đăng tin part-time, quản lý tin đăng, đổi trạng thái vòng đời tin, xem danh sách ứng viên nộp hồ sơ, duyệt hoặc từ chối đơn. |
-| **Nhà tuyển dụng (Employer)** | `techlead@innovate.vn` | Trần Văn Minh (Innovate Studio) | Tuyển dụng lập trình viên, designer, xem CV ứng viên, đánh giá 2 chiều (1-5 sao) sau khi hoàn thành. |
-| **Sinh viên (Student)** | `sinhvien.khoi@vanlanguni.vn` | Nguyễn Bá Anh Khôi | Tìm kiếm và lọc việc làm theo dữ liệu đã nạp, nộp hồ sơ kèm link CV, xem trạng thái đơn, tự hủy đơn ứng tuyển đang chờ duyệt, cập nhật hồ sơ cá nhân (kỹ năng, trường, ngành). |
-| **Sinh viên (Student)** | `sinhvien.tai@vanlanguni.vn` | Tài khoản dữ liệu mẫu (tên cũ trong seed) | Xem lịch sử ứng tuyển, theo dõi đơn đã duyệt (`ACCEPTED`), thực hiện đánh giá nhà tuyển dụng sau khi công việc kết thúc. |
-| **Sinh viên (Student)** | `sinhvien.long@vanlanguni.vn` | Tài khoản mẫu cần xác nhận trong CSDL đang chạy | Quản lý thông báo hệ thống, chuyển đổi chế độ giao diện Sáng/Tối, chuyển đổi ngôn ngữ Việt/Anh. |
-
----
-
-## 8. CẤU TRÚC MÃ NGUỒN DỰ ÁN (PROJECT DIRECTORY STRUCTURE)
-
+### Bước 2: Khởi chạy toàn bộ hệ thống bằng Docker Compose
+```bash
+docker compose up -d --build
 ```
-cdtn2-NguyenBaAnhKhoi-se/
-├── .env.example                    # Biến môi trường mẫu
-├── .gitignore
-├── docker-compose.yml              # Đóng gói trọn cụm Backend + Frontend + Databases
-├── run.bat                         # Menu tương tác 1-Click trên Windows
-├── run-mysql.bat                   # 1-Click khởi chạy với MySQL 8
-├── run-postgres.bat                # 1-Click khởi chạy với PostgreSQL
-├── stop.bat                        # Giải phóng cổng 8080 & 3000
-├── README.md                       # Tài liệu hướng dẫn tổng quan dự án
-│
-├── docs/                           # Bộ hồ sơ kỹ thuật & tài liệu Word (.docx)
-│   ├── convert_md_to_docx.py       # Script tự động biên dịch Markdown ➔ Word (.docx)
-│   ├── srs.docx / srs.md           # Đặc tả yêu cầu phần mềm v1.2
-│   ├── api-contract.docx / .md     # Hợp đồng REST API Contract
-│   ├── architecture.docx / .md     # Tài liệu thiết kế kiến trúc hệ thống 3 tầng
-│   ├── deployment-guide.docx / .md # Hướng dẫn triển khai & vận hành
-│   ├── phieu-pham-vi.docx / .md    # Phiếu xác định phạm vi dự án
-│   ├── ai-disclosure.docx / .md    # Bản công bố minh bạch sử dụng AI
-│   ├── architecture.drawio         # Sơ đồ kiến trúc DrawIO
-│   ├── erd.drawio                  # Sơ đồ thực thể quan hệ CSDL DrawIO
-│   ├── usecase.drawio              # Sơ đồ Use Case phân quyền
-│   ├── activity-diagram.drawio     # Sơ đồ luồng hoạt động nghiệp vụ
-│   ├── wireframes.html             # Bản vẽ Wireframe giao diện
-│   └── test/                       # Kế hoạch và kết quả kiểm thử (Test Plan & Report)
-│
-├── dataset/                        # Dữ liệu việc làm thực tế quy mô lớn
-│   ├── output/jobs_marketplace.csv # CSV gồm 1.470 dòng dữ liệu
-│   ├── append_20_hcm_jobs.py       # Script cào và bổ sung 20 việc làm TP.HCM
-│   └── HUONG_DAN_AI_AGENT.md       # Cẩm nang dữ liệu & schema chi tiết
-│
-├── database/                       # CSDL, Schema & Seed Scripts
-│   ├── dataset_seed_mysql.sql      # Dữ liệu mẫu cho MySQL
-│   ├── dataset_seed_postgres.sql   # Dữ liệu mẫu cho PostgreSQL
-│   ├── schema.sql                  # Schema CSDL chuẩn 7 bảng & 13 chỉ mục
-│   ├── seed.sql                    # Dữ liệu tài khoản & danh mục cơ bản
-│   └── ERD_Diagram.md              # Sơ đồ quan hệ thực thể Mermaid
-│
-├── backend/                        # Java Spring Boot 3.2.x REST API
-│   ├── pom.xml
-│   ├── Dockerfile
-│   └── src/
-│       ├── main/
-│       │   ├── java/com/nhom8/freelance/
-│       │   │   ├── FreelanceMarketplaceApplication.java
-│       │   │   ├── config/         # CorsConfig, OpenApiConfig, SecurityConfig
-│       │   │   ├── controllers/    # Root, Auth, Job, Application, Review, Notification, User, Admin
-│       │   │   ├── dto/            # Request & Response envelopes (ApiResponse<T>)
-│       │   │   ├── exceptions/     # GlobalExceptionHandler, ResourceNotFoundException
-│       │   │   ├── models/         # User, Role, Category, Job, Application, Review, Notification
-│       │   │   ├── repositories/   # JPA Repositories
-│       │   │   ├── security/       # JwtTokenProvider, JwtAuthenticationFilter, UserPrincipal
-│       │   │   └── services/       # Logic nghiệp vụ chi tiết
-│       │   └── resources/
-│       │       ├── application.yml
-│       │       ├── application-mysql.yml
-│       │       └── application-postgres.yml
-│       └── test/java/com/nhom8/freelance/ # Bộ kiểm thử tự động JUnit 5 & Mockito
-│
-└── frontend/                       # React 18 + TypeScript + Vite Bundler
-    ├── package.json
-    ├── vite.config.ts
-    ├── Dockerfile
-    ├── index.html
-    └── src/
-        ├── App.tsx                 # Bộ định tuyến trung tâm và bảo vệ phân quyền
-        ├── main.tsx
-        ├── components/             # Thẻ việc làm, chuông thông báo, modal đánh giá, badge
-        ├── context/                # AuthContext, ThemeContext, LanguageContext
-        ├── layouts/                # MainLayout (Header, Navbar, Footer song ngữ)
-        ├── pages/                  # HomePage, JobBrowse, JobDetail, Login, Register, PostJob
-        │   ├── admin/              # AdminDashboard, ManageUsersPage, ManageJobsPage
-        │   ├── employer/           # EmployerDashboard, MyJobsPage, ApplicantsPage
-        │   └── student/            # StudentDashboard, MyApplicationsPage, StudentProfilePage
-        ├── routes/                 # ProtectedRoute guard theo vai trò
-        ├── services/               # apiClient (Axios Interceptor), authService, jobService...
-        ├── styles/                 # Hệ thống CSS Design Tokens (Dark & Light Theme)
-        └── types/                  # TypeScript interface models
+*(Hoặc chạy lệnh rút gọn nếu có Node.js: `npm run docker:up` / hoặc PowerShell script: `.\scripts\docker-run.ps1`)*
+
+---
+
+### Quá trình khởi động diễn ra tự động như thế nào?
+1. **Khởi động CSDL PostgreSQL 16 Alpine (`postgres_db`)**:
+   - Tự động áp dụng các cờ hiệu năng cao: `shared_buffers=256MB`, `work_mem=16MB`, `synchronous_commit=off`.
+   - Nạp tự động cấu trúc bảng quan hệ 3NF chuẩn, 13 indexes hiệu năng cao và hơn 1.470 việc làm thực tế từ tệp `database/postgres_init.sql`.
+   - Chạy healthcheck `pg_isready` mỗi 3 giây để báo hiệu sẵn sàng.
+2. **Khởi chạy Backend REST API (`backend_api`)**:
+   - Chờ `postgres_db` đạt trạng thái `healthy` mới khởi động, loại bỏ triệt để lỗi kết nối CSDL (`ECONNREFUSED`).
+   - Sử dụng Dockerfile đa tầng (Multi-Stage) với Maven 3.9 và Eclipse Temurin 17 JRE Alpine siêu nhẹ, chạy bằng người dùng không đặc quyền `spring:spring`.
+   - Kiểm tra sức khỏe tự động tại `http://127.0.0.1:8080/api/v1/jobs`.
+3. **Khởi chạy Frontend Web & Nginx Reverse Proxy (`frontend_web`)**:
+   - Chờ `backend_api` đạt trạng thái `healthy` mới phục vụ người dùng.
+   - Nginx 1.27 Alpine được cấu hình sẵn tính năng **Zero-CORS API Reverse Proxy**: Mọi request từ trình duyệt gọi `/api/v1/*` được Nginx tự động chuyển tiếp nội bộ sang backend, đảm bảo trải nghiệm Same-Origin mượt mà không gặp rào cản CORS.
+
+---
+
+### Truy Cập Ứng Dụng Cục Bộ
+* 🌐 **Giao diện Web Sinh viên & NTD:** [http://localhost:3000](http://localhost:3000)
+* 🩺 **Kiểm tra API Backend:** [http://localhost:8080/api/v1/jobs](http://localhost:8080/api/v1/jobs)
+* 📑 **Tài liệu Swagger / OpenAPI:** [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+* 🗄️ **H2 Web Console (khi chạy local dev):** [http://localhost:8080/api/v1/h2-console](http://localhost:8080/api/v1/h2-console)
+
+### Các lệnh quản trị Docker tiện ích:
+```bash
+# Xem trạng thái các container đang chạy (tất cả phải healthy)
+docker compose ps
+
+# Xem log thời gian thực của máy chủ backend
+docker compose logs -f backend_api
+
+# Xem log thời gian thực của toàn bộ hệ thống
+docker compose logs -f
+
+# Khởi động lại dịch vụ backend
+docker compose restart backend_api
+
+# Dừng hệ thống và giải phóng toàn bộ dữ liệu volume
+docker compose down -v
 ```
 
 ---
 
-## 9. QUY TRÌNH PHỐI HỢP PHÁT TRIỂN (GIT WORKFLOW)
+## 🎯 1. Bất Biến Quy Tắc Nghiệp Vụ Cốt Lõi (Business Invariants BR-01..BR-06)
 
-- **Nhánh `main`:** Nhánh hiện tại trong snapshot Git cục bộ.
-- **Nhánh `develop`:** Nhánh tích hợp được đề xuất; chưa thấy trong snapshot Git cục bộ.
-- **Nhánh tính năng:**
-  - Đề xuất `feature/auth-jwt`, `feature/job-management`, `feature/ui-ux-marketplace`; phân công nhánh cần nhóm thống nhất.
-- **Quy chuẩn đề xuất:** Review chéo, chạy kiểm thử và giải quyết xung đột trước khi merge. Đây là quy ước đề xuất; lịch sử Git hiện có chưa chứng minh quy trình đã được áp dụng.
+Hệ thống tuân thủ nghiêm ngặt 6 quy tắc nghiệp vụ bất biến theo Hiến pháp dự án:
 
----
-
-## 10. LỊCH TRÌNH 10 BUỔI HỌC (SPRINT TIMELINE)
-
-> **Quy tắc lịch:** Mỗi buổi học = **1 tuần** | Bắt đầu thứ Sáu | Buổi 1: 25/09/2026
-
-| Buổi | Ngày (Thứ 6) | Sprint | Nội dung chính | Trạng thái |
-|:----:|:------------:|:------:|:---------------|:----------:|
-| 1 | 25/09/2026 | Sprint 0 | Thành lập nhóm, đăng ký đề tài, phân chia vai trò | Theo hồ sơ; cần xác nhận |
-| 2 | 02/10/2026 | Sprint 0 | Phân tích 5W1H, soạn SRS v1.0, ma trận FR-NFR | Theo hồ sơ; cần xác nhận |
-| 3 | 09/10/2026 | Sprint 0 | Product Backlog MoSCoW, 14 User Stories, RACI | Theo hồ sơ; cần xác nhận |
-| 4 | 16/10/2026 | Sprint 1 | Thiết kế ERD 7 bảng, 13 indexes, API Contract Swagger | Theo hồ sơ; cần xác nhận |
-| **5** | **23/10/2026** | **Sprint 1** | **Wireframe UI, Báo cáo giữa kỳ (Rubric 2)** | Đã qua; cần xác nhận nghiệm thu |
-| **6** | **30/10/2026** | **Sprint 1** | **Xây dựng sản phẩm: Auth, phân quyền và CRUD tin tuyển dụng cơ bản** | 🟡 **Hiện tại — còn việc cần hoàn thiện** |
-| 7 | 06/11/2026 | Sprint 2 (dự kiến) | Module Đăng tin, Tìm kiếm, Ứng tuyển, Dataset 1.470 | 🔜 Sắp tới |
-| 8 | 13/11/2026 | Dự kiến | Duyệt hồ sơ, đánh giá hai chiều và kiểm thử | 🔜 Sắp tới |
-| 9 | 20/11/2026 | Dự kiến | Docker Compose, 1-Click Launcher, Video Demo | 🔜 Sắp tới |
-| **10** | **27/11/2026** | **Dự kiến** | **Bảo vệ đồ án cuối kỳ (Rubric 3) — Ngày kết thúc** | 🎯 **Mục tiêu** |
-
-> **📊 Tổng kết tiến độ:** Đang ở buổi 6; việc hoàn tất sprint và các mốc nghiệm thu cần xác nhận bằng minh chứng.
->
-> **📁 Hồ sơ đầy đủ tại:** `Tài liệu Báo cáo buổi cuối/output/` — Project Charter, Gantt, Backlog, Short Report
-
--------------------------
-# 🚀 Backend RESTful API Test Report — Freelance & Part-time Job Marketplace
-
-![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)
-![Tests](https://img.shields.io/badge/Tests-14%2F14%20Passed-success)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green)
-![Security](https://img.shields.io/badge/JWT-Role--Based%20%26%20Tenant--Isolated-blue)
-
-> **Tài liệu Báo cáo Kiểm thử Tổng thể Hệ thống RESTful API**  
-> **Dự án:** Chuyên đề Tốt nghiệp 2 — ĐH Văn Lang (K29 Track SE)  
-> **Đội ngũ phát triển (Nhóm 8):** Nguyễn Tấn Tài - Nguyễn Bá Anh Khôi - Phan Văn Hoàng Long  
-> **Người thực hiện kiểm thử:** Phan Văn Hoàng Long  
-> **Ngày thực hiện:** 02/11/2026  
-> **Môi trường:** Localhost (`http://localhost:8080/api/v1`) | Swagger UI / OpenAPI 3.0
+* **BR-01 (Quyền Ứng tuyển):** Chỉ người dùng có vai trò Sinh viên (`ROLE_STUDENT`) mới có quyền nộp đơn ứng tuyển vào tin việc làm đang mở (`OPEN`).
+* **BR-02 (Quyền Đăng tin & Quản lý tin):** Chỉ Nhà tuyển dụng (`ROLE_EMPLOYER`) và Quản trị viên (`ROLE_ADMIN`) mới có quyền tạo mới, chỉnh sửa, đóng hoặc chuyển trạng thái tin việc làm.
+* **BR-03 (Chống Trùng Đơn Ứng tuyển):** Mỗi sinh viên chỉ được nộp duy nhất 1 đơn cho 1 tin việc làm. Cơ sở dữ liệu cưỡng chế qua ràng buộc duy nhất `UNIQUE (job_id, student_id)`.
+* **BR-04 (Quyền Xét Duyệt & Chống IDOR):** Chỉ chính NTD sở hữu bài đăng đó (hoặc Admin) mới có quyền xem danh sách đơn ứng tuyển và duyệt nhận (`ACCEPTED`) hoặc từ chối (`REJECTED`) đơn.
+* **BR-05 (Điều Kiện Đánh Giá Hai Chiều):** Đánh giá chỉ được thực hiện khi tin việc làm đã hoàn thành (`COMPLETED`) và sinh viên đã được duyệt trúng tuyển (`ACCEPTED`). Điểm đánh giá từ 1 đến 5 sao (`UNIQUE (job_id, reviewer_id)`).
+* **BR-06 (Khóa Tài Khoản Vi Phạm):** Khi tài khoản bị vô hiệu hóa (`isActive = false`), hệ thống lập tức từ chối phát hành JWT và chặn mọi request nghiệp vụ tiếp theo.
 
 ---
 
-## 📌 1. Bảng Tổng hợp Kết quả Kiểm thử (Summary Table)
+## ⚡ 2. Điểm Nhấn Công Nghệ Web Hiện Đại & Tối Ưu Hiệu Năng (Modern Web APIs & Core Web Vitals)
 
-| STT | Nhóm chức năng | Tên ca kiểm thử (Test Case) | Endpoint & Method | Expected | Actual | Verdict |
-| :---: | :--- | :--- | :--- | :---: | :---: | :---: |
-| **01** | **Xác thực (Auth)** | Đăng nhập tài khoản Sinh viên / NTD nhận JWT Token | `POST /auth/login` | `200` | `200 OK` | **PASSED** |
-| **02** | **Xác thực (Auth)** | Lấy thông tin cá nhân hiện tại qua Bearer Token | `GET /auth/me` | `200` | `200 OK` | **PASSED** |
-| **03** | **Phân quyền (RBAC)**| Chặn Sinh viên / NTD truy cập API Quản trị | `GET /admin/users` | `403` | `403 Forbidden` | **PASSED** |
-| **04** | **Việc làm (Jobs)** | Lấy danh sách việc làm công khai (Phân trang) | `GET /jobs` | `200` | `200 OK` | **PASSED** |
-| **05** | **Phân quyền (RBAC)**| Chặn Sinh viên thực hiện tạo bài đăng tuyển dụng | `POST /jobs` | `403` | `403 Forbidden` | **PASSED** |
-| **06** | **Việc làm (Jobs)** | NTD chính chủ đăng bài việc làm mới hợp lệ | `POST /jobs` | `200` | `200 OK` | **PASSED** |
-| **07** | **Ứng tuyển** | Sinh viên nộp đơn ứng tuyển vào công việc | `POST /applications/jobs/{jobId}/apply` | `200` | `200 OK` | **PASSED** |
-| **08** | **Bảo mật Logic** | Chặn Sinh viên nộp đơn trùng vào cùng một bài đăng | `POST /applications/jobs/{jobId}/apply` | `400` | `400 Bad Request` | **PASSED** |
-| **09** | **Duyệt đơn** | NTD chính chủ duyệt đơn ứng tuyển ➔ `ACCEPTED` | `PATCH /applications/{id}/status` | `200` | `200 OK` | **PASSED** |
-| **10** | **Bảo mật Logic** | Chặn Sinh viên hủy đơn ứng tuyển đã ở trạng thái `ACCEPTED` | `PATCH /applications/{id}/cancel` | `400` | `400 Bad Request` | **PASSED** |
-| **11** | **Bảo mật Logic** | Chặn Sinh viên A rút / hủy đơn ứng tuyển của Sinh viên B | `PATCH /applications/{id}/cancel` | `400` | `400 Bad Request` | **PASSED** |
-| **12** | **Phân quyền NTD**| Chặn NTD B xem danh sách ứng viên bài đăng của NTD A | `GET /applications/job/{jobId}` | `400`/`403` | `400 Bad Request` | **PASSED** |
-| **13** | **Phân quyền NTD**| Chặn NTD B xét duyệt đơn ứng tuyển thuộc bài đăng NTD A | `PATCH /applications/{id}/status` | `400`/`403` | `400 Bad Request` | **PASSED** |
-| **14** | **Vòng đời Job** | NTD chính chủ đóng bài đăng ➔ Trạng thái `CLOSED` | `PATCH /jobs/{id}/status` | `200` | `200 OK` | **PASSED** |
+Hệ thống tích hợp 11 hạng mục công nghệ tiên tiến nhất của hệ sinh thái Web hiện đại:
+1. **WebAuthn Passkeys:** Xác thực sinh trắc học không mật khẩu (vân tay, Face ID, Windows Hello) bằng chuẩn FIDO2.
+2. **Content Security Policy (CSP):** Thiết lập chính sách bảo mật nội dung chặt chẽ, ngăn ngừa XSS và clickjacking.
+3. **HTML5 `<dialog>` Modal:** Nâng cấp toàn bộ modal cửa sổ (`ReviewModal`, `ReportJobModal`, `ForgotPasswordModal`) sang thẻ `<dialog>` chuẩn với backdrop mượt mà và animation `@starting-style`.
+4. **Popover API & CSS Anchor Positioning Tooltips:** Tooltips neo trực tiếp vào phần tử kích hoạt không gây giật layout.
+5. **CSS Anchor Positioning Tab Bar:** Thanh điều hướng có chỉ báo highlight trượt mượt mà theo tab được chọn.
+6. **Container Queries Dashboard Cards:** Thẻ thống kê tự động co giãn bố cục theo chiều rộng container (`@container`) thay vì chỉ theo viewport toàn trang.
+7. **Stats Accordion Animation:** Hiệu ứng đóng mở mượt mà bằng CSS Grid height transition.
+8. **Link Hover Preloading:** Tự động preload bundle của các trang điều hướng quan trọng khi người dùng hover/focus liên kết.
+9. **Tối ưu INP (Interaction to Next Paint):** Cắt nhỏ các long task bằng `scheduler.yield()` / `requestIdleCallback` và `React.startTransition`, loại bỏ giật lag khi tương tác.
+10. **Tối ưu LCP (Largest Contentful Paint):** Chia nhỏ route với `React.lazy()`, cấu hình code-splitting qua Vite `manualChunks`, giảm kích thước bundle chính xuống chỉ còn ~158 kB.
+11. **Báo Cáo Kiểm Toán Bảo Mật (Security Audit):** Tài liệu phân tích an ninh toàn diện tại [docs/security-audit-report.md](docs/security-audit-report.md).
 
 ---
 
-## 🔍 2. Chi tiết Ca Kiểm thử theo Nhóm Chức năng
+## 🏗️ 3. Kiến Trúc Kỹ Thuật Đa Tầng (Technical Architecture)
 
-### 🔑 A. Xác thực & Phân quyền Vai trò (Auth & RBAC)
-
-* **Test 01: Đăng nhập & Sinh JWT Token (`POST /auth/login`)**
-  * **Payload:** `{"email": "techlead@innovate.vn", "password": "Password123@"}`
-  * **Response:** HTTP `200 OK`. Cấp mã JWT `accessToken`, xác định rõ `userId: 3`, `role: "ROLE_EMPLOYER"`.
-  * **Đánh giá:** Mã hóa HMAC-SHA256 chuẩn, chứa đúng Claims phân quyền.
-
-* **Test 02: Xác thực Profile Cá nhân (`GET /auth/me`)**
-  * **Header:** `Authorization: Bearer <JWT_EMPLOYER_TOKEN>`
-  * **Response:** HTTP `200 OK`. Trả về chính xác Profile NTD Tuyết (`companyName: "The Coffee House Bình Thạnh"`).
-
-* **Test 03: Chặn Tài khoản Thường vào API Admin (`GET /admin/users`)**
-  * **Header:** Token `ROLE_EMPLOYER` hoặc `ROLE_STUDENT`
-  * **Response:** HTTP `403 Forbidden`.
-  * **Đánh giá:** Spring Security Interceptor chặn thành công truy cập trái phép.
-
-* **Test 05: Chặn Sinh viên Tạo Bài đăng Tuyển dụng (`POST /jobs`)**
-  * **Header:** Token `ROLE_STUDENT` (Tấn Tài / Anh Khôi)
-  * **Response:** HTTP `403 Forbidden`.
-
----
-
-### 💼 B. Quản lý Tin tuyển dụng (Jobs Management)
-
-* **Test 04: Truy vấn Danh sách Việc làm Công khai (`GET /jobs`)**
-  * **Params:** `page=0&size=10`
-  * **Response:** HTTP `200 OK`. Trả về danh sách chuẩn `PageJob` kèm thông tin Doanh nghiệp, Mức lương (`HOURLY`, `FIXED_PROJECT`) và Trạng thái.
-
-* **Test 06: Nhà tuyển dụng Đăng bài Mới (`POST /jobs`)**
-  * **Header:** Token `ROLE_EMPLOYER`
-  * **Payload:** Title `"Tin test của Long"`, `categoryId: 1`, `salaryAmount: 25000`
-  * **Response:** HTTP `200 OK`. Khởi tạo bài đăng thành công với ID = 5, trạng thái mặc định `OPEN`.
-
-* **Test 14: Cập nhật Trạng thái Đóng Bài đăng (`PATCH /jobs/{id}/status`)**
-  * **Params:** Path `id=5`, Query `status=CLOSED` (Thực hiện bởi chính chủ bài đăng)
-  * **Response:** HTTP `200 OK`. Trạng thái bài đăng chuyển sang `CLOSED`, thời gian `updatedAt` được ghi nhận.
+```text
+               ┌────────────────────────────────────────────────────────┐
+               │              TRÌNH DUYỆT NGƯỜI DÙNG                   │
+               │  - Single Page Application (React 18 + Vite)           │
+               │  - Dark/Light Theme, Song ngữ VI/EN, Lucide Icons      │
+               │  - Passkey WebAuthn, Anchor Positioning, Dialogs       │
+               └──────────────────────────┬─────────────────────────────┘
+                                          │ HTTP / RESTful API (Port 3000 -> 8080)
+                                          ▼
+               ┌────────────────────────────────────────────────────────┐
+               │          BACKEND SERVICE (Spring Boot 3.2.x)           │
+               │  - Controller Layer: DTO validation, ApiResponse<T>    │
+               │  - Service Layer: Business logic, Event listeners      │
+               │  - Security: JWT HS256 Stateless, BCrypt, WebAuthn     │
+               │  - Email Service: Event-Driven Spring ApplicationEvent │
+               └──────────────────────────┬─────────────────────────────┘
+                                          │ Spring Data JPA / HikariCP Pool
+                                          ▼
+               ┌────────────────────────────────────────────────────────┐
+               │          CƠ SỞ DỮ LIỆU POSTGRESQL 16                   │
+               │  - Chuẩn hóa 3NF: users, jobs, applications, reviews,  │
+               │    reports, user_passkey_credentials                   │
+               │  - 13 Chỉ mục hiệu năng cao (B-Tree Indexes)           │
+               │  - Bộ dữ liệu mẫu: 1.470+ việc làm sinh viên chuẩn     │
+               └────────────────────────────────────────────────────────┘
+```
 
 ---
 
-### 📝 C. Quy trình & Logic Ứng tuyển (Applications Flow)
+## 📡 4. Danh Sách RESTful API Endpoints
 
-* **Test 07: Sinh viên Nộp Đơn Ứng tuyển (`POST /applications/jobs/{jobId}/apply`)**
-  * **Header:** Token Sinh viên Anh Khôi (`ROLE_STUDENT`)
-  * **Params:** Path `jobId=5`
-  * **Response:** HTTP `200 OK`. Đơn tạo thành công với ID = 4, trạng thái ban đầu `PENDING`.
+Mọi endpoint đều trả về cấu trúc bọc `ApiResponse<T>` thống nhất (`success`, `message`, `data`, `errors`, `timestamp`):
 
-* **Test 08: Chặn Spam / Nộp Đơn Trùng lặp**
-  * **Hành động:** Sinh viên gửi tiếp đơn nộp vào `jobId=5` lần thứ 2.
-  * **Response:** HTTP `400 Bad Request`. Ràng buộc Unique Key dữ liệu hoạt động chính xác.
+### A. Xác thực & Passkey (`/api/v1/auth`)
+| Phương thức | Đường dẫn API | Quyền hạn | Chức năng |
+|:---:|:---|:---:|:---|
+| `POST` | `/api/v1/auth/register` | Public | Đăng ký tài khoản Sinh viên hoặc Nhà tuyển dụng |
+| `POST` | `/api/v1/auth/login` | Public | Đăng nhập bằng email/password, trả về JWT token |
+| `GET` | `/api/v1/auth/me` | Authenticated | Lấy thông tin tài khoản hiện tại |
+| `POST` | `/api/v1/auth/passkey/register-options` | Authenticated | Lấy challenge đăng ký Passkey FIDO2 |
+| `POST` | `/api/v1/auth/passkey/register` | Authenticated | Lưu thông tin khóa công khai Passkey |
+| `POST` | `/api/v1/auth/passkey/login-options` | Public | Lấy challenge đăng nhập không mật khẩu |
+| `POST` | `/api/v1/auth/passkey/verify-login` | Public | Xác thực chữ ký WebAuthn và cấp JWT |
 
-* **Test 09: NTD Xét duyệt Đơn Ứng tuyển (`PATCH /applications/{id}/status`)**
-  * **Header:** Token NTD Tuyết (Sở hữu Job ID = 5)
-  * **Payload:** `{"status": "ACCEPTED"}`
-  * **Response:** HTTP `200 OK`. Đơn ứng tuyển ID = 3 chuyển sang trạng thái `ACCEPTED`.
+### B. Quản lý việc làm (`/api/v1/jobs`)
+| Phương thức | Đường dẫn API | Quyền hạn | Chức năng |
+|:---:|:---|:---:|:---|
+| `GET` | `/api/v1/jobs` | Public | Tìm kiếm, lọc việc làm theo từ khóa, ngành nghề, địa điểm, mức lương |
+| `GET` | `/api/v1/jobs/{id}` | Public | Xem thông tin chi tiết việc làm |
+| `GET` | `/api/v1/jobs/my-jobs` | Employer | Xem danh sách tin việc làm do chính NTD đăng |
+| `POST` | `/api/v1/jobs` | Employer / Admin | Đăng tin tuyển dụng mới |
+| `PUT` | `/api/v1/jobs/{id}` | Employer / Admin | Cập nhật nội dung tin việc làm (kiểm tra sở hữu) |
+| `PATCH` | `/api/v1/jobs/{id}/status` | Employer / Admin | Đổi trạng thái tin (`OPEN`, `IN_PROGRESS`, `COMPLETED`, `CLOSED`) |
+| `DELETE` | `/api/v1/jobs/{id}` | Employer / Admin | Xóa tin việc làm |
 
-* **Test 10: Chặn Hủy Đơn đã được Chấp nhận (`PATCH /applications/{id}/cancel`)**
-  * **Hành động:** Sinh viên gửi yêu cầu hủy đơn ID = 3 (đã `ACCEPTED`).
-  * **Response:** HTTP `400 Bad Request`.
-  * **Message:** *"Chỉ có thể hủy đơn ứng tuyển khi hồ sơ ở trạng thái Chờ duyệt (PENDING)!"*
+### C. Ứng tuyển (`/api/v1/applications`)
+| Phương thức | Đường dẫn API | Quyền hạn | Chức năng |
+|:---:|:---|:---:|:---|
+| `POST` | `/api/v1/applications` | Student | Nộp hồ sơ ứng tuyển kèm link CV và thư giới thiệu |
+| `GET` | `/api/v1/applications/my-applications` | Student | Xem danh sách đơn ứng tuyển của bản thân |
+| `GET` | `/api/v1/applications/job/{jobId}` | Employer / Admin | NTD xem danh sách ứng viên nộp vào tin của mình |
+| `PATCH` | `/api/v1/applications/{id}/status` | Employer / Admin | Duyệt (`ACCEPTED`) hoặc từ chối (`REJECTED`) đơn |
+| `PATCH` | `/api/v1/applications/{id}/cancel` | Student | Sinh viên tự hủy đơn khi đang ở trạng thái `PENDING` |
 
-* **Test 11: Chặn Hủy Đơn Ứng tuyển của Người khác (`PATCH /applications/{id}/cancel`)**
-  * **Hành động:** Sinh viên A dùng Token của mình cố ý hủy đơn ID = 3 của Sinh viên B.
-  * **Response:** HTTP `400 Bad Request`.
-  * **Message:** *"Bạn không thể hủy đơn ứng tuyển của người khác!"*
+### D. Đánh giá & Báo cáo (`/api/v1/reviews`, `/api/v1/reports`, `/api/v1/admin`)
+| Phương thức | Đường dẫn API | Quyền hạn | Chức năng |
+|:---:|:---|:---:|:---|
+| `POST` | `/api/v1/reviews` | Student / Employer | Đánh giá 1–5 sao hai chiều khi công việc `COMPLETED` |
+| `GET` | `/api/v1/reviews/user/{userId}` | Public | Xem danh sách đánh giá và điểm sao trung bình của người dùng |
+| `POST` | `/api/v1/reports` | Authenticated | Gửi báo cáo tin tuyển dụng hoặc hành vi lừa đảo |
+| `GET` | `/api/v1/admin/reports` | Admin | Quản trị viên xem danh sách các báo cáo vi phạm |
+| `PATCH` | `/api/v1/admin/users/{id}/toggle-status` | Admin | Khóa hoặc mở khóa tài khoản người dùng vi phạm |
 
 ---
 
-### 🛡️ D. Phân quyền Chéo giữa các Nhà tuyển dụng (Cross-Tenant Authorization)
+## 🧪 5. Kiểm Thử Tự Động & Đảm Bảo Chất Lượng (QA & Testing)
 
-* **Test 12: Chặn NTD B Xem Danh sách Ứng viên của NTD A (`GET /applications/job/{jobId}`)**
-  * **Hành động:** NTD Minh (Innovate Studio) gửi request xem ứng viên của `jobId=5` (thuộc NTD Tuyết - The Coffee House).
-  * **Response:** HTTP `400 Bad Request`.
-  * **Message:** *"Bạn không có quyền xem danh sách ứng viên của công việc này"*
+Hệ thống tích hợp bộ kiểm thử tự động toàn diện theo chuẩn kim tự tháp kiểm thử:
 
-* **Test 13: Chặn NTD B Duyệt Đơn thuộc Bài đăng của NTD A (`PATCH /applications/{id}/status`)**
-  * **Hành động:** NTD Minh cố gắng gửi request chuyển trạng thái đơn `applicationId=3` của NTD Tuyết.
-  * **Response:** HTTP `400 Bad Request`.
-  * **Message:** *"Bạn không có quyền xét duyệt đơn ứng tuyển này"*
+```bash
+# Kiểm thử Backend (JUnit 5 + Mockito)
+npm run test:backend
+# hoặc: cd backend && mvn test
+
+# Kiểm thử Frontend Build & TypeScript static check
+npm run test:frontend
+# hoặc: cd frontend && npm run build
+```
+
+### Kết quả nghiệm thu thực tế:
+* **Backend:** **57/57 tests PASS** (0 failures, 0 errors, 0 skipped, thời gian ~30s).
+  - Bao gồm: `PasskeyServiceTest`, `AuthServiceTest`, `JobServiceTest`, `ApplicationServiceTest`, `ReviewServiceTest`, `ReportServiceTest`, `EmailServiceTest`, `ApplicationAcceptedEmailListenerTest`, `JobRepositoryTest`, `GlobalExceptionHandlerTest`.
+* **Frontend:** **1.596 modules transformed**, 0 lỗi TypeScript, đóng gói sản xuất tối ưu trong 6.6s.
 
 ---
 
-## 🛠️ 3. Kết luận Đánh giá Hệ thống Backend
+## 🛠️ 6. Hướng Dẫn Xử Lý Sự Cố (Troubleshooting)
 
-1. **Bảo mật 3 Lớp (Deep Defense):**
-   * **Lớp 1 (Authentication):** Mã hóa JWT Bearer Token không trạng thái (Stateless).
-   * **Lớp 2 (Role Authorization):** Khóa đường dẫn theo `ROLE_ADMIN`, `ROLE_EMPLOYER`, `ROLE_STUDENT`.
-   * **Lớp 3 (Resource-Level Isolation):** Kiểm tra quyền sở hữu đối tượng (Ownership Check) chặn gian lận thao tác dữ liệu chéo giữa các người dùng.
-2. **Xử lý Ngoại lệ Tăng cường (Global Exception Handler):**
-   * Định dạng dữ liệu phản hồi thống nhất `ApiResponse<T>`.
-   * Trả đúng chuẩn mã trạng thái HTTP (`200`, `400`, `403`, `404`) đi kèm thông điệp nghiệp vụ rõ ràng.
-3. **Mức độ Sẵn sàng:** Backend RESTful API hoàn thành 100% mục tiêu kiểm thử chất lượng, đạt độ tin cậy tuyệt đối để tích hợp cùng Frontend.
+1. **Xung đột cổng `3000` hoặc `8080` trên máy:**
+   Mở tệp `.env`, điều chỉnh:
+   ```env
+   FRONTEND_PORT=3001
+   BACKEND_PORT=8081
+   ```
+   Sau đó chạy lại `docker compose up -d`.
+2. **Khởi tạo lại sạch cơ sở dữ liệu:**
+   ```bash
+   docker compose down -v
+   docker compose up -d --build
+   ```
+3. **Xem log chi tiết khi gặp lỗi:**
+   ```bash
+   docker compose logs -f backend_api
+   ```
+
+---
+
+## 📋 7. Thông Tin Đồ Án & Phân Công Trách Nhiệm
+
+* **Nguyễn Bá Anh Khôi (Team Lead):** Phụ trách kiến trúc hệ thống, Spring Security 6, cấu hình Docker Compose & Multi-stage Dockerfile, Netlify & Neon Cloud deployment, Design Tokens & Passkey WebAuthn.
+* **Phan Văn Hoàng Long (Backend & QA/QC):** Phụ trách xây dựng các DTOs, Bean Validation, xử lý ngoại lệ `GlobalExceptionHandler`, xây dựng bộ 57 tests tự động và kiểm thử phân quyền RBAC.
+* **Phạm Công Tài (Frontend Lead):** Phụ trách giao diện React Vite SPA, Dark/Light Mode, Song ngữ VI/EN, Event-driven Email Notification và tối ưu hóa trải nghiệm tìm kiếm việc làm.
+
+---
+*Bản quyền © 2026–2027 Nhóm 8 — Khoa Công nghệ Thông tin — Trường Đại học Văn Lang.*

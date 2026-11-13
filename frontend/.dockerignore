@@ -1,0 +1,11 @@
+# ==============================================================================
+# frontend/.dockerignore — Build context optimization for React Vite SPA Dockerfile
+# ==============================================================================
+node_modules
+dist
+.git
+.idea
+.vscode
+*.log
+.codegraph
+

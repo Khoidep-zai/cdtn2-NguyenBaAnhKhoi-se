@@ -30,7 +30,8 @@ fix-bug-log/
     ├── eye-care light theme palette and fluid responsive typography.md (Commit 092f5b2 & 09ab9b1 - Giao diện dịu mắt & CSS)
     ├── implement P0 core features for part-time student job portal.md (Commit eceaae8 - Hoàn thiện 100% tiêu chí P0)
     ├── modern web components passkey webauthn csp security and core web vitals optimization.md (Commit 718562f - 11 tính năng Modern Web & Vitals)
-    └── optimize fullstack system for netlify cloud deployment with zero-cors reverse proxy and neon database.md (Commit mới - Tối ưu triển khai Netlify & Neon)
+    ├── optimize fullstack system for netlify cloud deployment with zero-cors reverse proxy and neon database.md (Commit 959b90b - Tối ưu triển khai Netlify & Neon)
+    └── apply cdtn1 docker technology and multi-stage containerization to cdtn2.md (Commit mới - Áp dụng Docker CDTN1 sang CDTN2)
 ```
 
 ---
@@ -53,7 +54,8 @@ fix-bug-log/
 | `9254a78` | 12/11/2026 | Phạm Công Tài | FE Lead & Fullstack | BE / Email | Tự động gửi email chúc mừng sinh viên khi được nhận qua Spring Event-Driven | [Xem log](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_test/fix-bug-log/Tai-fe/implement%20automatic%20application%20acceptance%20email%20notification.md) |
 | `ddf53a9` | 12/11/2026 | Phạm Công Tài | FE Lead & Fullstack | Documentation | Báo cáo chi tiết kết quả đóng góp cá nhân của sinh viên Phạm Công Tài (CDTN2) | [Xem log](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_test/fix-bug-log/Tai-fe/add%20Pham%20Cong%20Tai%20CDTN2%20work%20report.md) |
 | `718562f` | 13/11/2026 | Nguyễn Bá Anh Khôi | Team Lead & Fullstack | Fullstack Modern | Triển khai 11 tính năng Modern Web, Passkey WebAuthn, CSP Security & Core Web Vitals | [Xem log](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_main/fix-bug-log/Khoi-lead/modern%20web%20components%20passkey%20webauthn%20csp%20security%20and%20core%20web%20vitals%20optimization.md) |
-| `HEAD` | 13/11/2026 | Nguyễn Bá Anh Khôi | Team Lead & DevOps | DevOps / Cloud | Tối ưu hóa toàn diện hệ thống triển khai đám mây Netlify, Neon Serverless DB & Zero-CORS Gateway | [Xem log](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_main/fix-bug-log/Khoi-lead/optimize%20fullstack%20system%20for%20netlify%20cloud%20deployment%20with%20zero-cors%20reverse%20proxy%20and%20neon%20database.md) |
+| `959b90b` | 13/11/2026 | Nguyễn Bá Anh Khôi | Team Lead & DevOps | DevOps / Cloud | Tối ưu hóa toàn diện hệ thống triển khai đám mây Netlify, Neon Serverless DB & Zero-CORS Gateway | [Xem log](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_main/fix-bug-log/Khoi-lead/optimize%20fullstack%20system%20for%20netlify%20cloud%20deployment%20with%20zero-cors%20reverse%20proxy%20and%20neon%20database.md) |
+| `HEAD` | 13/11/2026 | Nguyễn Bá Anh Khôi | Team Lead & DevOps | DevOps / Docker | Áp dụng toàn diện công nghệ & phương pháp Docker đa tầng tối ưu từ CDTN1 sang CDTN2 | [Xem log](file:///C:/O%20E/Chuyen%20de%202/Project/Nhom%208_dev/cdtn2-NguyenBaAnhKhoi-se_main/fix-bug-log/Khoi-lead/apply%20cdtn1%20docker%20technology%20and%20multi-stage%20containerization%20to%20cdtn2.md) |
 
 ---
 

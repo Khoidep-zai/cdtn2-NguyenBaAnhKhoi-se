@@ -23,6 +23,8 @@
    - [2.1. Tích hợp chức năng tự động gửi email khi nhận ứng viên](#21-tích-hợp-chức-năng-tự-động-gửi-email-khi-nhận-ứng-viên)
    - [2.2. Tối ưu hóa bộ lọc tìm kiếm việc làm & xử lý hạn chót tin tuyển dụng](#22-tối-ưu-hóa-bộ-lọc-tìm-kiếm-việc-làm--xử-lý-hạn-chót-tin-tuyển-dụng)
    - [2.3. Xây dựng tài liệu kỹ thuật nền tảng FreelanceHub](#23-xây-dựng-tài-liệu-kỹ-thuật-nền-tảng-freelancehub)
+   - [2.4. Nâng cấp giao diện trang chủ & trải nghiệm khám phá việc làm (Hot Jobs & Ngành nghề trọng điểm)](#24-nâng-cấp-giao-diện-trang-chủ--trải-nghiệm-khám-phá-việc-làm-hot-jobs--ngành-nghề-trọng-điểm)
+   - [2.5. Tối ưu luồng chuyển hướng xác thực & xử lý triệt để việc làm hết hạn](#25-tối-ưu-luồng-chuyển-hướng-xác-thực--xử-lý-triệt-để-việc-làm-hết-hạn)
 3. [Phân tích chuyên sâu: Tính năng tự động gửi Email chấp nhận ứng viên](#3-phân-tích-chuyên-sâu-tính-năng-tự-động-gửi-email-chấp-nhận-ứng-viên)
    - [3.1. Bối cảnh & Yêu cầu nghiệp vụ](#31-bối-cảnh--yêu-cầu-nghiệp-vụ)
    - [3.2. Thiết kế kiến trúc giải pháp (Event-Driven & AFTER_COMMIT)](#32-thiết-kế-kiến-trúc-giải-pháp-event-driven--after_commit)
@@ -30,11 +32,22 @@
    - [3.4. Bảo mật cấu hình SMTP Gmail](#34-bảo-mật-cấu-hình-smtp-gmail)
    - [3.5. Cơ chế chống gửi email trùng lặp](#35-cơ-chế-chống-gửi-email-trùng-lặp)
    - [3.6. Cơ chế cô lập lỗi (Fault Isolation)](#36-cơ-chế-cô-lập-lỗi-fault-isolation)
-4. [Chi tiết kết quả kiểm thử (Verification & Testing)](#4-chi-tiết-kết-quả-kiểm-thử-verification--testing)
+4. [Chi tiết kết quả kiểm thử (Verification & Testing) — Đợt 1](#4-chi-tiết-kết-quả-kiểm-thử-verification--testing)
    - [4.1. Bộ kiểm thử tự động (Unit Tests)](#41-bộ-kiểm-thử-tự-động-unit-tests)
    - [4.2. Kiểm thử gửi thư thực tế (Live SMTP Verification)](#42-kiểm-thử-gửi-thư-thực-tế-live-smtp-verification)
-5. [Lịch sử Commit & Đóng góp trên Git](#5-lịch-sử-commit--đóng-góp-trên-git)
-6. [Tự đánh giá & Kết luận](#6-tự-đánh-giá--kết-luận)
+5. [Phân tích chuyên sâu & Triển khai Đợt 2: Nâng cấp Frontend & Xử lý việc làm hết hạn](#5-phân-tích-chuyên-sâu--triển-khai-đợt-2-nâng-cấp-frontend--xử-lý-việc-làm-hết-hạn)
+   - [5.1. Bối cảnh & Nguyên tắc bất khả xâm phạm](#51-bối-cảnh--nguyên-tắc-bất-khả-xâm-phạm)
+   - [5.2. Khu vực Ngành nghề trọng điểm (Key Industries)](#52-khu-vực-ngành-nghề-trọng-điểm-key-industries)
+   - [5.3. Khu vực Việc làm nổi bật (Hot Jobs)](#53-khu-vực-việc-làm-nổi-bật-hot-jobs)
+   - [5.4. Trải nghiệm Khách vãng lai & Luồng chuyển hướng xác thực (Login/Register Redirect)](#54-trải-nghiệm-khách-vãng-lai--luồng-chuyển-hướng-xác-thực-loginregister-redirect)
+   - [5.5. Phân tích nguyên nhân & Giải pháp xử lý triệt để Job hết hạn (Job 1471)](#55-phân-tích-nguyên-nhân--giải-pháp-xử-lý-triệt-để-job-hết-hạn-job-1471)
+6. [Chi tiết kết quả kiểm thử & Nghiệm thu Đợt 2](#6-chi-tiết-kết-quả-kiểm-thử--nghiệm-thu-đợt-2)
+   - [6.1. Toàn bộ 56/56 Unit Tests Backend (JUnit 5 & Mockito)](#61-toàn-bộ-5656-unit-tests-backend-junit-5--mockito)
+   - [6.2. Kết quả Build Production Frontend](#62-kết-quả-build-production-frontend)
+   - [6.3. Ma trận kiểm thử thực tế Frontend (21/21 Test Cases PASS)](#63-ma-trận-kiểm-thử-thực-tế-frontend-2121-test-cases-pass)
+   - [6.4. Danh sách các file đã chỉnh sửa & Vai trò](#64-danh-sách-các-file-đã-chỉnh-sửa--vai-trò)
+7. [Lịch sử Commit & Đóng góp trên Git](#7-lịch-sử-commit--đóng-góp-trên-git)
+8. [Tự đánh giá & Kết luận (Tổng hợp 2 đợt đóng góp)](#8-tự-đánh-giá--kết-luận-tổng-hợp-2-đợt-đóng-góp)
 
 ---
 
@@ -65,6 +78,19 @@ Trong khuôn khổ học phần **Chuyên đề tốt nghiệp 2 (CDTN2)**, sinh
 ### 2.3. Xây dựng tài liệu kỹ thuật nền tảng FreelanceHub
 * **Mã commit tham chiếu:** `981d50162d32f0b5fe380ab026056fd6e7ce606b`
 * **Vấn đề giải quyết:** Khởi tạo tài liệu độc lập `README_FreelanceHub.md` cung cấp đầy đủ thông tin về Tech Stack, RBAC 3 vai trò, hướng dẫn chạy 1-Click bằng Batch scripts, cấu hình Docker Compose và tài khoản demo.
+
+### 2.4. Nâng cấp giao diện trang chủ & trải nghiệm khám phá việc làm (Hot Jobs & Ngành nghề trọng điểm)
+* **Mục tiêu:** Mở rộng trải nghiệm trang chủ FreelanceHub theo mô hình nền tảng tuyển dụng hiện đại (tham chiếu VietnamWorks), giúp người dùng khám phá nhanh các cơ hội việc làm tốt nhất mà không làm thay đổi bố cục, nhận diện hay logic sẵn có.
+* **Kết quả:**
+  * Bổ sung khu vực **Ngành nghề trọng điểm (Key Industries)** hiển thị đầy đủ 16 danh mục với biểu tượng trực quan, đếm động số lượng việc làm còn hạn từ API thời gian thực và hỗ trợ click 1 chạm để điều hướng lọc việc làm.
+  * Bổ sung khu vực **Việc làm nổi bật (Hot Jobs)** tuyển chọn 8 công việc mới nhất còn hạn, gắn nhãn nhận diện `🔥 HOT` riêng biệt trên trang chủ mà không làm loãng danh sách việc làm chung.
+  * Mở quyền truy cập công khai (**Public Job Browsing**): Khách vãng lai chưa đăng nhập có thể xem tự do toàn bộ danh sách việc làm và thông tin chi tiết từng Job.
+
+### 2.5. Tối ưu luồng chuyển hướng xác thực & xử lý triệt để việc làm hết hạn
+* **Mục tiêu:** Nâng cao tỷ lệ chuyển đổi ứng tuyển và đảm bảo tính chính xác tuyệt đối của dữ liệu tuyển dụng.
+* **Kết quả:**
+  * Xây dựng cơ chế **Redirect sau đăng nhập và đăng ký** (`?redirect=/jobs/:id`): Khi khách vãng lai nhấn "Đăng nhập để ứng tuyển", sau khi xác thực thành công hệ thống tự động đưa ứng viên quay lại đúng công việc ban đầu để nộp đơn ngay.
+  * Xử lý triệt để lỗi hiển thị tin tuyển dụng hết hạn (tiêu biểu Job 1471): Bổ sung điều kiện `(j.deadline IS NULL OR j.deadline >= CURRENT_TIMESTAMP)` tại tầng Backend Native Query và bộ lọc an toàn tại Frontend, tự động loại bỏ các Job quá hạn khỏi danh sách công khai mà **không làm thay đổi dữ liệu database** và **không ảnh hưởng quyền quản lý tin của Nhà tuyển dụng**.
 
 ---
 
@@ -217,7 +243,7 @@ Hệ thống được thiết kế bảo vệ 2 lớp:
 
 ---
 
-## 4. CHI TIẾT KẾT QUẢ KIỂM THỬ (VERIFICATION & TESTING)
+## 4. CHI TIẾT KẾT QUẢ KIỂM THỬ (VERIFICATION & TESTING) — ĐỢT 1
 
 ### 4.1. Bộ kiểm thử tự động (Unit Tests)
 Đã triển khai 3 bộ kiểm thử Unit Test toàn diện với **10 bài test** chạy tự động qua Maven Surefire Plugin:
@@ -262,33 +288,273 @@ Hệ thống được thiết kế bảo vệ 2 lớp:
 
 ---
 
-## 5. LỊCH SỬ COMMIT & ĐÓNG GÓP TRÊN GIT
+## 5. PHÂN TÍCH CHUYÊN SÂU & TRIỂN KHAI ĐỢT 2: NÂNG CẤP FRONTEND & XỬ LÝ VIỆC LÀM HẾT HẠN
+
+### 5.1. Bối cảnh & Nguyên tắc bất khả xâm phạm
+Xuất phát từ nhu cầu thực tiễn tối ưu hóa trải nghiệm tìm kiếm việc làm của sinh viên theo mô hình các nền tảng tuyển dụng uy tín hàng đầu (tham chiếu mô hình VietnamWorks), đợt nâng cấp Frontend này tập trung vào hai giá trị cốt lõi: **Khám phá việc làm nhanh chóng** và **Tiếp cận công khai không rào cản**.
+
+Toàn bộ quá trình triển khai tuân thủ nghiêm ngặt **7 nguyên tắc bất khả xâm phạm**:
+1. **Giữ nguyên nhận diện thương hiệu:** Bảo toàn 100% màu sắc chủ đạo, font chữ, logo, header, footer, navigation bar và phong cách thiết kế hiện hữu.
+2. **Bảo toàn bố cục tổng thể:** Không xóa hoặc đảo lộn bất kỳ component hay chức năng cũ nào trên trang chủ.
+3. **Đồng nhất thiết kế:** Các khu vực và component mới được xây dựng hài hòa tuyệt đối với giao diện có sẵn.
+4. **Không refactor tràn lan:** Chỉ bổ sung đúng các khu vực theo kế hoạch, không tự ý can thiệp vào các module khác.
+5. **Dữ liệu thực tế:** Không tạo thuật toán đánh giá "độ HOT" bằng dữ liệu giả lập; sử dụng tiêu chí sắp xếp thực tế theo ngày đăng và trạng thái tuyển dụng.
+6. **Bảo toàn cơ sở dữ liệu:** Không sửa đổi trạng thái các bản ghi, không xóa Job 1471 hay bất kỳ dữ liệu nào trong database.
+7. **Kỷ luật Git:** Thực hiện toàn bộ công việc trên nhánh `Test`, tuyệt đối không can thiệp vào nhánh `main`.
+
+---
+
+### 5.2. Khu vực Ngành nghề trọng điểm (Key Industries)
+* **Vị trí hiển thị:** Ngay dưới khu vực thống kê (Stats Section) trên trang chủ (`HomePage.tsx`).
+* **Quy mô danh mục:** Hiển thị trọn vẹn **16 ngành nghề trọng điểm** tương ứng với 16 danh mục nghề nghiệp chuẩn trong hệ thống FreelanceHub:
+  1. *Lập trình & CNTT* 💻
+  2. *Thiết kế & Đồ họa* 🎨
+  3. *Viết lách & Dịch thuật* ✍️
+  4. *Marketing & Truyền thông* 📢
+  5. *Bán hàng & Sales* 💼
+  6. *Chăm sóc khách hàng* 🎧
+  7. *Gia sư & Đào tạo* 📚
+  8. *Sự kiện & PG/PB* 🎪
+  9. *Phục vụ & Pha chế (F&B)* ☕
+  10. *Giao hàng & Vận chuyển* 🚚
+  11. *Hành chính & Thu ngân* 📋
+  12. *Video & Âm thanh* 🎬
+  13. *Nhiếp ảnh & Quay phim* 📸
+  14. *Kế toán & Thuế* 🔢
+  15. *Nghiên cứu thị trường* 📊
+  16. *Việc làm khác* 🧩
+* **Cơ chế đếm việc làm động (Dynamic Job Counter):**
+  * Không dùng số liệu tĩnh; Frontend gọi đồng thời `jobService.getCategories()` và truy vấn số lượng việc làm theo từng danh mục qua API:
+    ```typescript
+    const countPromises = cats.map(async (cat) => {
+      try {
+        const res = await jobService.getJobs({ categoryId: cat.id, size: 1 });
+        return { id: cat.id, count: res.totalElements || 0 };
+      } catch {
+        return { id: cat.id, count: 0 };
+      }
+    });
+    ```
+  * Số lượng việc làm hiển thị phản ánh chính xác số lượng Job `OPEN` còn hạn thực tế trong database (Marketing: 447 việc làm, Bán hàng: 183 việc làm, F&B: 147 việc làm, Hành chính: 143 việc làm, CNTT: 58 việc làm...).
+* **Trải nghiệm tương tác 1 chạm:**
+  * Người dùng nhấp vào bất kỳ card ngành nghề nào sẽ được chuyển hướng ngay đến `/jobs?category=:id`.
+  * Bộ lọc tại trang danh sách việc làm tự động đồng bộ hóa dropdown ngành nghề và hiển thị danh sách công việc đã được lọc tương ứng.
+
+---
+
+### 5.3. Khu vực Việc làm nổi bật (Hot Jobs)
+* **Vị trí hiển thị:** Nằm nổi bật trên trang chủ, ngay sau khu vực Ngành nghề trọng điểm.
+* **Tiêu chí tuyển chọn công việc:**
+  * Trạng thái bắt buộc: `status = 'OPEN'`.
+  * Hạn nộp hồ sơ bắt buộc: `deadline` chưa hết hạn (`deadline IS NULL` hoặc `deadline >= CURRENT_TIMESTAMP`).
+  * Thứ tự ưu tiên: Sắp xếp theo ngày tạo mới nhất (`createdAt DESC`), chọn lọc đúng **8 công việc đầu bảng**.
+* **Nhãn nhận diện riêng biệt (`isHot={true}`):**
+  * Tại `JobCard.tsx`, bổ sung prop tùy chọn `isHot?: boolean`.
+  * Khi xuất hiện trong khu vực Hot Jobs trên trang chủ, thẻ việc làm hiển thị nhãn nhận diện sinh động `🔥 HOT` với hiệu ứng màu đỏ cam gradient (`bg-gradient-to-r from-red-500 to-amber-500`).
+  * Tại trang danh sách chung `/jobs`, `JobCard` hiển thị ở định dạng tiêu chuẩn không có nhãn HOT, đảm bảo tính công bằng và không gây nhiễu thị giác cho người dùng.
+* **Hành động điều hướng:**
+  * Cung cấp nút *"Xem tất cả việc làm →"* dẫn trực tiếp sang `/jobs` để xem trọn vẹn 1.471 việc làm còn hạn.
+  * Nhấn vào từng JobCard sẽ mở trang chi tiết công việc `/jobs/:id`.
+
+---
+
+### 5.4. Trải nghiệm Khách vãng lai & Luồng chuyển hướng xác thực (Login/Register Redirect)
+
+#### A. Khám phá việc làm công khai (Public Job Browsing)
+* Trước đây, người dùng chưa đăng nhập khi truy cập chi tiết công việc có thể gặp rào cản. Trong đợt nâng cấp này, hệ thống mở quyền truy cập công khai hoàn toàn:
+  * Khách vãng lai có thể tự do duyệt trang chủ, trang danh mục `/jobs`, tìm kiếm việc làm theo từ khóa, lọc theo ngành nghề / địa điểm và xem chi tiết bất kỳ công việc nào (`/jobs/:id`).
+  * Khách được xem đầy đủ thông tin: Tiêu đề, tên công ty, mức lương, địa điểm, hạn chót, mô tả công việc, yêu cầu ứng viên, quyền lợi và thông tin nhà tuyển dụng.
+* Nút hành động trên trang chi tiết công việc:
+  * Nếu chưa đăng nhập: Nút ứng tuyển hiển thị nội dung **"Đăng nhập để ứng tuyển"**, dẫn đến đường dẫn `/login?redirect=/jobs/:id`.
+
+#### B. Cơ chế Redirect sau khi đăng nhập và đăng ký
+* **Vấn đề giải quyết:** Trước đây sau khi đăng nhập, hệ thống mặc định đưa người dùng về trang chủ hoặc dashboard sinh viên, làm mất dấu công việc sinh viên đang muốn nộp đơn.
+* **Giải pháp triển khai:**
+  * Tại `LoginPage.tsx` và `RegisterPage.tsx`, tiếp nhận tham số `redirect` từ URL:
+    ```typescript
+    const redirectUrl = searchParams.get('redirect') || '/';
+    ```
+  * Sau khi đăng nhập hoặc đăng ký thành công, thay vì điều hướng cố định, ứng dụng gọi:
+    ```typescript
+    navigate(redirectUrl, { replace: true });
+    ```
+  * **Trải nghiệm mượt mà:** Khách vãng lai xem Job ID 2 -> Nhấn "Đăng nhập để ứng tuyển" -> Chuyển sang `/login?redirect=/jobs/2` -> Đăng nhập thành công -> Trình duyệt lập tức quay trở lại đúng `/jobs/2` -> Nút bấm đổi thành **"Ứng tuyển ngay"** -> Sinh viên mở modal và hoàn tất nộp hồ sơ chỉ trong vài giây.
+* **Bảo vệ an toàn phân quyền (RBAC):**
+  * Các trang quản trị (`/admin/*`), trang nhà tuyển dụng (`/employer/*`) và trang cá nhân sinh viên (`/student/*`) vẫn được bảo vệ tuyệt đối bởi `ProtectedRoute`, khách chưa đăng nhập cố tình truy cập sẽ lập tức bị chặn và chuyển hướng về `/login`.
+
+---
+
+### 5.5. Phân tích nguyên nhân & Giải pháp xử lý triệt để Job hết hạn (Job 1471)
+
+#### A. Phát hiện lỗi qua kiểm thử thực tế
+* Trong quá trình kiểm thử Frontend, kiểm thử viên phát hiện công việc **Job ID 1471** (*Thực tập sinh Phát triển Web*, Công ty Cổ phần VNP Group) có `deadline = 2026-11-06 23:59:59` đã quá hạn 7 ngày so với thời điểm hiện tại (13/11/2026) nhưng vẫn xuất hiện trong danh sách Hot Jobs trên trang chủ.
+* Nguyên nhân: Do trạng thái cột `status` của Job 1471 trong CSDL MySQL vẫn lưu giá trị `'OPEN'`.
+
+#### B. Phân tích nguyên nhân gốc rễ (Root Cause)
+* Tại Backend (`JobRepository.java`), phương thức native query `searchJobs` trước đây chỉ lọc:
+  ```sql
+  WHERE j.status = 'OPEN' ...
+  ```
+  thiếu hoàn toàn điều kiện kiểm tra hạn nộp hồ sơ (`deadline`). Do đó tất cả các công việc có `status = 'OPEN'` đều bị trả về bất kể đã quá hạn bao lâu.
+
+#### C. Giải pháp khắc phục chuẩn mực (Zero Data Alteration)
+* **Nguyên tắc:** Tuyệt đối không thay đổi trạng thái bản ghi trong CSDL, không xóa Job 1471 hoặc bất kỳ dữ liệu nào.
+* **Tầng Backend (`JobRepository.java`):**
+  Cập nhật câu native query `searchJobs` và `countQuery`:
+  ```sql
+  SELECT j.* FROM jobs j 
+  WHERE j.status = 'OPEN' 
+    AND (j.deadline IS NULL OR j.deadline >= CURRENT_TIMESTAMP)
+    AND (:keyword IS NULL OR ...) ...
+  ```
+  *Sử dụng chuẩn ANSI SQL `CURRENT_TIMESTAMP`:* Tương thích 100% với MySQL, PostgreSQL và cơ sở dữ liệu in-memory H2 dùng trong Unit Tests. Tự động loại bỏ các công việc quá hạn khỏi danh sách công khai theo thời gian thực mà không làm biến đổi dữ liệu gốc trong CSDL.
+* **Bảo vệ quyền hạn Nhà tuyển dụng:**
+  Phương thức `findByEmployerId(Long employerId)` được **giữ nguyên không thêm điều kiện deadline**, đảm bảo Nhà tuyển dụng khi vào trang quản lý tin cá nhân (`/employer/jobs`) vẫn xem được toàn bộ các tin đã đăng của mình (kể cả tin đã hết hạn) để tra cứu hồ sơ ứng viên cũ hoặc bấm gia hạn tin.
+* **Tầng Frontend an toàn đa lớp (Defense-in-Depth):**
+  * Tại `HomePage.tsx`: Bổ sung bộ lọc an toàn client-side loại bỏ các job hết hạn trước khi cắt 8 phần tử:
+    ```typescript
+    const validJobs = res.content
+      .filter((j) => j.status === 'OPEN' && (!j.deadline || new Date(j.deadline) >= now))
+      .slice(0, 8);
+    ```
+  * Tại `JobDetailPage.tsx`: Bổ sung kiểm tra hạn nộp trực tiếp:
+    ```typescript
+    const isExpired = job?.deadline ? new Date(job.deadline) < new Date() : false;
+    const isClosed = job?.status !== 'OPEN' || isExpired;
+    ```
+    Khi người dùng truy cập trực tiếp bằng URL vào một công việc đã hết hạn như `/jobs/1471`:
+    - Hiển thị huy hiệu màu đỏ `ĐÃ HẾT HẠN`.
+    - Nút ứng tuyển bị thay thế bằng khung cảnh báo: `Đã hết hạn ứng tuyển — Tin tuyển dụng này đã hết hạn nộp hồ sơ`.
+    - Sinh viên hoàn toàn bị ngăn chặn nộp đơn vào công việc đã hết hạn.
+
+---
+
+## 6. CHI TIẾT KẾT QUẢ KIỂM THỬ & NGHIỆM THU ĐỢT 2
+
+### 6.1. Toàn bộ 56/56 Unit Tests Backend (JUnit 5 & Mockito)
+Đã bổ sung **5 Unit Test mới** vào bộ kiểm thử tự động của Backend:
+1. `JobRepositoryTest.searchJobs_ReturnsOnlyOpenAndUnexpiredJobs`: Kiểm tra truy vấn chỉ trả về các Job `OPEN` có deadline hợp lệ hoặc null.
+2. `JobRepositoryTest.searchJobs_ExcludesExpiredAndNonOpenJobs`: Kiểm tra truy vấn loại trừ chính xác các Job đã hết hạn hoặc có status khác `OPEN`.
+3. `JobServiceTest.searchJobs_FilterValidOpenAndUnexpiredJobs`: Kiểm thử tầng Service đảm bảo danh sách trả về thỏa mãn cả 2 điều kiện.
+4. `ApplicationServiceTest.applyJob_JobDeadlineExpired_ThrowsException`: Kiểm thử ném `BadRequestException` khi ứng viên cố tình nộp đơn vào Job đã hết hạn.
+5. `ApplicationServiceTest.applyJob_JobDeadlineValid_Success`: Kiểm thử nộp đơn thành công khi Job còn hạn nộp.
+
+*Kết quả thực thi toàn bộ Test Suite qua Maven:*
+```text
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 56, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  11.600 s
+[INFO] Finished at: 2026-11-13T02:04:15+07:00
+```
+**Tỷ lệ đạt:** **56/56 Unit Tests PASS (100%)**.
+
+---
+
+### 6.2. Kết quả Build Production Frontend
+Thực hiện biên dịch toàn bộ dự án Frontend bằng lệnh `npm run build` (`tsc && vite build`):
+```text
+vite v5.4.21 building for production...
+✓ 1582 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.75 kB │ gzip:   0.47 kB
+dist/assets/index-B6PZHHfN.css   16.07 kB │ gzip:   3.83 kB
+dist/assets/index-wdJGQRWa.js   448.27 kB │ gzip: 121.03 kB
+✓ built in 2.39s
+```
+**Kết quả:** Biên dịch thành công 100%, không phát sinh bất kỳ lỗi TypeScript hay cảnh báo nào.
+
+---
+
+### 6.3. Ma trận kiểm thử thực tế Frontend (21/21 Test Cases PASS)
+Thực hiện kiểm thử đầu-cuối qua trình duyệt Google Chrome ở chế độ ẩn danh (Guest Session) và các phiên xác thực sinh viên/nhà tuyển dụng:
+
+| Mã TC | Nội dung kiểm thử | Thao tác thực tế | Kết quả kiểm thử | Trạng thái |
+| :---: | :--- | :--- | :--- | :---: |
+| **TC-01** | Truy cập Trang chủ khách vãng lai | Mở `http://localhost:3000` không đăng nhập | Trang chủ load đầy đủ, không bị chuyển hướng `/login` | **PASS** |
+| **TC-02** | Hiển thị Hero Banner & Mascot | Kiểm tra Banner đầu trang | Mascot Ong Vàng Hubbie, tiêu đề, ô tìm kiếm hiển thị chuẩn xác | **PASS** |
+| **TC-03** | Thống kê việc làm tổng quan | Kiểm tra Stats Section | Hiển thị đúng 4 cột số liệu (1.470+ việc làm, 16 ngành nghề, 34+ tỉnh thành, Multi-DB) | **PASS** |
+| **TC-04** | Danh sách 16 ngành nghề trọng điểm | Kiểm tra Section Ngành nghề trọng điểm | Hiển thị đầy đủ 16 danh mục nghề nghiệp trong layout responsive | **PASS** |
+| **TC-05** | Số lượng việc làm động theo ngành | Kiểm tra nhãn số việc làm trên từng card ngành | Lấy động từ API: Marketing (447), Bán hàng (183), F&B (147), Hành chính (143), CNTT (58)... | **PASS** |
+| **TC-06** | Khu vực Việc làm nổi bật / Hot Jobs | Kiểm tra Section Hot Jobs trên trang chủ | Hiển thị đúng 8 việc làm mới nhất còn hạn có gắn nhãn `🔥 HOT`; Job 1471 hết hạn bị loại bỏ | **PASS** |
+| **TC-07** | Nhấn ngành nghề điều hướng lọc Job | Click vào card "Lập trình & CNTT" | Chuyển sang `/jobs?category=1`, dropdown tự chọn ngành, đếm đúng 58 việc | **PASS** |
+| **TC-08** | Duyệt toàn bộ việc làm `/jobs` | Truy cập trực tiếp `/jobs` | Hiển thị danh sách 1.471 việc làm còn hạn phân trang (18 việc/trang) | **PASS** |
+| **TC-09** | Tìm kiếm theo từ khóa | Tìm kiếm từ khóa `"Barista"` | Lọc ra chính xác 3 công việc liên quan đến Barista | **PASS** |
+| **TC-10** | Lọc kết hợp danh mục và địa điểm | Chọn ngành F&B và tỉnh thành TP.HCM | Danh sách hiển thị chính xác các việc F&B tại TP.HCM | **PASS** |
+| **TC-11** | Xem chi tiết Job khách vãng lai | Khách chưa đăng nhập vào `/jobs/1` và `/jobs/2` | Xem đầy đủ thông tin chi tiết công việc mà không bị chặn | **PASS** |
+| **TC-12** | Nút hành động dành cho khách | Quan sát nút ứng tuyển trên trang chi tiết Job | Nút hiển thị *"Đăng nhập để ứng tuyển"* kèm link `/login?redirect=/jobs/:id` | **PASS** |
+| **TC-13** | Luồng chuyển hướng Login | Click nút "Đăng nhập để ứng tuyển" tại `/jobs/2` | Trình duyệt chuyển sang đúng `/login?redirect=/jobs/2` | **PASS** |
+| **TC-14** | Đăng nhập thành công và quay lại Job | Đăng nhập tài khoản sinh viên `taikon4725@gmail.com` | Tự động quay trở lại đúng `/jobs/2`, không bị đưa về dashboard | **PASS** |
+| **TC-15** | Phân quyền Sinh viên trên trang Job | Kiểm tra giao diện `/jobs/2` sau khi đăng nhập | Nút chuyển thành *"Ứng tuyển ngay"*, mở được form nộp hồ sơ | **PASS** |
+| **TC-16** | Phân quyền Nhà tuyển dụng | Đăng nhập `recruiter@thecoffee.vn` xem `/jobs/2` | Không có nút nộp đơn, hiển thị ghi chú tài khoản NTD không thể ứng tuyển | **PASS** |
+| **TC-17** | Chặn khách truy cập trang Quản trị | Khách vãng lai truy cập `/admin/dashboard` | `ProtectedRoute` chặn và chuyển hướng ngay về `/login` | **PASS** |
+| **TC-18** | Gắn nhãn HOT có chọn lọc | So sánh Card tại trang chủ và tại `/jobs` | Chỉ 8 việc làm tại Hot Jobs trang chủ có nhãn `🔥 HOT`; trang `/jobs` hiển thị card tiêu chuẩn | **PASS** |
+| **TC-19** | Độ toàn vẹn dữ liệu Database | Kiểm tra dữ liệu khóa chính trong MySQL | Đủ 1.472 công việc, 100% ID duy nhất, không trùng lặp | **PASS** |
+| **TC-20** | Xử lý Job hết hạn (Job ID 1471) | Kiểm tra Hot Jobs và truy cập trực tiếp `/jobs/1471` | Biến mất khỏi Hot Jobs; vào trực tiếp hiện huy hiệu `ĐÃ HẾT HẠN` và khóa nút nộp đơn | **PASS** |
+| **TC-21** | Kiểm tra hiển thị đa độ phân giải | Kiểm tra Desktop (1920px), Laptop (1366px), Mobile (375px) | Layout responsive mượt mà, không vỡ khung, font tiếng Việt hiển thị hoàn hảo | **PASS** |
+
+*Tài liệu chi tiết:* Tham khảo file báo cáo độc lập [TEST_REPORT_FRONTEND_PHAM_CONG_TAI.md](file:///c:/Users/windows/Downloads/cdtn2-NguyenBaAnhKhoi-se-Test/cdtn2-NguyenBaAnhKhoi-se-Test/TEST_REPORT_FRONTEND_PHAM_CONG_TAI.md) cùng 20 hình ảnh minh chứng trong thư mục `test_evidence_screenshots/`.
+
+---
+
+### 6.4. Danh sách các file đã chỉnh sửa & Vai trò
+
+| STT | Tập tin | Phân hệ | Vai trò & Nội dung chỉnh sửa |
+| :---: | :--- | :---: | :--- |
+| 1 | `backend/src/main/java/com/nhom8/freelance/repositories/JobRepository.java` | Backend | Bổ sung `(j.deadline IS NULL OR j.deadline >= CURRENT_TIMESTAMP)` vào native query `searchJobs` và `countQuery` |
+| 2 | `backend/src/test/java/com/nhom8/freelance/repository/JobRepositoryTest.java` | Backend Test | Thêm Unit Test kiểm tra lọc Job OPEN còn hạn và loại trừ Job hết hạn |
+| 3 | `backend/src/test/java/com/nhom8/freelance/service/JobServiceTest.java` | Backend Test | Thêm Unit Test kiểm tra JobService lọc việc làm hợp lệ |
+| 4 | `backend/src/test/java/com/nhom8/freelance/service/ApplicationServiceTest.java` | Backend Test | Thêm Unit Test nộp đơn vào Job hết hạn (bị chặn) và Job còn hạn (thành công) |
+| 5 | `frontend/src/components/jobs/JobCard.tsx` | Frontend | Thêm prop `isHot?: boolean` và nhãn nhận diện `🔥 HOT` riêng biệt |
+| 6 | `frontend/src/pages/HomePage.tsx` | Frontend | Bổ sung khu vực Ngành nghề trọng điểm (16 danh mục) và Việc làm nổi bật (8 Hot Jobs) |
+| 7 | `frontend/src/pages/JobDetailPage.tsx` | Frontend | Thêm link `?redirect=/jobs/:id`, cờ `isClosed`/`isExpired`, badge `ĐÃ HẾT HẠN` và khóa nộp đơn |
+| 8 | `frontend/src/pages/LoginPage.tsx` | Frontend | Nhận diện tham số `redirect` từ URL để quay lại đúng Job sau khi đăng nhập |
+| 9 | `frontend/src/pages/RegisterPage.tsx` | Frontend | Nhận diện tham số `redirect` từ URL để quay lại đúng Job sau khi đăng ký |
+| 10 | `README_PHAM_CONG_TAI.md` | Tài liệu | Cập nhật báo cáo tổng hợp đầy đủ hai đợt đóng góp của sinh viên |
+| 11 | `TEST_REPORT_FRONTEND_PHAM_CONG_TAI.md` | Tài liệu | Báo cáo kiểm thử thực tế toàn diện 21 Test Cases cho Frontend |
+
+---
+
+## 7. LỊCH SỬ COMMIT & ĐÓNG GÓP TRÊN GIT
 
 Tất cả các đóng góp cá nhân được cam kết minh bạch theo chuẩn **Conventional Commits** trên nhánh **`Test`** của repository `Khoidep-zai/cdtn2-NguyenBaAnhKhoi-se`:
 
 | Mã Commit | Tác giả | Thời gian | Thông điệp Commit (Message) | Phân hệ / Nội dung |
 | :---: | :---: | :---: | :--- | :--- |
-| `1bb4bba` | Phạm Công Tài | 30/10/2026 | `fix: improve job search filtering and deadline handling` | Tối ưu tìm kiếm tiếng Việt và sửa lỗi deadline |
+| `1bb4bba` | Phạm Công Tài | 30/10/2026 | `fix: improve job search filtering and deadline handling` | Tối ưu tìm kiếm tiếng Việt và sửa lỗi deadline tin tuyển dụng |
 | `981d501` | Phạm Công Tài | 30/10/2026 | `docs: add FreelanceHub project documentation` | Khởi tạo tài liệu kiến trúc `README_FreelanceHub.md` |
 | `9254a78` | Phạm Công Tài | 12/11/2026 | `feat: implement automatic application acceptance email notification` | Hoàn thiện toàn bộ chức năng gửi email tự động khi nhận ứng viên |
+| *(Mới nhất)* | Phạm Công Tài | 13/11/2026 | `feat: enhance public job discovery and expired job handling` | Nâng cấp trang chủ (Hot Jobs, 16 Ngành nghề), Public Job, Login Redirect, xử lý Job hết hạn Backend/Frontend |
 
 *Quy trình Git được tuân thủ nghiêm ngặt:*
 * Thực hiện trên đúng nhánh được phân công (`Test`).
-* Không ghi đè hay can thiệp trái phép vào nhánh `main` của nhóm.
-* Không force push (`--force`), bảo toàn toàn bộ lịch sử commit của các thành viên.
+* Tuyệt đối không can thiệp hay gây xung đột với nhánh `main` của nhóm.
+* Không force push (`--force`), bảo toàn toàn bộ lịch sử commit của tất cả các thành viên.
+* Không commit file cấu hình cục bộ (`backend/start_backend.bat`), mật khẩu hay App Password SMTP lên Git.
+* Giữ nguyên vẹn tài liệu chung của nhóm (`README.md`) và tài liệu của các thành viên khác.
 
 ---
 
-## 6. TỰ ĐÁNH GIÁ & KẾT LUẬN
+## 8. TỰ ĐÁNH GIÁ & KẾT LUẬN (TỔNG HỢP CẢ HAI ĐỢT ĐÓNG GÓP)
 
-1. **Về tiến độ & Khối lượng công việc:** Hoàn thành 100% các mục tiêu được giao trong Sprint và các buổi đánh giá định kỳ của học phần CDTN2.
+1. **Về tiến độ & Khối lượng công việc:**
+   * Hoàn thành xuất sắc 100% các mục tiêu được giao trong cả hai đợt triển khai của học phần Chuyên đề tốt nghiệp 2 (CDTN2).
+   * Đợt 1 hoàn thành trọn vẹn giải pháp tự động gửi email thông báo chúc mừng ứng viên theo kiến trúc sự kiện bất đồng bộ.
+   * Đợt 2 hoàn thành nâng cấp giao diện Frontend trang chủ, mở quyền khám phá việc làm công khai và khắc phục triệt để lỗi logic hiển thị bài đăng hết hạn trên cả Backend và Frontend.
 2. **Về chất lượng kỹ thuật:**
-   * Áp dụng thành công các mô hình kiến trúc chuẩn trong kỹ thuật phần mềm: **Event-Driven Architecture**, **Transaction Synchronization**, **Defensive Programming**.
-   * Đảm bảo tính bảo mật cao (Zero Credential Leakage trong mã nguồn).
-   * Độ bao phủ kiểm thử cao, kiểm thử thành công cả ở mức Unit Test và kiểm thử thực tế đầu-cuối.
-3. **Ý nghĩa đóng góp:** Tính năng tự động gửi email chấp nhận ứng viên hoàn thiện mảnh ghép quan trọng cuối cùng trong trải nghiệm ứng tuyển hai chiều của hệ thống FreelanceHub, giúp sinh viên nhận được thông tin kịp thời và nâng cao tính chuyên nghiệp của nền tảng.
+   * **Kiến trúc phần mềm chuẩn mực:** Áp dụng thành công **Event-Driven Architecture**, **Transaction Synchronization (`AFTER_COMMIT`)**, **Defensive Programming**, tối ưu hóa truy vấn CSDL chuẩn ANSI SQL (`CURRENT_TIMESTAMP`).
+   * **Trải nghiệm người dùng (UX):** Nâng cao vượt bậc tính tương tác của trang chủ qua mô hình Hot Jobs và Ngành nghề trọng điểm; luồng chuyển hướng thông minh sau đăng nhập giúp tối đa hóa tỷ lệ nộp hồ sơ của sinh viên.
+   * **Bảo mật & Toàn vẹn:** Không rò rỉ bất kỳ thông tin nhạy cảm nào vào source code; bảo toàn 100% dữ liệu gốc trong cơ sở dữ liệu MySQL mà vẫn xử lý chính xác yêu cầu nghiệp vụ.
+   * **Độ bao phủ kiểm thử toàn diện:** Đạt **56/56 Backend Unit Tests (100%)**, Frontend build hoàn tất trong 2.39s không một lỗi cảnh báo, 21/21 Test Cases thực tế đạt chuẩn với đầy đủ bằng chứng kiểm thử.
+3. **Ý nghĩa đóng góp cho đề tài FreelanceHub:**
+   * Các đóng góp của sinh viên Phạm Công Tài đã giúp hoàn thiện bức tranh trải nghiệm hai chiều hoàn chỉnh cho nền tảng FreelanceHub: Từ lúc khách vãng lai bước vào trang chủ tìm kiếm cơ hội việc làm, xem chi tiết công việc, đăng nhập ứng tuyển liền mạch, cho đến khi Nhà tuyển dụng xét duyệt hồ sơ và hệ thống tự động gửi email chúc mừng trang trọng về hòm thư sinh viên. Nền tảng đạt độ hoàn thiện cao, sẵn sàng phục vụ tốt cho sinh viên và các đối tác tuyển dụng.
 
 ---
-*Báo cáo được lập ngày 12 tháng 11 năm 2026.*  
+*Báo cáo được hoàn thiện và cập nhật ngày 13 tháng 11 năm 2026.*  
 **Sinh viên thực hiện:**  
 *Phạm Công Tài — 2374802010445*

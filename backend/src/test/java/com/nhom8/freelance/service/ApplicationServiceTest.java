@@ -109,9 +109,42 @@ class ApplicationServiceTest {
         when(applicationRepository.existsByJobIdAndStudentId(10L, 2L)).thenReturn(false);
         when(jobRepository.findById(10L)).thenReturn(Optional.of(job));
 
-        assertThrows(BadRequestException.class, () ->
+        BadRequestException ex = assertThrows(BadRequestException.class, () ->
                 applicationService.applyJob(2L, 10L, "Cover letter", "cv_url")
         );
+        assertEquals("Công việc này hiện không còn nhận hồ sơ", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("Ném BadRequestException khi công việc đã hết hạn nộp hồ sơ (deadline quá khứ)")
+    void applyJob_JobDeadlineExpired_ThrowsException() {
+        job.setStatus("OPEN");
+        job.setDeadline(java.time.LocalDateTime.now().minusDays(2));
+        when(applicationRepository.existsByJobIdAndStudentId(10L, 2L)).thenReturn(false);
+        when(jobRepository.findById(10L)).thenReturn(Optional.of(job));
+
+        BadRequestException ex = assertThrows(BadRequestException.class, () ->
+                applicationService.applyJob(2L, 10L, "Cover letter", "cv_url")
+        );
+        assertEquals("Công việc này đã hết hạn nộp hồ sơ!", ex.getMessage());
+        verify(applicationRepository, never()).save(any(Application.class));
+    }
+
+    @Test
+    @DisplayName("Nộp đơn ứng tuyển thành công khi công việc còn hạn nộp hồ sơ (deadline tương lai)")
+    void applyJob_JobDeadlineValid_Success() {
+        job.setStatus("OPEN");
+        job.setDeadline(java.time.LocalDateTime.now().plusDays(5));
+        when(applicationRepository.existsByJobIdAndStudentId(10L, 2L)).thenReturn(false);
+        when(jobRepository.findById(10L)).thenReturn(Optional.of(job));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(student));
+        when(applicationRepository.save(any(Application.class))).thenReturn(application);
+
+        Application result = applicationService.applyJob(2L, 10L, "Cover letter", "cv_url");
+
+        assertNotNull(result);
+        assertEquals("PENDING", result.getStatus());
+        verify(applicationRepository).save(any(Application.class));
     }
 
     @Test

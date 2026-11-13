@@ -8,9 +8,10 @@ import { cleanMojibake, formatSalaryDisplay, formatLocationDisplay } from '../..
 
 interface JobCardProps {
   job: Job;
+  isHot?: boolean;
 }
 
-export const JobCard: React.FC<JobCardProps> = ({ job }) => {
+export const JobCard: React.FC<JobCardProps> = ({ job, isHot }) => {
   const { t, language } = useLanguage();
 
   const getJobTypeLabel = (type: string) => {
@@ -96,6 +97,24 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
     <div className="job-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', background: 'var(--bg-card)' }}>
       <div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', alignItems: 'center', marginBottom: '0.75rem' }}>
+          {isHot && (
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.2rem',
+                padding: '0.2rem 0.55rem',
+                borderRadius: 'var(--radius-full)',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+                color: 'white',
+                boxShadow: '0 1px 3px rgba(239, 68, 68, 0.3)',
+              }}
+            >
+              🔥 HOT
+            </span>
+          )}
           <Badge type={job.jobType} label={getJobTypeLabel(job.jobType)} />
           {job.shiftType && getShiftBadge(job.shiftType)}
           {job.studentFriendly && (

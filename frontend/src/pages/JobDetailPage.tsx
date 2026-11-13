@@ -137,6 +137,9 @@ export const JobDetailPage: React.FC = () => {
     }
   };
 
+  const isExpired = job?.deadline ? new Date(job.deadline) < new Date() : false;
+  const isClosed = job?.status !== 'OPEN' || isExpired;
+
   return (
     <div className="container" style={{ padding: '3rem 1.5rem', maxWidth: '900px' }}>
       <Link to="/jobs" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)', marginBottom: '1.5rem', fontWeight: 600 }}>
@@ -148,7 +151,7 @@ export const JobDetailPage: React.FC = () => {
           <div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', marginBottom: '0.75rem' }}>
               <Badge type={job.jobType} label={job.jobType === 'PART_TIME' ? t('browse.partTime') : job.jobType === 'INTERNSHIP' ? t('browse.internship') : t('browse.freelance')} />
-              <Badge type={job.status} label={job.status === 'OPEN' ? t('job.open') : job.status} />
+              <Badge type={isClosed ? 'CLOSED' : job.status} label={isClosed ? (language === 'vi' ? 'Đã hết hạn' : 'Closed') : (job.status === 'OPEN' ? t('job.open') : job.status)} />
               {job.studentFriendly && (
                 <span
                   style={{
@@ -199,6 +202,10 @@ export const JobDetailPage: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '0.75rem 1.25rem', borderRadius: 'var(--radius-md)', fontWeight: 700 }}>
                 <CheckCircle2 size={20} /> {t('job.applied')}
               </div>
+            ) : isClosed ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.25)', padding: '0.75rem 1.25rem', borderRadius: 'var(--radius-md)', fontWeight: 700 }}>
+                {language === 'vi' ? 'Đã hết hạn ứng tuyển' : 'Application closed'}
+              </div>
             ) : isAuthenticated ? (
               user?.role === 'ROLE_STUDENT' ? (
                 <button onClick={() => setShowModal(true)} className="btn btn-primary" style={{ padding: '0.85rem 1.75rem' }}>
@@ -210,7 +217,7 @@ export const JobDetailPage: React.FC = () => {
                 </div>
               )
             ) : (
-              <Link to="/login" className="btn btn-primary" style={{ padding: '0.85rem 1.75rem' }}>
+              <Link to={`/login?redirect=/jobs/${job.id}`} className="btn btn-primary" style={{ padding: '0.85rem 1.75rem' }}>
                 {t('job.loginToApply')}
               </Link>
             )}

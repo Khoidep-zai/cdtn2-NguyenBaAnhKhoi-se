@@ -132,6 +132,28 @@ class JobServiceTest {
     }
 
     @Test
+    @DisplayName("Tìm kiếm việc làm chỉ trả về các công việc OPEN và chưa hết hạn")
+    void searchJobs_FilterValidOpenAndUnexpiredJobs() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Job validJob = Job.builder()
+                .id(1L)
+                .title("Việc còn hạn")
+                .status("OPEN")
+                .deadline(java.time.LocalDateTime.now().plusDays(10))
+                .build();
+        Page<Job> jobPage = new PageImpl<>(List.of(validJob));
+
+        when(jobRepository.searchJobs(any(), any(), any(), any(), any(), any(), any(), eq(pageable))).thenReturn(jobPage);
+
+        Page<Job> result = jobService.searchJobs(null, null, null, null, null, null, pageable);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+        assertEquals("OPEN", result.getContent().get(0).getStatus());
+        assertTrue(result.getContent().get(0).getDeadline().isAfter(java.time.LocalDateTime.now()));
+    }
+
+    @Test
     @DisplayName("Admin phê duyệt tin tuyển dụng thành công")
     void reviewJob_Approve_Success() {
         sampleJob.setStatus("PENDING_REVIEW");

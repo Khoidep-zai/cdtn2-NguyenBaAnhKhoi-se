@@ -131,7 +131,19 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     // Footer
     'footer.brand': 'FreelanceHub — Marketplace việc làm sinh viên',
     'footer.course': 'Đồ án môn học: Chuyên đề tốt nghiệp 2 (261_71ITGR40303_04) — Khoa Công nghệ Thông tin, Trường Đại học Văn Lang.',
-    'footer.team': 'Thực hiện bởi Nhóm 8: Nguyễn Tấn Tài (PM), Nguyễn Bá Anh Khôi (BA), Hoàng Bảo Long (Tester)',
+    'footer.copyright': '© 2026 FreelanceHub. All rights reserved.',
+    'footer.terms': 'Điều khoản dịch vụ',
+    'footer.privacy': 'Chính sách bảo mật',
+    'footer.operatingRegulation': 'Quy chế hoạt động',
+    'footer.dispute': 'Giải quyết khiếu nại',
+    'footer.security': 'Bảo mật SSL 256-bit & FIDO2 Passkey',
+    'footer.cloud': 'Cloud Multi-DB (Neon PostgreSQL & Spring Boot)',
+    'footer.resolution': 'Chuẩn hóa theo Nghị quyết 202/2025/QH15',
+    'footer.systemStatus': 'Hệ thống trực tuyến 99.9%',
+    'footer.organization': 'Đơn vị chủ quản: Khoa Công nghệ Thông tin — Trường Đại học Văn Lang',
+    'footer.address': 'Cơ sở chính: 69/68 Đặng Thùy Trâm, Phường 13, Quận Bình Thạnh, TP. Hồ Chí Minh',
+    'footer.contact': 'Tổng đài hỗ trợ sinh viên: 1900 6868 • Email: support@freelancehub.vn',
+    'footer.team': 'Phát triển bởi Nhóm 8: Nguyễn Tấn Tài (PM), Nguyễn Bá Anh Khôi (BA), Hoàng Bảo Long (Tester)',
   },
   en: {
     // Navigation
@@ -261,7 +273,19 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     // Footer
     'footer.brand': 'FreelanceHub — Student Job Marketplace',
     'footer.course': 'Graduation Project 2 (261_71ITGR40303_04) — Faculty of Information Technology, Van Lang University.',
-    'footer.team': 'Developed by Team 8: Nguyen Tan Tai (PM), Nguyen Ba Anh Khoi (BA), Hoang Bao Long (QA/Tester)',
+    'footer.copyright': '© 2026 FreelanceHub. All rights reserved.',
+    'footer.terms': 'Terms of Service',
+    'footer.privacy': 'Privacy Policy',
+    'footer.operatingRegulation': 'Platform Regulations',
+    'footer.dispute': 'Dispute Resolution',
+    'footer.security': 'SSL 256-bit & FIDO2 Passkey Secured',
+    'footer.cloud': 'Cloud Multi-DB (Neon PostgreSQL & Spring Boot)',
+    'footer.resolution': 'Standardized under Resolution 202/2025/QH15',
+    'footer.systemStatus': 'System Operational (99.9% Uptime)',
+    'footer.organization': 'Governing Body: Faculty of Information Technology — Van Lang University',
+    'footer.address': 'Main Campus: 69/68 Dang Thuy Tram, Ward 13, Binh Thanh Dist, Ho Chi Minh City',
+    'footer.contact': 'Student Support Hotline: 1900 6868 • Email: support@freelancehub.vn',
+    'footer.team': 'Engineered by Team 8: Nguyen Tan Tai (PM), Nguyen Ba Anh Khoi (BA), Hoang Bao Long (QA/Tester)',
   },
 };
 

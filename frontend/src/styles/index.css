@@ -105,11 +105,16 @@ body {
   z-index: 50;
 }
 
+.navbar .container {
+  max-width: 1400px;
+}
+
 .nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 72px;
+  gap: 1.25rem;
 }
 
 .brand-logo {
@@ -120,21 +125,28 @@ body {
   font-size: 1.25rem;
   color: var(--primary);
   text-decoration: none;
+  white-space: nowrap !important;
+  flex-shrink: 0;
 }
 
 .brand-badge {
   background: var(--primary-light);
   color: var(--primary);
   font-size: 0.75rem;
-  padding: 0.2rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   border-radius: var(--radius-full);
-  font-weight: 600;
+  font-weight: 700;
+  white-space: nowrap !important;
+  letter-spacing: 0.02em;
+  display: inline-block;
 }
 
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: clamp(0.5rem, 1.2vw, 1.15rem);
+  flex-wrap: nowrap;
+  white-space: nowrap !important;
 }
 
 .nav-link {
@@ -142,10 +154,34 @@ body {
   color: var(--text-muted);
   text-decoration: none;
   transition: var(--transition);
+  white-space: nowrap !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.925rem;
+  flex-shrink: 0;
 }
 
 .nav-link:hover, .nav-link.active {
   color: var(--primary);
+}
+
+.nav-user-name {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.nav-btn-logout,
+.navbar .btn {
+  white-space: nowrap !important;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 /* Admin Role Badge Pill */
@@ -162,6 +198,8 @@ body {
   font-weight: 700;
   text-decoration: none;
   transition: var(--transition);
+  white-space: nowrap !important;
+  flex-shrink: 0;
 }
 
 .btn-admin-badge:hover {
@@ -807,7 +845,7 @@ textarea::placeholder {
   display: none;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .desktop-nav {
     display: none !important;
   }

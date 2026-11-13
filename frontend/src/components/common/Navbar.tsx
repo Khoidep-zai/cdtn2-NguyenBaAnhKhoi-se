@@ -81,14 +81,14 @@ export const Navbar: React.FC = () => {
 
               <PrefetchLink
                 to={getDashboardPath()}
-                className="nav-link"
+                className="nav-link nav-user-profile"
                 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
               >
                 <UserIcon size={18} />
-                <span>{user?.fullName}</span>
+                <span className="nav-user-name">{user?.fullName}</span>
               </PrefetchLink>
 
-              <button onClick={handleLogout} className="btn btn-secondary" style={{ padding: '0.45rem 0.85rem' }}>
+              <button onClick={handleLogout} className="btn btn-secondary nav-btn-logout" style={{ padding: '0.45rem 0.85rem' }}>
                 <LogOut size={16} /> {t('nav.logout')}
               </button>
             </>

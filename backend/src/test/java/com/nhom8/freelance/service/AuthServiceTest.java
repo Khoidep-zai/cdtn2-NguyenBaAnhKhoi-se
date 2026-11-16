@@ -154,7 +154,7 @@ class AuthServiceTest {
 
     @Test
     @DisplayName("Yêu cầu quên mật khẩu thành công khi email tồn tại")
-    void createPasswordResetToken_Success_WhenUserExists() {
+    void createPasswordResetToken_Success_WhenUserExists() throws Exception {
         ForgotPasswordRequest req = new ForgotPasswordRequest("student@vanlanguni.vn");
         User user = User.builder().id(5L).email("student@vanlanguni.vn").fullName("SV Test").build();
 
@@ -164,14 +164,15 @@ class AuthServiceTest {
 
         assertNotNull(result);
         assertEquals("student@vanlanguni.vn", result.get("email"));
-        assertNotNull(result.get("resetTokenPreview"));
+        assertNull(result.get("resetTokenPreview"), "Không được để lộ mã OTP trong kết quả phản hồi API");
         verify(passwordResetTokenRepository, times(1)).deleteByUserId(5L);
         verify(passwordResetTokenRepository, times(1)).save(any(PasswordResetToken.class));
+        verify(emailService, times(1)).sendPasswordResetOtpEmail(eq("student@vanlanguni.vn"), eq("SV Test"), anyString());
     }
 
     @Test
     @DisplayName("Yêu cầu quên mật khẩu an toàn khi email không tồn tại (chống lộ email)")
-    void createPasswordResetToken_Safe_WhenUserNotFound() {
+    void createPasswordResetToken_Safe_WhenUserNotFound() throws Exception {
         ForgotPasswordRequest req = new ForgotPasswordRequest("unknown@vanlanguni.vn");
 
         when(userRepository.findByEmail("unknown@vanlanguni.vn")).thenReturn(Optional.empty());
@@ -182,6 +183,7 @@ class AuthServiceTest {
         assertEquals("unknown@vanlanguni.vn", result.get("email"));
         assertNull(result.get("resetTokenPreview"));
         verify(passwordResetTokenRepository, never()).save(any(PasswordResetToken.class));
+        verify(emailService, never()).sendPasswordResetOtpEmail(any(), any(), any());
     }
 
     @Test

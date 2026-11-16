@@ -154,10 +154,10 @@ public class AuthService {
                 }
             }
 
-            result.put("resetTokenPreview", token);
+            result.put("message", "Mã xác thực OTP đã được gửi đến email của bạn.");
         } else {
             // Do not reveal email absence for anti-enumeration security
-            result.put("resetTokenPreview", null);
+            result.put("message", "Nếu email tồn tại trong hệ thống, mã xác thực đặt lại mật khẩu đã được gửi đến email của bạn.");
         }
 
         return result;

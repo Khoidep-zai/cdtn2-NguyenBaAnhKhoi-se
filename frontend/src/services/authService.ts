@@ -25,8 +25,8 @@ export const authService = {
     return res.data.data;
   },
 
-  async forgotPassword(email: string): Promise<{ email: string; resetTokenPreview?: string }> {
-    const res = await apiClient.post<ApiResponse<{ email: string; resetTokenPreview?: string }>>('/auth/forgot-password', { email });
+  async forgotPassword(email: string): Promise<{ email: string; message?: string }> {
+    const res = await apiClient.post<ApiResponse<{ email: string; message?: string }>>('/auth/forgot-password', { email });
     return res.data.data;
   },
 

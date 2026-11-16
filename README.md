@@ -1,14 +1,12 @@
 # 🎓 FreelanceHub — Sàn Giao Dịch Việc Làm Part-time & Freelance Cho Sinh Viên
 
-> **Học phần:** Chuyên đề Tốt nghiệp 2 (CDTN2 — HK1 2026–2027)  
-> **Khoa:** Công nghệ Thông tin — Trường Đại học Văn Lang  
-> **Mã lớp học phần:** `261_71ITGR40303_04` | **Nhóm:** Nhóm 8  
-> **Thành viên nhóm:**
+> **Học phần:** Chuyên đề Tốt nghiệp 2 (CDTN2 — HK1 2026–2027)**Khoa:** Công nghệ Thông tin — Trường Đại học Văn Lang**Mã lớp học phần:** `261_71ITGR40303_04` | **Nhóm:** Nhóm 8**Thành viên nhóm:**
+>
 > - **Nguyễn Bá Anh Khôi** — `2374802010247` (Developer & Cloud Infrastructure)
 > - **Phan Văn Hoàng Long** — `2374802010283` (Backend Developer & Product Owner)
 > - **Phạm Công Tài** — `2374802010445` (Frontend Developer & Scrum Master)
 >
-> **Giảng viên hướng dẫn:** ThS. Nguyễn Văn Trung  
+> **Giảng viên hướng dẫn:** ThS. Nguyễn Văn Trung
 > **Kho lưu trữ GitHub:** [https://github.com/Khoidep-zai/cdtn2-NguyenBaAnhKhoi-se](https://github.com/Khoidep-zai/cdtn2-NguyenBaAnhKhoi-se)
 
 ---
@@ -30,11 +28,11 @@ Dự án đã được triển khai hoàn chỉnh và kết nối thông suốt 
 
 Cơ sở dữ liệu đám mây Neon đã nạp sẵn 3 tài khoản mẫu đầy đủ phân quyền theo tiêu chuẩn RBAC:
 
-| Vai trò người dùng | Tên đăng nhập (Email) | Mật khẩu chuẩn | Quyền hạn nghiệp vụ |
-| :--- | :--- | :--- | :--- |
-| **Quản trị viên (Admin)** | `admin@test.com` | `123456` | Quản trị toàn sàn: Duyệt tin đăng (`PENDING`), quản lý tài khoản người dùng, xử lý báo cáo vi phạm, xem thống kê KPI. |
-| **Nhà tuyển dụng (Employer)** | `employer@test.com` | `123456` | Đăng tin tuyển dụng part-time/freelance, quản lý bài đăng, xem danh sách ứng viên, duyệt nhận (`ACCEPTED`) hoặc từ chối (`REJECTED`) đơn, nhận mail tự động khi đủ người. |
-| **Sinh viên (Student)** | `student@test.com` | `123456` | Tìm việc làm theo ca kíp/lương, nộp hồ sơ CV, theo dõi trạng thái ứng tuyển, hủy đơn khi `PENDING`, nhận email thông báo Đậu/Rớt, đánh giá sao NTD. |
+| Vai trò người dùng                 | Tên đăng nhập (Email) | Mật khẩu chuẩn | Quyền hạn nghiệp vụ                                                                                                                                                                                  |
+| :------------------------------------- | :------------------------ | :---------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Quản trị viên (Admin)**     | `admin@test.com`        | Password123@      | Quản trị toàn sàn: Duyệt tin đăng (`PENDING`), quản lý tài khoản người dùng, xử lý báo cáo vi phạm, xem thống kê KPI.                                                             |
+| **Nhà tuyển dụng (Employer)** | `employer@test.com`     | Password123@      | Đăng tin tuyển dụng part-time/freelance, quản lý bài đăng, xem danh sách ứng viên, duyệt nhận (`ACCEPTED`) hoặc từ chối (`REJECTED`) đơn, nhận mail tự động khi đủ người. |
+| **Sinh viên (Student)**         | `student@test.com`      | Password123@      | Tìm việc làm theo ca kíp/lương, nộp hồ sơ CV, theo dõi trạng thái ứng tuyển, hủy đơn khi `PENDING`, nhận email thông báo Đậu/Rớt, đánh giá sao NTD.                          |
 
 > [!TIP]
 > **Xác thực Sinh trắc học (Passkey WebAuthn):** Hệ thống hỗ trợ đăng nhập không cần mật khẩu bằng vân tay, Face ID hoặc Windows Hello (FIDO2) ngay tại màn hình đăng nhập!
@@ -65,6 +63,7 @@ Hệ thống tích hợp đầy đủ quy trình gửi email qua **Gmail SMTP** 
 Áp dụng toàn bộ công nghệ container hóa tối ưu từ **CDTN1 sang CDTN2**, toàn bộ hệ thống gồm 3 tầng khép kín (PostgreSQL 16 Alpine + Spring Boot 3.2.x REST API + React Vite SPA Nginx) được khởi chạy hoàn chỉnh chỉ bằng **đúng 2 câu lệnh**:
 
 ### Bước 1: Sao chép tệp cấu hình môi trường mẫu
+
 - **Trên Windows PowerShell:**
   ```powershell
   Copy-Item .env.example .env
@@ -75,14 +74,17 @@ Hệ thống tích hợp đầy đủ quy trình gửi email qua **Gmail SMTP** 
   ```
 
 ### Bước 2: Khởi chạy toàn bộ hệ thống bằng Docker Compose
+
 ```bash
 docker compose up -d --build
 ```
+
 *(Hoặc chạy lệnh rút gọn: `npm run docker:up` / hoặc PowerShell script: `.\scripts\docker-run.ps1`)*
 
 ---
 
 ### Quá trình khởi động diễn ra tự động như thế nào?
+
 1. **Khởi động CSDL PostgreSQL 16 Alpine (`postgres_db`)**:
    - Tự động áp dụng các cờ hiệu năng cao: `shared_buffers=256MB`, `work_mem=16MB`, `synchronous_commit=off`.
    - Nạp tự động cấu trúc bảng quan hệ 3NF chuẩn, 13 indexes hiệu năng cao và hơn 1.470 việc làm thực tế từ tệp `database/postgres_init.sql`.
@@ -98,12 +100,14 @@ docker compose up -d --build
 ---
 
 ### Truy Cập Ứng Dụng Cục Bộ
+
 * 🌐 **Giao diện Web Sinh viên & NTD:** [http://localhost:3000](http://localhost:3000)
 * 🩺 **Kiểm tra API Backend:** [http://localhost:8080/api/v1/jobs](http://localhost:8080/api/v1/jobs)
 * 📑 **Tài liệu Swagger / OpenAPI:** [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
 * 🗄️ **H2 Web Console (khi chạy local profile):** [http://localhost:8080/api/v1/h2-console](http://localhost:8080/api/v1/h2-console)
 
 ### Các lệnh quản trị Docker tiện ích:
+
 ```bash
 # Xem trạng thái các container đang chạy (tất cả phải healthy)
 docker compose ps
@@ -191,49 +195,49 @@ Mọi endpoint đều trả về cấu trúc bọc `ApiResponse<T>` thống nh�
 
 ### A. Xác thực, Mật khẩu & Passkey (`/api/v1/auth`)
 
-| Phương thức | Đường dẫn API | Quyền hạn | Chức năng |
-| :---: | :--- | :---: | :--- |
-| `POST` | `/api/v1/auth/register` | Public | Đăng ký tài khoản Sinh viên / NTD & gửi email OTP xác nhận |
-| `POST` | `/api/v1/auth/login` | Public | Đăng nhập bằng email/password, trả về JWT token |
-| `GET` | `/api/v1/auth/me` | Authenticated | Lấy thông tin tài khoản hiện tại |
-| `POST` | `/api/v1/auth/forgot-password` | Public | Yêu cầu cấp mã OTP đặt lại mật khẩu gửi về Gmail |
-| `POST` | `/api/v1/auth/reset-password` | Public | Đặt lại mật khẩu mới thông qua mã OTP/token hợp lệ |
-| `POST` | `/api/v1/auth/passkey/register-options` | Authenticated | Lấy challenge đăng ký Passkey FIDO2 |
-| `POST` | `/api/v1/auth/passkey/register` | Authenticated | Lưu thông tin khóa công khai Passkey |
-| `POST` | `/api/v1/auth/passkey/login-options` | Public | Lấy challenge đăng nhập không mật khẩu |
-| `POST` | `/api/v1/auth/passkey/verify-login` | Public | Xác thực chữ ký WebAuthn và cấp JWT |
+| Phương thức | Đường dẫn API                         |  Quyền hạn  | Chức năng                                                         |
+| :------------: | :---------------------------------------- | :-----------: | :------------------------------------------------------------------ |
+|    `POST`    | `/api/v1/auth/register`                 |    Public    | Đăng ký tài khoản Sinh viên / NTD & gửi email OTP xác nhận |
+|    `POST`    | `/api/v1/auth/login`                    |    Public    | Đăng nhập bằng email/password, trả về JWT token               |
+|    `GET`    | `/api/v1/auth/me`                       | Authenticated | Lấy thông tin tài khoản hiện tại                              |
+|    `POST`    | `/api/v1/auth/forgot-password`          |    Public    | Yêu cầu cấp mã OTP đặt lại mật khẩu gửi về Gmail         |
+|    `POST`    | `/api/v1/auth/reset-password`           |    Public    | Đặt lại mật khẩu mới thông qua mã OTP/token hợp lệ        |
+|    `POST`    | `/api/v1/auth/passkey/register-options` | Authenticated | Lấy challenge đăng ký Passkey FIDO2                             |
+|    `POST`    | `/api/v1/auth/passkey/register`         | Authenticated | Lưu thông tin khóa công khai Passkey                            |
+|    `POST`    | `/api/v1/auth/passkey/login-options`    |    Public    | Lấy challenge đăng nhập không mật khẩu                       |
+|    `POST`    | `/api/v1/auth/passkey/verify-login`     |    Public    | Xác thực chữ ký WebAuthn và cấp JWT                           |
 
 ### B. Quản lý việc làm (`/api/v1/jobs`)
 
-| Phương thức | Đường dẫn API | Quyền hạn | Chức năng |
-| :---: | :--- | :---: | :--- |
-| `GET` | `/api/v1/jobs` | Public | Tìm kiếm, lọc việc làm theo từ khóa, ngành nghề, địa điểm, mức lương |
-| `GET` | `/api/v1/jobs/{id}` | Public | Xem thông tin chi tiết việc làm |
-| `GET` | `/api/v1/jobs/my-jobs` | Employer | Xem danh sách tin việc làm do chính NTD đăng |
-| `POST` | `/api/v1/jobs` | Employer / Admin | Đăng tin tuyển dụng mới |
-| `PUT` | `/api/v1/jobs/{id}` | Employer / Admin | Cập nhật nội dung tin việc làm (kiểm tra sở hữu) |
-| `PATCH` | `/api/v1/jobs/{id}/status` | Employer / Admin | Đổi trạng thái tin (`OPEN`, `IN_PROGRESS`, `COMPLETED`, `CLOSED`) |
-| `DELETE` | `/api/v1/jobs/{id}` | Employer / Admin | Xóa tin việc làm |
+| Phương thức | Đường dẫn API            |   Quyền hạn   | Chức năng                                                                          |
+| :------------: | :--------------------------- | :--------------: | :----------------------------------------------------------------------------------- |
+|    `GET`    | `/api/v1/jobs`             |      Public      | Tìm kiếm, lọc việc làm theo từ khóa, ngành nghề, địa điểm, mức lương |
+|    `GET`    | `/api/v1/jobs/{id}`        |      Public      | Xem thông tin chi tiết việc làm                                                  |
+|    `GET`    | `/api/v1/jobs/my-jobs`     |     Employer     | Xem danh sách tin việc làm do chính NTD đăng                                   |
+|    `POST`    | `/api/v1/jobs`             | Employer / Admin | Đăng tin tuyển dụng mới                                                         |
+|    `PUT`    | `/api/v1/jobs/{id}`        | Employer / Admin | Cập nhật nội dung tin việc làm (kiểm tra sở hữu)                             |
+|   `PATCH`   | `/api/v1/jobs/{id}/status` | Employer / Admin | Đổi trạng thái tin (`OPEN`, `IN_PROGRESS`, `COMPLETED`, `CLOSED`)        |
+|   `DELETE`   | `/api/v1/jobs/{id}`        | Employer / Admin | Xóa tin việc làm                                                                  |
 
 ### C. Ứng tuyển (`/api/v1/applications`)
 
-| Phương thức | Đường dẫn API | Quyền hạn | Chức năng |
-| :---: | :--- | :---: | :--- |
-| `POST` | `/api/v1/applications` | Student | Nộp hồ sơ ứng tuyển kèm link CV và thư giới thiệu |
-| `GET` | `/api/v1/applications/my-applications` | Student | Xem danh sách đơn ứng tuyển của bản thân |
-| `GET` | `/api/v1/applications/job/{jobId}` | Employer / Admin | NTD xem danh sách ứng viên nộp vào tin của mình |
-| `PATCH` | `/api/v1/applications/{id}/status` | Employer / Admin | Duyệt (`ACCEPTED` - gửi mail mừng) hoặc từ chối (`REJECTED` - gửi mail từ chối) |
-| `PATCH` | `/api/v1/applications/{id}/cancel` | Student | Sinh viên tự hủy đơn khi đang ở trạng thái `PENDING` |
+| Phương thức | Đường dẫn API                        |   Quyền hạn   | Chức năng                                                                                  |
+| :------------: | :--------------------------------------- | :--------------: | :------------------------------------------------------------------------------------------- |
+|    `POST`    | `/api/v1/applications`                 |     Student     | Nộp hồ sơ ứng tuyển kèm link CV và thư giới thiệu                                  |
+|    `GET`    | `/api/v1/applications/my-applications` |     Student     | Xem danh sách đơn ứng tuyển của bản thân                                             |
+|    `GET`    | `/api/v1/applications/job/{jobId}`     | Employer / Admin | NTD xem danh sách ứng viên nộp vào tin của mình                                       |
+|   `PATCH`   | `/api/v1/applications/{id}/status`     | Employer / Admin | Duyệt (`ACCEPTED` - gửi mail mừng) hoặc từ chối (`REJECTED` - gửi mail từ chối) |
+|   `PATCH`   | `/api/v1/applications/{id}/cancel`     |     Student     | Sinh viên tự hủy đơn khi đang ở trạng thái `PENDING`                              |
 
 ### D. Đánh giá & Báo cáo (`/api/v1/reviews`, `/api/v1/reports`, `/api/v1/admin`)
 
-| Phương thức | Đường dẫn API | Quyền hạn | Chức năng |
-| :---: | :--- | :---: | :--- |
-| `POST` | `/api/v1/reviews` | Student / Employer | Đánh giá 1–5 sao hai chiều khi công việc `COMPLETED` |
-| `GET` | `/api/v1/reviews/user/{userId}` | Public | Xem danh sách đánh giá và điểm sao trung bình của người dùng |
-| `POST` | `/api/v1/reports` | Authenticated | Gửi báo cáo tin tuyển dụng hoặc hành vi lừa đảo |
-| `GET` | `/api/v1/admin/reports` | Admin | Quản trị viên xem danh sách các báo cáo vi phạm |
-| `PATCH` | `/api/v1/admin/users/{id}/toggle-status` | Admin | Khóa hoặc mở khóa tài khoản người dùng vi phạm |
+| Phương thức | Đường dẫn API                          |    Quyền hạn    | Chức năng                                                              |
+| :------------: | :----------------------------------------- | :----------------: | :----------------------------------------------------------------------- |
+|    `POST`    | `/api/v1/reviews`                        | Student / Employer | Đánh giá 1–5 sao hai chiều khi công việc `COMPLETED`            |
+|    `GET`    | `/api/v1/reviews/user/{userId}`          |       Public       | Xem danh sách đánh giá và điểm sao trung bình của người dùng |
+|    `POST`    | `/api/v1/reports`                        |   Authenticated   | Gửi báo cáo tin tuyển dụng hoặc hành vi lừa đảo                |
+|    `GET`    | `/api/v1/admin/reports`                  |       Admin       | Quản trị viên xem danh sách các báo cáo vi phạm                  |
+|   `PATCH`   | `/api/v1/admin/users/{id}/toggle-status` |       Admin       | Khóa hoặc mở khóa tài khoản người dùng vi phạm                 |
 
 ---
 
@@ -282,6 +286,7 @@ npm run test:frontend
    FRONTEND_PORT=3001
    BACKEND_PORT=8081
    ```
+
    Sau đó chạy lại `docker compose up -d`.
 2. **Khởi tạo lại sạch cơ sở dữ liệu:**
    ```bash

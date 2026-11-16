@@ -821,6 +821,77 @@ body {
   color: var(--text-light);
 }
 
+/* Password Input with Animated Eye Toggle */
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-input-container input {
+  width: 100%;
+  padding-right: 2.85rem !important;
+}
+
+.password-eye-btn {
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 0.35rem;
+  color: var(--text-light);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm, 6px);
+  transition: color 0.2s ease, background-color 0.2s ease, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  outline: none;
+  z-index: 2;
+  user-select: none;
+}
+
+.password-eye-btn:hover {
+  color: var(--primary);
+  background-color: rgba(99, 102, 241, 0.12);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.password-eye-btn:active {
+  transform: translateY(-50%) scale(0.92);
+}
+
+.password-eye-btn.is-visible {
+  color: var(--primary);
+}
+
+/* Eye Blink & Spring Animation */
+@keyframes eyeBlinkMorph {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(0.7, 0.15) rotate(8deg);
+    opacity: 0.4;
+  }
+  70% {
+    transform: scale(1.2, 1.2) rotate(-4deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.password-eye-icon-animate {
+  animation: eyeBlinkMorph 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 .auth-error {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);

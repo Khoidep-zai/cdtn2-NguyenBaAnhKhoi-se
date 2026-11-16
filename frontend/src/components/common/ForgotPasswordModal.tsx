@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, KeyRound, CheckCircle2, AlertCircle, ShieldCheck } from 'lucide-react';
+import { PasswordInput } from './PasswordInput';
 import { authService } from '../../services/authService';
 import { useLanguage } from '../../context/LanguageContext';
 import './ModernDialog.css';
@@ -293,8 +294,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.4rem' }}>
               {language === 'vi' ? 'Mật khẩu mới' : 'New Password'}
             </label>
-            <input
-              type="password"
+            <PasswordInput
               required
               placeholder="••••••••"
               value={newPassword}
@@ -308,6 +308,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                 color: 'var(--text-main)',
                 boxSizing: 'border-box'
               }}
+              autoComplete="new-password"
             />
           </div>
 
@@ -315,8 +316,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.4rem' }}>
               {language === 'vi' ? 'Xác nhận mật khẩu mới' : 'Confirm New Password'}
             </label>
-            <input
-              type="password"
+            <PasswordInput
               required
               placeholder="••••••••"
               value={confirmPassword}
@@ -330,6 +330,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                 color: 'var(--text-main)',
                 boxSizing: 'border-box'
               }}
+              autoComplete="new-password"
             />
           </div>
 

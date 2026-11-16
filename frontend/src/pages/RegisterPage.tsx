@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { UserPlus, AlertCircle } from 'lucide-react';
+import { PasswordInput } from '../components/common/PasswordInput';
 
 export const RegisterPage: React.FC = () => {
   const [role, setRole] = useState<'ROLE_STUDENT' | 'ROLE_EMPLOYER'>('ROLE_STUDENT');
@@ -130,14 +131,14 @@ export const RegisterPage: React.FC = () => {
 
           <div>
             <label className="auth-label">{t('auth.passwordMin')}</label>
-            <input
-              type="password"
+            <PasswordInput
               required
               minLength={6}
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="auth-input"
+              autoComplete="new-password"
             />
           </div>
 

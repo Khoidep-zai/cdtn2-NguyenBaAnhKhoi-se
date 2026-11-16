@@ -5,6 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { LogIn, AlertCircle, Fingerprint } from 'lucide-react';
 import { HubbieMascot } from '../components/common/HubbieMascot';
 import { ForgotPasswordModal } from '../components/common/ForgotPasswordModal';
+import { PasswordInput } from '../components/common/PasswordInput';
 import { passkeyService } from '../services/passkeyService';
 
 export const LoginPage: React.FC = () => {
@@ -133,13 +134,13 @@ export const LoginPage: React.FC = () => {
                 {language === 'vi' ? 'Quên mật khẩu?' : 'Forgot password?'}
               </button>
             </div>
-            <input
-              type="password"
+            <PasswordInput
               required
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="auth-input"
+              autoComplete="current-password"
             />
           </div>
 

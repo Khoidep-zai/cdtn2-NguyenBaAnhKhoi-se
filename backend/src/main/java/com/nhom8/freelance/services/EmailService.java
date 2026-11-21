@@ -216,6 +216,154 @@ public class EmailService {
         mailSender.send(message);
     }
 
+    public void sendNewApplicationEmailToEmployer(
+            String employerEmail,
+            String employerName,
+            String studentName,
+            String studentEmail,
+            String jobTitle,
+            String university,
+            String major
+    ) throws MessagingException {
+        if (employerEmail == null || employerEmail.isBlank()) {
+            throw new IllegalArgumentException("Recipient email must not be empty");
+        }
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setFrom(getFromAddress());
+        helper.setTo(employerEmail);
+        helper.setSubject(String.format("Thông báo: Có ứng viên mới ứng tuyển vị trí \"%s\" – FreelanceHub", jobTitle));
+
+        String safeEmployerName = employerName != null ? employerName : "Quý Nhà tuyển dụng";
+        String safeStudentName = studentName != null ? studentName : "Một sinh viên";
+        String safeJobTitle = jobTitle != null ? jobTitle : "";
+        String safeUni = (university != null && !university.isBlank()) ? university : "Chưa cập nhật";
+        String safeMajor = (major != null && !major.isBlank()) ? major : "Chưa cập nhật";
+
+        String plainText = String.format(
+                "Xin chào %s,\n\n" +
+                "FreelanceHub xin thông báo: Vị trí \"%s\" của quý công ty vừa nhận được hồ sơ ứng tuyển mới từ sinh viên %s.\n\n" +
+                "Thông tin tóm tắt ứng viên:\n" +
+                "- Họ và tên: %s\n" +
+                "- Email: %s\n" +
+                "- Trường: %s\n" +
+                "- Chuyên ngành: %s\n\n" +
+                "Vui lòng đăng nhập vào FreelanceHub để xem chi tiết hồ sơ (CV, thư giới thiệu) và xét duyệt ứng viên.\n\n" +
+                "Trân trọng,\n" +
+                "FreelanceHub Team.",
+                safeEmployerName, safeJobTitle, safeStudentName,
+                safeStudentName, studentEmail != null ? studentEmail : "", safeUni, safeMajor
+        );
+
+        String htmlContent = String.format("""
+            <!DOCTYPE html>
+            <html lang="vi">
+            <head>
+              <meta charset="UTF-8">
+            </head>
+            <body style="font-family: Arial, sans-serif; color: #334155; line-height: 1.6; background-color: #f8fafc; padding: 24px;">
+              <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 32px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h2 style="color: #2563eb; margin-top: 0;">FreelanceHub</h2>
+                <p>Xin chào <strong>%s</strong>,</p>
+                <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px; margin: 16px 0; border-radius: 4px;">
+                  <h3 style="color: #1e40af; margin-top: 0; margin-bottom: 8px;">📬 Có ứng viên mới nộp hồ sơ!</h3>
+                  <p style="margin: 0; color: #1e3a8a;">Công việc <strong>%s</strong> của bạn vừa nhận được đơn ứng tuyển mới.</p>
+                </div>
+                <table style="width: 100%%; border-collapse: collapse; margin: 16px 0;">
+                  <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 8px 0; color: #64748b; width: 140px;">Họ tên ứng viên:</td>
+                    <td style="padding: 8px 0; font-weight: bold; color: #0f172a;">%s</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 8px 0; color: #64748b;">Trường đại học:</td>
+                    <td style="padding: 8px 0; color: #334155;">%s</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 8px 0; color: #64748b;">Chuyên ngành:</td>
+                    <td style="padding: 8px 0; color: #334155;">%s</td>
+                  </tr>
+                </table>
+                <p>Vui lòng đăng nhập vào <strong>FreelanceHub</strong> để xem chi tiết hồ sơ (CV, Cover Letter) và tiến hành xét duyệt ứng viên kịp thời.</p>
+                <p style="margin-top: 24px;">Trân trọng,<br><strong>FreelanceHub Team.</strong></p>
+              </div>
+            </body>
+            </html>
+            """,
+                escapeHtml(safeEmployerName),
+                escapeHtml(safeJobTitle),
+                escapeHtml(safeStudentName),
+                escapeHtml(safeUni),
+                escapeHtml(safeMajor)
+        );
+
+        helper.setText(plainText, htmlContent);
+        mailSender.send(message);
+    }
+
+    public void sendApplicationSubmittedEmailToStudent(
+            String studentEmail,
+            String studentName,
+            String jobTitle,
+            String employerName
+    ) throws MessagingException {
+        if (studentEmail == null || studentEmail.isBlank()) {
+            throw new IllegalArgumentException("Recipient email must not be empty");
+        }
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setFrom(getFromAddress());
+        helper.setTo(studentEmail);
+        helper.setSubject(String.format("Xác nhận nộp hồ sơ thành công – Vị trí \"%s\"", jobTitle));
+
+        String safeStudentName = studentName != null ? studentName : "bạn";
+        String safeJobTitle = jobTitle != null ? jobTitle : "";
+        String safeEmployerName = employerName != null ? employerName : "Nhà tuyển dụng";
+
+        String plainText = String.format(
+                "Xin chào %s,\n\n" +
+                "Bạn đã nộp hồ sơ ứng tuyển thành công cho vị trí %s tại %s trên hệ thống FreelanceHub.\n\n" +
+                "Hồ sơ của bạn đã được chuyển đến nhà tuyển dụng. Hệ thống sẽ thông báo qua email và thông báo nội bộ ngay khi nhà tuyển dụng có phản hồi kết quả xét duyệt.\n\n" +
+                "Chúc bạn có một kết quả thật tốt!\n\n" +
+                "Trân trọng,\n" +
+                "FreelanceHub Team.",
+                safeStudentName, safeJobTitle, safeEmployerName
+        );
+
+        String htmlContent = String.format("""
+            <!DOCTYPE html>
+            <html lang="vi">
+            <head>
+              <meta charset="UTF-8">
+            </head>
+            <body style="font-family: Arial, sans-serif; color: #334155; line-height: 1.6; background-color: #f8fafc; padding: 24px;">
+              <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 32px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h2 style="color: #2563eb; margin-top: 0;">FreelanceHub</h2>
+                <p>Xin chào <strong>%s</strong>,</p>
+                <div style="background-color: #f0fdf4; border-left: 4px solid #22c55e; padding: 16px; margin: 16px 0; border-radius: 4px;">
+                  <h3 style="color: #15803d; margin-top: 0; margin-bottom: 8px;">✅ Nộp hồ sơ ứng tuyển thành công!</h3>
+                  <p style="margin: 0; color: #166534;">Hồ sơ của bạn cho vị trí <strong>%s</strong> tại <strong>%s</strong> đã được gửi tới nhà tuyển dụng.</p>
+                </div>
+                <p>Hồ sơ ứng tuyển hiện đang ở trạng thái <strong>Chờ duyệt (PENDING)</strong>. Bạn có thể theo dõi tiến độ xét duyệt trực tiếp tại mục <em>Lịch sử ứng tuyển</em> trên tài khoản FreelanceHub của bạn.</p>
+                <p>Hệ thống sẽ tự động gửi thông báo đến bạn ngay khi có cập nhật mới từ nhà tuyển dụng.</p>
+                <p>Chúc bạn sớm nhận được tin vui!</p>
+                <p style="margin-top: 24px;">Trân trọng,<br><strong>FreelanceHub Team.</strong></p>
+              </div>
+            </body>
+            </html>
+            """,
+                escapeHtml(safeStudentName),
+                escapeHtml(safeJobTitle),
+                escapeHtml(safeEmployerName)
+        );
+
+        helper.setText(plainText, htmlContent);
+        mailSender.send(message);
+    }
+
     public void sendRegistrationOtpEmail(
             String recipientEmail,
             String recipientName,

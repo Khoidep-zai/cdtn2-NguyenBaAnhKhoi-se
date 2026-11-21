@@ -46,6 +46,11 @@ public class ApplicationService {
             throw new BadRequestException("Bạn không thể tự ứng tuyển vào công việc do chính mình đăng!");
         }
 
+        long currentAccepted = applicationRepository.countByJobIdAndStatus(jobId, "ACCEPTED");
+        if (job.getSlotsAvailable() != null && job.getSlotsAvailable() > 0 && currentAccepted >= job.getSlotsAvailable()) {
+            throw new BadRequestException("Công việc này đã tuyển đủ số lượng chỉ tiêu (" + job.getSlotsAvailable() + " người)!");
+        }
+
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thông tin sinh viên"));
 
@@ -67,6 +72,44 @@ public class ApplicationService {
                 "NEW_APPLICATION",
                 saved.getId()
         );
+
+        if (eventPublisher != null) {
+            String employerName = job.getEmployer().getCompanyName();
+            if (employerName == null || employerName.isBlank()) {
+                employerName = job.getEmployer().getFullName();
+            }
+
+            // Gửi email thông báo ứng viên mới cho Nhà tuyển dụng
+            if (job.getEmployer().getEmail() != null && !job.getEmployer().getEmail().isBlank()) {
+                eventPublisher.publishEvent(
+                        new NewApplicationEvent(
+                                saved.getId(),
+                                job.getId(),
+                                job.getEmployer().getEmail(),
+                                employerName,
+                                student.getFullName(),
+                                student.getEmail(),
+                                job.getTitle(),
+                                student.getUniversity(),
+                                student.getMajor()
+                        )
+                );
+            }
+
+            // Gửi email biên nhận xác nhận nộp hồ sơ cho Sinh viên
+            if (student.getEmail() != null && !student.getEmail().isBlank()) {
+                eventPublisher.publishEvent(
+                        new ApplicationSubmittedEvent(
+                                saved.getId(),
+                                job.getId(),
+                                student.getEmail(),
+                                student.getFullName(),
+                                job.getTitle(),
+                                employerName
+                        )
+                );
+            }
+        }
 
         return saved;
     }
@@ -166,10 +209,10 @@ public class ApplicationService {
                     )
             );
 
-            // Check if job slots are now fully filled
+            // Check if job slots are now fully filled (only trigger once when exactly reaching the slot limit)
             long acceptedCount = applicationRepository.countByJobIdAndStatus(application.getJob().getId(), "ACCEPTED");
             Integer slotsAvailable = application.getJob().getSlotsAvailable();
-            if (slotsAvailable != null && slotsAvailable > 0 && acceptedCount >= slotsAvailable) {
+            if (slotsAvailable != null && slotsAvailable > 0 && acceptedCount == slotsAvailable) {
                 User employer = application.getJob().getEmployer();
                 String empEmail = employer != null ? employer.getEmail() : null;
                 if (empEmail != null && !empEmail.isBlank()) {
@@ -183,6 +226,10 @@ public class ApplicationService {
                             )
                     );
                 }
+                // Tự động đóng tin tuyển dụng khi đã tuyển đủ số lượng chỉ tiêu
+                Job job = application.getJob();
+                job.setStatus("CLOSED");
+                jobRepository.save(job);
             }
         }
 

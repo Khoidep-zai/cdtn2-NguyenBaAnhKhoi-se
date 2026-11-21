@@ -11,6 +11,8 @@ import com.nhom8.freelance.repositories.UserRepository;
 import com.nhom8.freelance.services.ApplicationAcceptedEvent;
 import com.nhom8.freelance.services.ApplicationRejectedEvent;
 import com.nhom8.freelance.services.JobSlotsFilledEvent;
+import com.nhom8.freelance.services.NewApplicationEvent;
+import com.nhom8.freelance.services.ApplicationSubmittedEvent;
 import com.nhom8.freelance.services.ApplicationService;
 import com.nhom8.freelance.services.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,7 +79,7 @@ class ApplicationServiceTest {
     }
 
     @Test
-    @DisplayName("Nộp đơn ứng tuyển thành công - Không gửi email chúc mừng")
+    @DisplayName("Nộp đơn ứng tuyển thành công - Phát sinh sự kiện gửi email thông báo cho NTD và Ứng viên")
     void applyJob_Success() {
         when(applicationRepository.existsByJobIdAndStudentId(10L, 2L)).thenReturn(false);
         when(jobRepository.findById(10L)).thenReturn(Optional.of(job));
@@ -90,7 +92,26 @@ class ApplicationServiceTest {
         assertEquals("PENDING", result.getStatus());
         verify(applicationRepository).save(any(Application.class));
         verify(notificationService).createNotification(eq(1L), anyString(), anyString(), eq("NEW_APPLICATION"), anyLong());
-        verify(eventPublisher, never()).publishEvent(any());
+
+        ArgumentCaptor<Object> eventCaptor = ArgumentCaptor.forClass(Object.class);
+        verify(eventPublisher, times(2)).publishEvent(eventCaptor.capture());
+        var publishedEvents = eventCaptor.getAllValues();
+        assertTrue(publishedEvents.stream().anyMatch(e -> e instanceof NewApplicationEvent));
+        assertTrue(publishedEvents.stream().anyMatch(e -> e instanceof ApplicationSubmittedEvent));
+    }
+
+    @Test
+    @DisplayName("Ném BadRequestException khi công việc đã tuyển đủ số lượng chỉ tiêu")
+    void applyJob_SlotsFilled_ThrowsException() {
+        when(applicationRepository.existsByJobIdAndStudentId(10L, 2L)).thenReturn(false);
+        when(jobRepository.findById(10L)).thenReturn(Optional.of(job));
+        when(applicationRepository.countByJobIdAndStatus(10L, "ACCEPTED")).thenReturn(1L);
+
+        BadRequestException ex = assertThrows(BadRequestException.class, () ->
+                applicationService.applyJob(2L, 10L, "Cover letter", "cv_url")
+        );
+        assertTrue(ex.getMessage().contains("đã tuyển đủ số lượng chỉ tiêu"));
+        verify(applicationRepository, never()).save(any(Application.class));
     }
 
     @Test
@@ -147,6 +168,9 @@ class ApplicationServiceTest {
         assertNotNull(result);
         assertEquals("PENDING", result.getStatus());
         verify(applicationRepository).save(any(Application.class));
+
+        ArgumentCaptor<Object> eventCaptor = ArgumentCaptor.forClass(Object.class);
+        verify(eventPublisher, times(2)).publishEvent(eventCaptor.capture());
     }
 
     @Test
@@ -206,6 +230,8 @@ class ApplicationServiceTest {
 
         assertNotNull(updated);
         assertEquals("ACCEPTED", application.getStatus());
+        assertEquals("CLOSED", job.getStatus());
+        verify(jobRepository, times(1)).save(eq(job));
 
         ArgumentCaptor<Object> eventCaptor = ArgumentCaptor.forClass(Object.class);
         verify(eventPublisher, times(2)).publishEvent(eventCaptor.capture());

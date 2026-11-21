@@ -27,10 +27,12 @@ ON DUPLICATE KEY UPDATE
     major = VALUES(major),
     is_active = 1;
 
--- 3. XÓA CÁC CA LÀM CỦA JOB TEST CŨ NẾU ĐÃ TỒN TẠI ĐỂ RE-SEED CHUẨN
+-- 3. XÓA CÁC CA LÀM VÀ JOB TEST CŨ NẾU ĐÃ TỒN TẠI ĐỂ RE-SEED CHUẨN UTF8
 DELETE js FROM job_shifts js
 JOIN jobs j ON js.job_id = j.id
 WHERE j.title LIKE '%TEST_FREELANCEHUB%' OR j.id IN (99001, 99002, 99003, 99004, 99005, 99006);
+
+DELETE FROM jobs WHERE id IN (99001, 99002, 99003, 99004, 99005, 99006);
 
 -- 4. TẠO 4 TIN TUYỂN DỤNG THỬ NGHIỆM CHÍNH (THEO YÊU CẦU PHẦN 3)
 

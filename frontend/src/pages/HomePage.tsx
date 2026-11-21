@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Sparkles, TrendingUp, ShieldCheck, MapPin, Database, ArrowRight, Briefcase, Layers, Flame } from 'lucide-react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { JobCard } from '../components/jobs/JobCard';
 import { HubbieMascot } from '../components/common/HubbieMascot';
 import { Job, Category } from '../types';
 import { jobService } from '../services/jobService';
 import { useLanguage } from '../context/LanguageContext';
 import { cleanMojibake } from '../utils/textUtils';
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 const MOCK_FEATURED_JOBS: Job[] = [
   {
@@ -124,6 +129,131 @@ export const HomePage: React.FC = () => {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
 
+  const heroRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+
+  // 1. Hero Section Entrance Animation with GSAP
+  useGSAP(
+    () => {
+      const prefersReduced =
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+      tl.from('.hero-mascot-wrapper', {
+        y: -16,
+        autoAlpha: 0,
+        duration: 0.55,
+      })
+        .from(
+          '.hero-sparkle-badge',
+          {
+            scale: 0.88,
+            autoAlpha: 0,
+            duration: 0.45,
+            ease: 'back.out(1.6)',
+          },
+          '-=0.3'
+        )
+        .from(
+          '.hero-title-part',
+          {
+            y: 28,
+            autoAlpha: 0,
+            duration: 0.6,
+          },
+          '-=0.25'
+        )
+        .from(
+          '.hero-gradient',
+          {
+            y: 28,
+            autoAlpha: 0,
+            duration: 0.6,
+          },
+          '-=0.45'
+        )
+        .from(
+          '.hero-desc',
+          {
+            y: 18,
+            autoAlpha: 0,
+            duration: 0.5,
+          },
+          '-=0.35'
+        )
+        .from(
+          '.search-box',
+          {
+            scale: 0.96,
+            y: 14,
+            autoAlpha: 0,
+            duration: 0.55,
+            ease: 'back.out(1.3)',
+          },
+          '-=0.3'
+        )
+        .from(
+          '.quick-province-pill',
+          {
+            scale: 0.86,
+            autoAlpha: 0,
+            duration: 0.35,
+            stagger: 0.04,
+            ease: 'power2.out',
+          },
+          '-=0.3'
+        );
+    },
+    { scope: heroRef }
+  );
+
+  // 2. Stats Numbers Smooth Count-up on Scroll with ScrollTrigger
+  useGSAP(
+    () => {
+      const prefersReduced =
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+
+      const statConfigs = [
+        { id: 'stat-jobs-count', target: 1470, suffix: '+', formatThousand: true },
+        { id: 'stat-cats-count', target: 16, suffix: '', formatThousand: false },
+        { id: 'stat-provs-count', target: 34, suffix: '+', formatThousand: false },
+      ];
+
+      statConfigs.forEach(({ id, target, suffix, formatThousand }) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const counterObj = { val: 0 };
+        gsap.to(counterObj, {
+          val: target,
+          duration: 1.8,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: statsRef.current,
+            start: 'top 85%',
+            once: true,
+          },
+          onUpdate: () => {
+            const current = Math.floor(counterObj.val);
+            let display = `${current}`;
+            if (formatThousand && current >= 1000) {
+              const thousands = Math.floor(current / 1000);
+              const remainder = current % 1000;
+              display = `${thousands}.${remainder.toString().padStart(3, '0')}`;
+            }
+            el.innerText = `${display}${suffix}`;
+          },
+        });
+      });
+    },
+    { scope: statsRef }
+  );
+
   useEffect(() => {
     let isMounted = true;
 
@@ -197,10 +327,10 @@ export const HomePage: React.FC = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="hero">
+      <section className="hero" ref={heroRef}>
         <div className="container">
           {/* Mascot Greeting */}
-          <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'center' }}>
+          <div className="hero-mascot-wrapper" style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'center' }}>
             <HubbieMascot
               size={68}
               message={
@@ -212,6 +342,7 @@ export const HomePage: React.FC = () => {
           </div>
 
           <div
+            className="hero-sparkle-badge"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -271,23 +402,23 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* Stats Banner */}
-      <section style={{ background: 'var(--bg-card)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', padding: '2rem 0' }}>
+      <section ref={statsRef} style={{ background: 'var(--bg-card)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)', padding: '2rem 0' }}>
         <div className="container stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', textAlign: 'center' }}>
           <div className="stat-item">
             <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontSize: '2rem', fontWeight: 800, color: 'var(--primary)' }}>
-              <Briefcase size={24} /> 1.470+
+              <Briefcase size={24} /> <span id="stat-jobs-count">1.470+</span>
             </div>
             <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>{t('home.statJobs')}</div>
           </div>
           <div className="stat-item">
             <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontSize: '2rem', fontWeight: 800, color: '#059669' }}>
-              <Layers size={24} /> 16
+              <Layers size={24} /> <span id="stat-cats-count">16</span>
             </div>
             <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>{t('home.statCats')}</div>
           </div>
           <div className="stat-item">
             <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', fontSize: '2rem', fontWeight: 800, color: '#d97706' }}>
-              <MapPin size={24} /> 34+
+              <MapPin size={24} /> <span id="stat-provs-count">34+</span>
             </div>
             <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '0.25rem' }}>{t('home.statProvs')}</div>
           </div>
@@ -335,6 +466,7 @@ export const HomePage: React.FC = () => {
                 <div
                   key={cat.id}
                   onClick={() => navigate(`/jobs?category=${cat.id}`)}
+                  className="category-card-interactive"
                   style={{
                     background: 'var(--bg-card)',
                     borderRadius: 'var(--radius-lg)',
@@ -345,18 +477,7 @@ export const HomePage: React.FC = () => {
                     alignItems: 'center',
                     textAlign: 'center',
                     cursor: 'pointer',
-                    transition: 'var(--transition)',
                     boxShadow: 'var(--shadow-sm)',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--primary)';
-                    e.currentTarget.style.transform = 'translateY(-3px)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--border-color)';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
                   }}
                 >
                   <div

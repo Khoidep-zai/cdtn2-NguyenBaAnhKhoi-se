@@ -3,6 +3,7 @@ package com.nhom8.freelance.services;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -15,6 +16,7 @@ public class ApplicationAcceptedEmailListener {
 
     private final EmailService emailService;
 
+    @Async("mailTaskExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onApplicationAccepted(ApplicationAcceptedEvent event) {
         try {

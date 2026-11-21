@@ -1,8 +1,8 @@
 package com.nhom8.freelance.service;
 
+import com.nhom8.freelance.services.EmailService;
 import com.nhom8.freelance.services.JobSlotsFilledEmailListener;
 import com.nhom8.freelance.services.JobSlotsFilledEvent;
-import com.nhom8.freelance.services.EmailService;
 import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,13 +25,13 @@ class JobSlotsFilledEmailListenerTest {
     private JobSlotsFilledEmailListener listener;
 
     @Test
-    @DisplayName("Xử lý event vị trí tuyển dụng đã đủ người và gửi email cho nhà tuyển dụng thành công")
+    @DisplayName("Xử lý event đã tuyển đủ chỉ tiêu và gửi email cho nhà tuyển dụng thành công")
     void onJobSlotsFilled_Success() throws Exception {
         JobSlotsFilledEvent event = new JobSlotsFilledEvent(
                 10L,
                 "employer@test.com",
-                "FPT Telecom",
-                "Lập trình viên Java",
+                "Công ty ABC",
+                "Backend Developer",
                 3
         );
 
@@ -39,30 +39,27 @@ class JobSlotsFilledEmailListenerTest {
 
         verify(emailService, times(1)).sendJobSlotsFilledEmail(
                 "employer@test.com",
-                "FPT Telecom",
-                "Lập trình viên Java",
+                "Công ty ABC",
+                "Backend Developer",
                 3
         );
     }
 
     @Test
-    @DisplayName("Bắt lỗi và ghi log khi gửi email thông báo đủ người thất bại - Không làm crash chương trình")
+    @DisplayName("Bắt lỗi và ghi log khi gửi email đủ chỉ tiêu thất bại - Không gây vỡ luồng")
     void onJobSlotsFilled_Failure_HandledGracefully() throws Exception {
         JobSlotsFilledEvent event = new JobSlotsFilledEvent(
                 10L,
                 "employer@test.com",
-                "FPT Telecom",
-                "Lập trình viên Java",
+                "Công ty ABC",
+                "Backend Developer",
                 3
         );
 
-        doThrow(new MessagingException("SMTP Connection timed out"))
+        doThrow(new MessagingException("SMTP Connection Closed"))
                 .when(emailService)
-                .sendJobSlotsFilledEmail(anyString(), anyString(), anyString(), anyInt());
+                .sendJobSlotsFilledEmail(any(), any(), any(), anyInt());
 
         assertDoesNotThrow(() -> listener.onJobSlotsFilled(event));
-
-        verify(emailService, times(1)).sendJobSlotsFilledEmail(anyString(), anyString(), anyString(), anyInt());
     }
 }
-

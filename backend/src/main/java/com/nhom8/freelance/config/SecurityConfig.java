@@ -49,7 +49,7 @@ public class SecurityConfig {
                                         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
                                         "font-src 'self' https://fonts.gstatic.com data:; " +
                                         "img-src 'self' data: https: blob:; " +
-                                        "connect-src 'self' https: https://*.netlify.app http://localhost:8080 http://localhost:5173 ws://localhost:5173; " +
+                                        "connect-src 'self' http://localhost:8080 http://localhost:5173 ws://localhost:5173; " +
                                         "frame-ancestors 'self';")
                         )
                 )
@@ -64,6 +64,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/reviews/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/student-profile/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/work-history/student/*").permitAll()
                         .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
                         // Role-based restrictions

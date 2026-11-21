@@ -42,4 +42,5 @@ public class JobCreateRequest {
 
     private Integer slotsAvailable = 1;
     private LocalDateTime deadline;
+    private java.util.List<com.nhom8.freelance.dto.JobShiftDTO> shifts;
 }

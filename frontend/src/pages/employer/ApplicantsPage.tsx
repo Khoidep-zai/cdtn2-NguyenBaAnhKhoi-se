@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { jobService } from '../../services/jobService';
-import { Job, Application } from '../../types';
+import { workHistoryService } from '../../services/workHistoryService';
+import { Job, Application, WorkHistory } from '../../types';
 import { ReviewModal } from '../../components/review/ReviewModal';
 import { 
   Users, 
@@ -16,7 +17,9 @@ import {
   Star, 
   Clock, 
   ExternalLink,
-  AlertCircle
+  AlertCircle,
+  ShieldCheck,
+  Award
 } from 'lucide-react';
 
 export const ApplicantsPage: React.FC = () => {
@@ -25,12 +28,22 @@ export const ApplicantsPage: React.FC = () => {
 
   const [job, setJob] = useState<Job | null>(null);
   const [applicants, setApplicants] = useState<Application[]>([]);
+  const [workHistories, setWorkHistories] = useState<Record<number, WorkHistory>>({});
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<number | null>(null);
 
   // Reject modal state
   const [rejectModalApp, setRejectModalApp] = useState<Application | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
+
+  // Mark Completed modal state
+  const [completeModalApp, setCompleteModalApp] = useState<Application | null>(null);
+  const [compStartDate, setCompStartDate] = useState('');
+  const [compEndDate, setCompEndDate] = useState('');
+  const [compRating, setCompRating] = useState(5);
+  const [compFeedback, setCompFeedback] = useState('');
+  const [compDescription, setCompDescription] = useState('');
+  const [submittingComplete, setSubmittingComplete] = useState(false);
 
   // Review modal state
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
@@ -48,7 +61,24 @@ export const ApplicantsPage: React.FC = () => {
         jobService.getApplicantsForJob(jobId).catch(() => [])
       ]);
       setJob(jobData);
-      setApplicants(appData || []);
+      const apps = appData || [];
+      setApplicants(apps);
+
+      // Load work history cho các đơn đã ACCEPTED
+      const acceptedApps = apps.filter(a => a.status === 'ACCEPTED');
+      if (acceptedApps.length > 0) {
+        const whResults = await Promise.all(
+          acceptedApps.map(async a => {
+            const wh = await workHistoryService.getByApplicationId(a.id);
+            return { appId: a.id, wh };
+          })
+        );
+        const whMap: Record<number, WorkHistory> = {};
+        whResults.forEach(r => {
+          if (r.wh) whMap[r.appId] = r.wh;
+        });
+        setWorkHistories(whMap);
+      }
     } finally {
       setLoading(false);
     }
@@ -87,6 +117,43 @@ export const ApplicantsPage: React.FC = () => {
       alert(err?.response?.data?.message || 'Có lỗi xảy ra khi từ chối ứng viên');
     } finally {
       setProcessingId(null);
+    }
+  };
+
+  const handleOpenComplete = (app: Application) => {
+    setCompleteModalApp(app);
+    // Ngày bắt đầu mặc định: ngày nộp đơn hoặc hôm nay
+    const today = new Date().toISOString().split('T')[0];
+    const appCreated = app.appliedAt ? app.appliedAt.split('T')[0] : today;
+    setCompStartDate(appCreated);
+    setCompEndDate(today);
+    setCompRating(5);
+    setCompFeedback('');
+    setCompDescription(job?.description ? job.description.substring(0, 150) : '');
+  };
+
+  const handleConfirmComplete = async () => {
+    if (!completeModalApp) return;
+    if (!compStartDate) {
+      alert('Vui lòng chọn ngày bắt đầu làm việc');
+      return;
+    }
+    setSubmittingComplete(true);
+    try {
+      const wh = await workHistoryService.markCompleted(completeModalApp.id, {
+        startDate: compStartDate,
+        endDate: compEndDate || undefined,
+        rating: compRating,
+        feedback: compFeedback.trim() || undefined,
+        description: compDescription.trim() || undefined
+      });
+      setWorkHistories(prev => ({ ...prev, [completeModalApp.id]: wh }));
+      setCompleteModalApp(null);
+      alert('Xác nhận hoàn thành việc thành công! Hệ thống đã gửi thông báo đến sinh viên để xác nhận vào Hồ sơ.');
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Có lỗi xảy ra khi xác nhận hoàn thành công việc');
+    } finally {
+      setSubmittingComplete(false);
     }
   };
 
@@ -305,7 +372,7 @@ export const ApplicantsPage: React.FC = () => {
                   flexWrap: 'wrap',
                   gap: '0.75rem'
                 }}>
-                  <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
                     {app.cvUrl ? (
                       <a
                         href={app.cvUrl}
@@ -326,9 +393,32 @@ export const ApplicantsPage: React.FC = () => {
                     ) : (
                       <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Không có file CV đính kèm</span>
                     )}
+
+                    {student?.id && (
+                      <Link
+                        to={`/students/${student.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{
+                          fontSize: '0.85rem',
+                          color: 'var(--primary)',
+                          textDecoration: 'none',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          fontWeight: 600,
+                          padding: '0.3rem 0.65rem',
+                          borderRadius: 'var(--radius-sm)',
+                          border: '1px solid var(--border-color)',
+                          background: 'var(--bg-main)'
+                        }}
+                      >
+                        <GraduationCap size={15} /> Xem hồ sơ 12 khu vực <ExternalLink size={13} />
+                      </Link>
+                    )}
                   </div>
 
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
                     {app.status !== 'ACCEPTED' && app.status !== 'REJECTED' && (
                       <>
                         <button
@@ -360,30 +450,93 @@ export const ApplicantsPage: React.FC = () => {
                       </>
                     )}
 
+                    {/* Work History Confirmation Status for ACCEPTED apps */}
+                    {app.status === 'ACCEPTED' && (() => {
+                      const wh = workHistories[app.id];
+                      if (!wh) {
+                        return (
+                          <button
+                            onClick={() => handleOpenComplete(app)}
+                            className="btn btn-primary"
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.4rem',
+                              padding: '0.4rem 0.85rem',
+                              fontSize: '0.85rem',
+                              background: '#2563eb',
+                              borderColor: '#2563eb'
+                            }}
+                          >
+                            <Award size={15} /> Xác nhận hoàn thành việc
+                          </button>
+                        );
+                      }
+                      if (wh.completionStatus === 'PENDING_STUDENT_CONFIRM') {
+                        return (
+                          <span style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                            padding: '0.35rem 0.75rem',
+                            background: '#fef3c7',
+                            color: '#92400e',
+                            borderRadius: 'var(--radius-sm)',
+                            fontSize: '0.82rem',
+                            fontWeight: 600,
+                            border: '1px solid #fde68a'
+                          }}>
+                            <Clock size={14} /> Đã gửi xác nhận ({wh.employerRating} ⭐) • Chờ sinh viên xác nhận
+                          </span>
+                        );
+                      }
+                      if (wh.completionStatus === 'COMPLETED') {
+                        return (
+                          <span style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                            padding: '0.35rem 0.75rem',
+                            background: '#dcfce7',
+                            color: '#166534',
+                            borderRadius: 'var(--radius-sm)',
+                            fontSize: '0.82rem',
+                            fontWeight: 600,
+                            border: '1px solid #bbf7d0'
+                          }}>
+                            <ShieldCheck size={14} /> Đã hoàn thành ({wh.employerRating} ⭐)
+                          </span>
+                        );
+                      }
+                      if (wh.completionStatus === 'DISPUTED') {
+                        return (
+                          <span style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                            padding: '0.35rem 0.75rem',
+                            background: '#fee2e2',
+                            color: '#991b1b',
+                            borderRadius: 'var(--radius-sm)',
+                            fontSize: '0.82rem',
+                            fontWeight: 600,
+                            border: '1px solid #fca5a5'
+                          }}>
+                            <AlertCircle size={14} /> Có khiếu nại: {wh.studentFeedback || 'Cần đối soát'}
+                          </span>
+                        );
+                      }
+                      return null;
+                    })()}
+
                     {app.status === 'ACCEPTED' && student && job?.status === 'COMPLETED' && (
                       <button
                         onClick={() => handleOpenReview(app)}
                         className="btn btn-secondary"
                         style={{ padding: '0.4rem 0.85rem', fontSize: '0.85rem' }}
                       >
-                        <Star size={15} color="#eab308" /> Đánh giá sinh viên
+                        <Star size={15} color="#eab308" /> Đánh giá thêm
                       </button>
-                    )}
-
-                    {app.status === 'ACCEPTED' && student && job?.status !== 'COMPLETED' && (
-                      <span style={{
-                        fontSize: '0.8rem',
-                        color: 'var(--text-muted)',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.3rem',
-                        padding: '0.35rem 0.6rem',
-                        background: 'var(--bg-main)',
-                        borderRadius: 'var(--radius-sm)',
-                        border: '1px solid var(--border-color)'
-                      }}>
-                        <Clock size={13} /> Đánh giá mở khi việc hoàn thành
-                      </span>
                     )}
                   </div>
                 </div>
@@ -460,6 +613,149 @@ export const ApplicantsPage: React.FC = () => {
                 disabled={processingId !== null}
               >
                 Xác nhận từ chối
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Complete Modal */}
+      {completeModalApp && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(15, 23, 42, 0.6)',
+          backdropFilter: 'blur(4px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 100,
+          padding: '1rem'
+        }}>
+          <div style={{
+            background: 'var(--bg-card)',
+            color: 'var(--text-main)',
+            border: '1px solid var(--border-color)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '2rem',
+            maxWidth: '540px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            boxShadow: 'var(--shadow-lg)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem', color: '#2563eb' }}>
+              <Award size={24} />
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: 'var(--text-main)' }}>
+                Xác nhận hoàn thành công việc
+              </h3>
+            </div>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '1.25rem', lineHeight: 1.5 }}>
+              Xác nhận ứng viên <strong>{completeModalApp.student?.fullName || 'Sinh viên'}</strong> đã hoàn thành công việc. Dữ liệu này sẽ được lưu snapshot vĩnh viễn vào Hồ sơ năng lực của sinh viên.
+            </p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+              <div>
+                <label className="form-label" style={{ fontSize: '0.85rem', fontWeight: 600 }}>
+                  Ngày bắt đầu làm *
+                </label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={compStartDate}
+                  onChange={(e) => setCompStartDate(e.target.value)}
+                  style={{ width: '100%', padding: '0.6rem', fontSize: '0.9rem' }}
+                />
+              </div>
+              <div>
+                <label className="form-label" style={{ fontSize: '0.85rem', fontWeight: 600 }}>
+                  Ngày kết thúc / bàn giao
+                </label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={compEndDate}
+                  onChange={(e) => setCompEndDate(e.target.value)}
+                  style={{ width: '100%', padding: '0.6rem', fontSize: '0.9rem' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '1.2rem' }}>
+              <label className="form-label" style={{ fontSize: '0.85rem', fontWeight: 600, display: 'block', marginBottom: '0.4rem' }}>
+                Đánh giá chất lượng sinh viên: {compRating} / 5 sao
+              </label>
+              <div style={{ display: 'flex', gap: '0.4rem' }}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setCompRating(star)}
+                    style={{
+                      background: 'transparent',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '0.2rem'
+                    }}
+                  >
+                    <Star
+                      size={28}
+                      color={star <= compRating ? '#eab308' : '#cbd5e1'}
+                      fill={star <= compRating ? '#eab308' : 'none'}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '1rem' }}>
+              <label className="form-label" style={{ fontSize: '0.85rem', fontWeight: 600 }}>
+                Nhận xét & Lời khen dành cho sinh viên:
+              </label>
+              <textarea
+                rows={3}
+                className="form-control"
+                value={compFeedback}
+                onChange={(e) => setCompFeedback(e.target.value)}
+                placeholder="Ví dụ: Sinh viên hoàn thành tốt công việc, đúng giờ, thái độ nhiệt tình và có trách nhiệm..."
+                style={{ width: '100%', padding: '0.65rem', fontSize: '0.88rem', resize: 'vertical' }}
+              />
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label className="form-label" style={{ fontSize: '0.85rem', fontWeight: 600 }}>
+                Mô tả tóm tắt kết quả công việc đã thực hiện:
+              </label>
+              <textarea
+                rows={2}
+                className="form-control"
+                value={compDescription}
+                onChange={(e) => setCompDescription(e.target.value)}
+                placeholder="Ví dụ: Đã hoàn thành 12 ca phục vụ bán lẻ trong tháng..."
+                style={{ width: '100%', padding: '0.65rem', fontSize: '0.88rem', resize: 'vertical' }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+              <button
+                type="button"
+                onClick={() => setCompleteModalApp(null)}
+                className="btn btn-secondary"
+                disabled={submittingComplete}
+              >
+                Hủy
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmComplete}
+                className="btn btn-primary"
+                style={{ background: '#2563eb', borderColor: '#2563eb' }}
+                disabled={submittingComplete}
+              >
+                {submittingComplete ? 'Đang lưu...' : 'Xác nhận & Lưu vào Hồ sơ'}
               </button>
             </div>
           </div>

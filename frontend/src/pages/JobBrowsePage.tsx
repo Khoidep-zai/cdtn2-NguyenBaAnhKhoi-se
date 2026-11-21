@@ -125,6 +125,12 @@ export const JobBrowsePage: React.FC = () => {
   const [selectedShift, setSelectedShift] = useState<string>('ALL');
   const [studentOnly, setStudentOnly] = useState(false);
 
+  // Bộ lọc lịch làm việc theo thứ và khung giờ
+  const [selectedDays, setSelectedDays] = useState<number[]>([]);
+  const [timePreset, setTimePreset] = useState<string>('ALL'); // ALL, MORNING, AFTERNOON, EVENING, CUSTOM
+  const [customStartTime, setCustomStartTime] = useState<string>('');
+  const [customEndTime, setCustomEndTime] = useState<string>('');
+
   const [categories, setCategories] = useState<Category[]>(DEFAULT_CATEGORIES);
   const [provinces, setProvinces] = useState<string[]>(POPULAR_PROVINCES);
 
@@ -168,6 +174,23 @@ export const JobBrowsePage: React.FC = () => {
   const fetchJobs = useCallback(async (page: number = 0) => {
     setLoading(true);
     try {
+      let reqStartTime: string | undefined = undefined;
+      let reqEndTime: string | undefined = undefined;
+
+      if (timePreset === 'MORNING') {
+        reqStartTime = '06:00:00';
+        reqEndTime = '12:00:00';
+      } else if (timePreset === 'AFTERNOON') {
+        reqStartTime = '12:00:00';
+        reqEndTime = '18:00:00';
+      } else if (timePreset === 'EVENING') {
+        reqStartTime = '18:00:00';
+        reqEndTime = '23:00:00';
+      } else if (timePreset === 'CUSTOM' && customStartTime && customEndTime) {
+        reqStartTime = customStartTime.length === 5 ? customStartTime + ':00' : customStartTime;
+        reqEndTime = customEndTime.length === 5 ? customEndTime + ':00' : customEndTime;
+      }
+
       const res = await jobService.getJobs({
         keyword: keyword.trim() || undefined,
         jobType: selectedType !== 'ALL' ? selectedType : undefined,
@@ -176,6 +199,9 @@ export const JobBrowsePage: React.FC = () => {
         categoryId: selectedCategory !== 'ALL' ? Number(selectedCategory) : undefined,
         studentFriendly: studentOnly ? true : undefined,
         shiftType: selectedShift !== 'ALL' ? selectedShift : undefined,
+        daysOfWeek: selectedDays.length > 0 ? selectedDays : undefined,
+        startTime: reqStartTime,
+        endTime: reqEndTime,
         page,
         size: pageSize,
       });
@@ -209,7 +235,7 @@ export const JobBrowsePage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [keyword, selectedType, selectedMode, selectedProvince, selectedCategory, studentOnly, selectedShift, pageSize]);
+  }, [keyword, selectedType, selectedMode, selectedProvince, selectedCategory, studentOnly, selectedShift, selectedDays, timePreset, customStartTime, customEndTime, pageSize]);
 
   useEffect(() => {
     fetchJobs(0);
@@ -222,8 +248,20 @@ export const JobBrowsePage: React.FC = () => {
     setSelectedProvince('ALL');
     setSelectedCategory('ALL');
     setSelectedShift('ALL');
+    setSelectedDays([]);
+    setTimePreset('ALL');
+    setCustomStartTime('');
+    setCustomEndTime('');
     setStudentOnly(false);
     setSearchParams({});
+  };
+
+  const toggleDay = (dayId: number) => {
+    if (selectedDays.includes(dayId)) {
+      setSelectedDays(selectedDays.filter(d => d !== dayId));
+    } else {
+      setSelectedDays([...selectedDays, dayId]);
+    }
   };
 
   const handleQuickProvince = (prov: string) => {
@@ -482,24 +520,25 @@ export const JobBrowsePage: React.FC = () => {
           })}
         </div>
 
-        {/* Quick Shift Chips Row */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', alignItems: 'center', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px dashed var(--border-color)' }}>
-          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginRight: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-            <Clock size={13} /> {language === 'vi' ? 'Ca làm việc:' : 'Shift:'}
+        {/* Lọc theo Thứ trong tuần */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', alignItems: 'center', marginTop: '0.85rem', paddingTop: '0.85rem', borderTop: '1px dashed var(--border-color)' }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginRight: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <Clock size={13} /> {language === 'vi' ? 'Thứ làm việc:' : 'Days of Week:'}
           </span>
           {[
-            { value: 'ALL', labelVi: 'Tất cả ca', labelEn: 'All Shifts' },
-            { value: 'MORNING', labelVi: 'Ca sáng', labelEn: 'Morning' },
-            { value: 'AFTERNOON', labelVi: 'Ca chiều', labelEn: 'Afternoon' },
-            { value: 'EVENING', labelVi: 'Ca tối', labelEn: 'Evening' },
-            { value: 'WEEKEND', labelVi: 'Cuối tuần', labelEn: 'Weekend' },
-            { value: 'FLEXIBLE', labelVi: 'Linh hoạt', labelEn: 'Flexible' },
-          ].map((shift) => {
-            const isSelected = selectedShift === shift.value;
+            { id: 1, label: 'Thứ 2' },
+            { id: 2, label: 'Thứ 3' },
+            { id: 3, label: 'Thứ 4' },
+            { id: 4, label: 'Thứ 5' },
+            { id: 5, label: 'Thứ 6' },
+            { id: 6, label: 'Thứ 7' },
+            { id: 7, label: 'Chủ nhật' },
+          ].map((d) => {
+            const isSelected = selectedDays.includes(d.id);
             return (
               <button
-                key={shift.value}
-                onClick={() => setSelectedShift(isSelected && shift.value !== 'ALL' ? 'ALL' : shift.value)}
+                key={d.id}
+                onClick={() => toggleDay(d.id)}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -515,12 +554,90 @@ export const JobBrowsePage: React.FC = () => {
                   border: isSelected ? '1px solid var(--primary)' : '1px solid var(--border-color)',
                 }}
               >
-                {isSelected && shift.value !== 'ALL' && <Check size={12} />}
-                {language === 'vi' ? shift.labelVi : shift.labelEn}
+                {isSelected && <Check size={12} />}
+                {d.label}
+              </button>
+            );
+          })}
+          {selectedDays.length > 0 && (
+            <button
+              onClick={() => setSelectedDays([])}
+              style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '0.75rem', cursor: 'pointer', textDecoration: 'underline' }}
+            >
+              Bỏ chọn thứ ({selectedDays.length})
+            </button>
+          )}
+        </div>
+
+        {/* Lọc theo Khung giờ / Ca làm việc */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', alignItems: 'center', marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px dashed var(--border-color)' }}>
+          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', marginRight: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <Clock size={13} /> {language === 'vi' ? 'Khung giờ / Ca:' : 'Time Slot:'}
+          </span>
+          {[
+            { value: 'ALL', label: 'Tất cả ca' },
+            { value: 'MORNING', label: 'Ca sáng (06:00 - 12:00)' },
+            { value: 'AFTERNOON', label: 'Ca chiều (12:00 - 18:00)' },
+            { value: 'EVENING', label: 'Ca tối (18:00 - 23:00)' },
+            { value: 'CUSTOM', label: 'Giờ tùy chỉnh ⏰' },
+          ].map((preset) => {
+            const isSelected = timePreset === preset.value;
+            return (
+              <button
+                key={preset.value}
+                onClick={() => {
+                  setTimePreset(preset.value);
+                  if (preset.value !== 'CUSTOM') {
+                    setCustomStartTime('');
+                    setCustomEndTime('');
+                  }
+                }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.25rem',
+                  padding: '0.35rem 0.75rem',
+                  borderRadius: 'var(--radius-full)',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'var(--transition)',
+                  background: isSelected ? 'var(--primary)' : 'var(--bg-card-subtle)',
+                  color: isSelected ? 'white' : 'var(--text-main)',
+                  border: isSelected ? '1px solid var(--primary)' : '1px solid var(--border-color)',
+                }}
+              >
+                {isSelected && preset.value !== 'ALL' && <Check size={12} />}
+                {preset.label}
               </button>
             );
           })}
         </div>
+
+        {/* Hàng chọn giờ tùy chỉnh nếu chọn CUSTOM */}
+        {timePreset === 'CUSTOM' && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.75rem', padding: '0.75rem 1rem', background: 'var(--bg-main)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>Giờ làm: Từ</span>
+            <input 
+              type="time" 
+              className="form-control" 
+              value={customStartTime} 
+              onChange={e => setCustomStartTime(e.target.value)} 
+              style={{ width: '130px', padding: '0.4rem 0.6rem', fontSize: '0.85rem' }} 
+            />
+            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>Đến</span>
+            <input 
+              type="time" 
+              className="form-control" 
+              value={customEndTime} 
+              onChange={e => setCustomEndTime(e.target.value)} 
+              style={{ width: '130px', padding: '0.4rem 0.6rem', fontSize: '0.85rem' }} 
+            />
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              (Hỗ trợ cả ca làm qua đêm xuyên 24h, ví dụ: 22:00 - 02:00)
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Results Bar */}

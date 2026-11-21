@@ -29,6 +29,37 @@ export const PostJobPage: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Cấu hình ca làm việc chi tiết
+  const [shifts, setShifts] = useState<Array<{
+    dayOfWeek: number;
+    shiftName: string;
+    startTime: string;
+    endTime: string;
+    isFlexible: boolean;
+  }>>([]);
+  const [shiftDay, setShiftDay] = useState<number>(1);
+  const [shiftNameInput, setShiftNameInput] = useState<string>('Ca sáng');
+  const [shiftStartInput, setShiftStartInput] = useState<string>('08:00');
+  const [shiftEndInput, setShiftEndInput] = useState<string>('12:00');
+  const [shiftFlexibleInput, setShiftFlexibleInput] = useState<boolean>(false);
+
+  const handleAddShift = () => {
+    setShifts([
+      ...shifts,
+      {
+        dayOfWeek: shiftDay,
+        shiftName: shiftNameInput,
+        startTime: shiftStartInput,
+        endTime: shiftEndInput,
+        isFlexible: shiftFlexibleInput
+      }
+    ]);
+  };
+
+  const handleRemoveShift = (idx: number) => {
+    setShifts(shifts.filter((_, i) => i !== idx));
+  };
+
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
 
@@ -84,6 +115,7 @@ export const PostJobPage: React.FC = () => {
         requirements,
         slotsAvailable: Number(slotsAvailable),
         deadline: deadline ? `${deadline}T23:59:59` : undefined,
+        shifts: shifts.length > 0 ? shifts : undefined,
       });
       setSuccess(true);
       setTimeout(() => {
@@ -289,6 +321,130 @@ export const PostJobPage: React.FC = () => {
                 style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}
               />
             </div>
+          </div>
+
+          {/* CẤU HÌNH LỊCH CA LÀM VIỆC CHI TIẾT */}
+          <div style={{ padding: '1.25rem', background: 'var(--bg-main)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+              <div>
+                <label style={{ display: 'block', fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)' }}>
+                  📅 Cấu hình ca làm việc chi tiết theo Thứ (Hỗ trợ nhiều ca & ca qua đêm)
+                </label>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  Giúp sinh viên tìm việc dễ dàng theo thứ và khung giờ rảnh của họ
+                </span>
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.75rem', marginBottom: '0.75rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, marginBottom: '0.25rem' }}>Thứ làm việc</label>
+                <select
+                  value={shiftDay}
+                  onChange={e => setShiftDay(Number(e.target.value))}
+                  style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}
+                >
+                  <option value={1}>Thứ 2</option>
+                  <option value={2}>Thứ 3</option>
+                  <option value={3}>Thứ 4</option>
+                  <option value={4}>Thứ 5</option>
+                  <option value={5}>Thứ 6</option>
+                  <option value={6}>Thứ 7</option>
+                  <option value={7}>Chủ nhật</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, marginBottom: '0.25rem' }}>Tên ca</label>
+                <input
+                  type="text"
+                  value={shiftNameInput}
+                  onChange={e => setShiftNameInput(e.target.value)}
+                  placeholder="Ca sáng / Ca tối..."
+                  style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, marginBottom: '0.25rem' }}>Giờ bắt đầu</label>
+                <input
+                  type="time"
+                  value={shiftStartInput}
+                  onChange={e => setShiftStartInput(e.target.value)}
+                  style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, marginBottom: '0.25rem' }}>Giờ kết thúc</label>
+                <input
+                  type="time"
+                  value={shiftEndInput}
+                  onChange={e => setShiftEndInput(e.target.value)}
+                  style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.82rem', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={shiftFlexibleInput}
+                  onChange={e => setShiftFlexibleInput(e.target.checked)}
+                />
+                Lịch linh hoạt (sinh viên có thể tự sắp xếp ca trong ngày này)
+              </label>
+
+              <button
+                type="button"
+                onClick={handleAddShift}
+                className="btn btn-secondary btn-sm"
+                style={{ fontWeight: 600 }}
+              >
+                + Thêm ca này vào lịch
+              </button>
+            </div>
+
+            {/* Danh sách ca đã thêm xem trước */}
+            {shifts.length > 0 && (
+              <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px dashed var(--border-color)' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, marginBottom: '0.4rem', color: 'var(--text-main)' }}>
+                  Các ca đã cấu hình ({shifts.length}):
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                  {shifts.map((s, idx) => {
+                    const dayLabels: Record<number, string> = { 1: 'T2', 2: 'T3', 3: 'T4', 4: 'T5', 5: 'T6', 6: 'T7', 7: 'CN' };
+                    return (
+                      <span
+                        key={idx}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          background: 'var(--bg-card)',
+                          padding: '0.3rem 0.6rem',
+                          borderRadius: 'var(--radius-sm)',
+                          border: '1px solid var(--border-color)',
+                          fontSize: '0.78rem',
+                          fontWeight: 600
+                        }}
+                      >
+                        <strong>{dayLabels[s.dayOfWeek]}</strong>: {s.shiftName} ({s.startTime} - {s.endTime})
+                        {s.isFlexible && <span style={{ color: '#16a34a' }}> [Linh hoạt]</span>}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveShift(idx)}
+                          style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: 0, marginLeft: '0.25rem' }}
+                        >
+                          &times;
+                        </button>
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           <div>

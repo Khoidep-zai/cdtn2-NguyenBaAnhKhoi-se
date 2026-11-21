@@ -194,9 +194,25 @@ export const App: React.FC = () => {
                     }
                   />
 
-                  {/* Universal Profile Route */}
+                  {/* Universal Profile Route & View Student Profile */}
                   <Route
                     path="profile"
+                    element={
+                      <ProtectedRoute allowedRoles={['ROLE_STUDENT', 'ROLE_EMPLOYER', 'ROLE_ADMIN']}>
+                        <StudentProfilePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="students/:id"
+                    element={
+                      <ProtectedRoute allowedRoles={['ROLE_STUDENT', 'ROLE_EMPLOYER', 'ROLE_ADMIN']}>
+                        <StudentProfilePage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="student-profile/:id"
                     element={
                       <ProtectedRoute allowedRoles={['ROLE_STUDENT', 'ROLE_EMPLOYER', 'ROLE_ADMIN']}>
                         <StudentProfilePage />

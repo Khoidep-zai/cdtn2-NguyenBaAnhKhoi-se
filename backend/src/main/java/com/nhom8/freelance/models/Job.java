@@ -86,6 +86,12 @@ public class Job {
 
     private LocalDateTime deadline;
 
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @org.hibernate.annotations.Fetch(org.hibernate.annotations.FetchMode.SUBSELECT)
+    @Builder.Default
+    @JsonIgnoreProperties("job")
+    private java.util.List<JobShift> shifts = new java.util.ArrayList<>();
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

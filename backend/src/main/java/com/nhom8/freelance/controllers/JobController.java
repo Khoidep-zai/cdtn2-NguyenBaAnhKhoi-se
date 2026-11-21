@@ -1,7 +1,7 @@
-
 package com.nhom8.freelance.controllers;
 
 import com.nhom8.freelance.dto.ApiResponse;
+import com.nhom8.freelance.dto.JobShiftDTO;
 import com.nhom8.freelance.dto.request.JobCreateRequest;
 import com.nhom8.freelance.models.Job;
 import com.nhom8.freelance.security.UserPrincipal;
@@ -30,7 +30,7 @@ public class JobController {
     private final JobService jobService;
 
     @GetMapping
-    @Operation(summary = "Tìm kiếm và lọc tin việc làm đa tiêu chí")
+    @Operation(summary = "Tìm kiếm và lọc tin việc làm đa tiêu chí kết hợp lịch làm việc và ca")
     public ResponseEntity<ApiResponse<Page<Job>>> searchJobs(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long categoryId,
@@ -39,11 +39,12 @@ public class JobController {
             @RequestParam(required = false) String province,
             @RequestParam(required = false) Boolean studentFriendly,
             @RequestParam(required = false) String shiftType,
+            @RequestParam(required = false) List<Integer> daysOfWeek,
+            @RequestParam(required = false) String startTime,
+            @RequestParam(required = false) String endTime,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        // Không truyền Sort tại đây.
-        // Repository sẽ sắp xếp theo created_at DESC.
         Pageable pageable = PageRequest.of(page, size);
 
         Page<Job> jobs = jobService.searchJobs(
@@ -54,9 +55,26 @@ public class JobController {
                 province,
                 studentFriendly,
                 shiftType,
+                daysOfWeek,
+                startTime,
+                endTime,
                 pageable
         );
 
+        return ResponseEntity.ok(
+                ApiResponse.ok("Lấy danh sách việc làm thành công", jobs)
+        );
+    }
+
+    public ResponseEntity<ApiResponse<Page<Job>>> searchJobs(
+            String keyword, Long categoryId, String jobType, String workMode,
+            String province, Boolean studentFriendly, String shiftType,
+            int page, int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Job> jobs = jobService.searchJobs(
+                keyword, categoryId, jobType, workMode, province, studentFriendly, shiftType, pageable
+        );
         return ResponseEntity.ok(
                 ApiResponse.ok("Lấy danh sách việc làm thành công", jobs)
         );
@@ -97,9 +115,21 @@ public class JobController {
         );
     }
 
+    @GetMapping("/{id:[0-9]+}/shifts")
+    @Operation(summary = "Lấy danh sách ca làm việc chi tiết của một tin tuyển dụng")
+    public ResponseEntity<ApiResponse<List<JobShiftDTO>>> getJobShifts(
+            @PathVariable Long id
+    ) {
+        List<JobShiftDTO> shifts = jobService.getJobShifts(id);
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Lấy ca làm việc thành công", shifts)
+        );
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyRole('EMPLOYER', 'ADMIN')")
-    @Operation(summary = "Nhà tuyển dụng đăng tin việc làm mới")
+    @Operation(summary = "Nhà tuyển dụng đăng tin việc làm mới kèm lịch ca làm")
     public ResponseEntity<ApiResponse<Job>> createJob(
             @AuthenticationPrincipal UserPrincipal currentUser,
             @Valid @RequestBody JobCreateRequest request
@@ -108,6 +138,21 @@ public class JobController {
 
         return ResponseEntity.ok(
                 ApiResponse.ok("Đăng tin tuyển dụng thành công!", job)
+        );
+    }
+
+    @PutMapping("/{id:[0-9]+}")
+    @PreAuthorize("hasAnyRole('EMPLOYER', 'ADMIN')")
+    @Operation(summary = "Chỉnh sửa tin tuyển dụng và lịch ca làm việc")
+    public ResponseEntity<ApiResponse<Job>> updateJob(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal currentUser,
+            @Valid @RequestBody JobCreateRequest request
+    ) {
+        Job job = jobService.updateJob(id, currentUser.getId(), request);
+
+        return ResponseEntity.ok(
+                ApiResponse.ok("Cập nhật tin tuyển dụng thành công!", job)
         );
     }
 

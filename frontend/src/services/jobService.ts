@@ -1,5 +1,5 @@
 import { apiClient } from './apiClient';
-import { Job, Application, ApiResponse } from '../types';
+import { Job, Application, JobShift, ApiResponse } from '../types';
 
 export interface SearchJobsParams {
   keyword?: string;
@@ -10,13 +10,21 @@ export interface SearchJobsParams {
   province?: string;
   studentFriendly?: boolean;
   shiftType?: string;
+  daysOfWeek?: number[];
+  startTime?: string;
+  endTime?: string;
   page?: number;
   size?: number;
 }
 
 export const jobService = {
   async getJobs(params?: SearchJobsParams): Promise<{ content: Job[]; totalElements: number; totalPages: number }> {
-    const res = await apiClient.get<ApiResponse<any>>('/jobs', { params });
+    // Nếu có daysOfWeek dạng mảng, truyền params serializer hoặc tham số comma-separated
+    const queryParams: any = { ...params };
+    if (params?.daysOfWeek && params.daysOfWeek.length > 0) {
+      queryParams.daysOfWeek = params.daysOfWeek.join(',');
+    }
+    const res = await apiClient.get<ApiResponse<any>>('/jobs', { params: queryParams });
     return res.data.data;
   },
 
@@ -30,14 +38,28 @@ export const jobService = {
     return res.data.data;
   },
 
+  async getJobShifts(jobId: number): Promise<JobShift[]> {
+    try {
+      const res = await apiClient.get<ApiResponse<JobShift[]>>(`/jobs/${jobId}/shifts`);
+      return res.data.data || [];
+    } catch {
+      return [];
+    }
+  },
+
   async createJob(jobData: any): Promise<Job> {
     const res = await apiClient.post<ApiResponse<Job>>('/jobs', jobData);
     return res.data.data;
   },
 
+  async updateJob(jobId: number, jobData: any): Promise<Job> {
+    const res = await apiClient.put<ApiResponse<Job>>(`/jobs/${jobId}`, jobData);
+    return res.data.data;
+  },
+
   async updateJobStatus(jobId: number, status: string): Promise<Job> {
     const res = await apiClient.patch<ApiResponse<Job>>(`/jobs/${jobId}/status`, null, {
-      params: { status }
+        params: { status }
     });
     return res.data.data;
   },

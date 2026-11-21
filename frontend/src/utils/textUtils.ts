@@ -9,8 +9,36 @@ export function cleanMojibake(text?: string): string {
   if (!text) return '';
   let res = text;
 
-  // Common mojibake word patterns from dataset/import
-  const replacements: [RegExp, string][] = [
+  // Direct phrase replacements for known dataset and test artifacts
+  const phraseReplacements: [RegExp, string][] = [
+    [/Gi├¡m s├ít/g, 'Giám sát'],
+    [/Hß╗Åc thß╗æng/g, 'Hệ thống'],
+    [/hß╗ç thß╗æng/g, 'hệ thống'],
+    [/É├¼m/g, 'Đêm'],
+    [/-æ├¬m/g, 'đêm'],
+    [/Cß╗Öng t├íc vi├¬n/g, 'Cộng tác viên'],
+    [/Dß╗ïch thuß║¡t/g, 'Dịch thuật'],
+    [/Lß╗ïch Linh Hoß║¡t/g, 'Lịch Linh Hoạt'],
+    [/Hß╗ù trß╗ú Kß╗╣ thuß║¡t/g, 'Hỗ trợ Kỹ thuật'],
+    [/Chiß╗üu/g, 'Chiều'],
+    [/Nh├ón vi├¬n/g, 'Nhân viên'],
+    [/B├ín h├áng/g, 'Bán hàng'],
+    [/Ca Tß╗æi/g, 'Ca Tối'],
+    [/Pha chß║┐/g, 'Pha chế'],
+    [/Ca S├íng/g, 'Ca Sáng'],
+    [/Ca s├íng/g, 'Ca sáng'],
+    [/Hß╗ô Ch├¡ Minh/g, 'Hồ Chí Minh'],
+    [/Quß║¡n Bình Thß║¡nh/g, 'Quận Bình Thạnh'],
+    [/Quß║¡n/g, 'Quận'],
+    [/Thß╗®/g, 'Thứ'],
+    [/thß╗®/g, 'thứ'],
+    [/v├á/g, 'và'],
+    [/-æ\/giß╗Ø/g, 'đ/giờ'],
+    [/đ\/giß╗Ø/g, 'đ/giờ'],
+    [/-æ\/dß╗▒ ├ín/g, 'đ/dự án'],
+    [/M├┤ tß║ú/g, 'Mô tả'],
+    [/c├┤ng viß»çc/g, 'công việc'],
+    [/kiß»âm thß»¡/g, 'kiểm thử'],
     [/CB¡Öng/g, 'Cộng'],
     [/THíc/g, 'Tác'],
     [/Vi\|¬n/g, 'Viên'],
@@ -33,10 +61,51 @@ export function cleanMojibake(text?: string): string {
     [/Phß¡æi hß¡úp/g, 'Phối hợp'],
     [/vß¡ơi/g, 'với'],
     [/nh lón vi\|¬n/g, 'nhân viên'],
-    [/hiß¡çn trã/g, 'hiện trường']
+    [/hiß¡çn trã/g, 'hiện trường'],
   ];
 
-  for (const [pattern, repl] of replacements) {
+  for (const [pattern, repl] of phraseReplacements) {
+    res = res.replace(pattern, repl);
+  }
+
+  // Token-level replacements for mojibake character fragments
+  const charReplacements: [RegExp, string][] = [
+    [/├¡/g, 'á'],
+    [/├í/g, 'á'],
+    [/├á/g, 'à'],
+    [/├│/g, 'ó'],
+    [/├ó/g, 'ò'],
+    [/├ú/g, 'ú'],
+    [/├╣/g, 'ù'],
+    [/├¬/g, 'ê'],
+    [/├¿/g, 'è'],
+    [/├®/g, 'é'],
+    [/├┤/g, 'ô'],
+    [/├«/g, 'î'],
+    [/├║/g, 'ứ'],
+    [/├ón/g, 'ân'],
+    [/ß╗æ/g, 'ố'],
+    [/ß╗Å/g, 'ệ'],
+    [/ß║¡/g, 'ậ'],
+    [/ß║┐/g, 'ế'],
+    [/ß╗®/g, 'ứ'],
+    [/ß╗ü/g, 'ề'],
+    [/ß╗ù/g, 'ỗ'],
+    [/ß╗ú/g, 'ự'],
+    [/ß╗ï/g, 'ị'],
+    [/ß╗Ö/g, 'ộ'],
+    [/ß╗Ø/g, 'ờ'],
+    [/ß╗▒/g, 'ự'],
+    [/ß║ú/g, 'ả'],
+    [/ß»ç/g, 'ệ'],
+    [/ß»âm/g, 'ểm'],
+    [/ß»¡/g, 'ử'],
+    [/Kß╗╣/g, 'Kỹ'],
+    [/-æ/g, 'đ'],
+    [/É├¼m/g, 'Đêm'],
+  ];
+
+  for (const [pattern, repl] of charReplacements) {
     res = res.replace(pattern, repl);
   }
 
@@ -54,14 +123,12 @@ export function parseBenefits(raw?: string): string[] {
   // Check if it's formatted as array ['...', '...'] or ["...", "..."]
   if ((cleaned.startsWith('[') && cleaned.endsWith(']')) || (cleaned.startsWith('(') && cleaned.endsWith(')'))) {
     try {
-      // Replace single quotes with double quotes for JSON parsing
       const jsonStr = cleaned.replace(/'/g, '"');
       const parsed = JSON.parse(jsonStr);
       if (Array.isArray(parsed)) {
         return parsed.map((item: any) => cleanMojibake(String(item).trim())).filter(Boolean);
       }
     } catch {
-      // Fallback: regex extraction of quotes
       const matches = cleaned.match(/['"]([^'"]+)['"]/g);
       if (matches && matches.length > 0) {
         return matches.map(m => cleanMojibake(m.replace(/^['"]|['"]$/g, '').trim())).filter(Boolean);
@@ -99,11 +166,9 @@ export function formatSalaryDisplay(
 ): string {
   if (salaryText && salaryText.trim()) {
     const raw = cleanMojibake(salaryText.trim());
-    // If it indicates 0 or empty
     if (['0.0 triệu', '0 triệu', '0.0', '0đ', '0 vnđ', '0 vnd', '$ 0.0 triệu', '$0.0 triệu'].includes(raw.toLowerCase())) {
       return language === 'vi' ? 'Thỏa thuận' : 'Negotiable';
     }
-    // Clean redundant leading $ if text already has 'triệu' or 'VNĐ'
     return raw.replace(/^\$\s*/, '');
   }
 
@@ -128,7 +193,6 @@ export function formatLocationDisplay(province?: string, location?: string, lang
     if (p.toLowerCase() === l.toLowerCase()) {
       return p;
     }
-    // Capitalize first letter of location if lowercase
     const capL = l.charAt(0).toUpperCase() + l.slice(1);
     return `${p} - ${capL}`;
   }
